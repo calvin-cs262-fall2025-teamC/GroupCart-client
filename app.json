@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "groupcart",
-    "slug": "groupcart",
+    "name": "client",
+    "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "groupcart",
+    "scheme": "client",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
