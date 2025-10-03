@@ -93,7 +93,7 @@ const exampleGroupRequest = new GroupRequest({
     id: "test",
     requests: exampleRequests,
     completed: false,
-    itemName: "Bannanas!"
+    itemName: "Banannas"
 });
 
 export default function GroupCart() {
@@ -152,33 +152,40 @@ export default function GroupCart() {
     function RequestRow({ groupRequest, setGroupRequests }: { groupRequest: GroupRequest, setGroupRequests: React.Dispatch<React.SetStateAction<GroupRequest[]>> }) {
         return (
             <View style={[styles.container, styles.requestRow]}>
-                <View style={styles.checkmarkSection}>
-                    <Button
-                        title={groupRequest.completed ? "Complete" : "Incomplete"}
-                        onPress={() => setGroupRequests(prev =>
-                            prev.map(gr =>
-                                gr.id === groupRequest.id
-                                    ? new GroupRequest({ ...gr, completed: !gr.completed })
-                                    : gr
-                            )
-                        )}
-                        color={groupRequest.completed ? "green" : "gray"} // optional coloring
-                    />
-                </View>
-                <View style={styles.itemDescriptionSection}>
-                    <Text style={styles.itemDescriptionText}>{groupRequest.itemName}</Text>
+                <View style={styles.row}>
+
+                    <View style={styles.checkmarkSection}>
+                        <Button
+                            title={groupRequest.completed ? "Complete" : "Incomplete"}
+                            onPress={() => setGroupRequests(prev =>
+                                prev.map(gr =>
+                                    gr.id === groupRequest.id
+                                        ? new GroupRequest({ ...gr, completed: !gr.completed })
+                                        : gr
+                                )
+                            )}
+                            color={groupRequest.completed ? "green" : "gray"} // optional coloring
+                        />
+                    </View>
+                    <View style={styles.itemDescriptionSection}>
+                        <Text style={styles.itemDescriptionText}>{groupRequest.itemName}</Text>
+                    </View>
                 </View>
                 <View style={styles.groupRequestsContainer}>
                     {groupRequest.requests.map((req) => (
                         <View key={req.id} style={styles.requestItem}>
-                            <Text style={[styles.requesterName, { color: req.requester.color }]}>
-                                {req.requester.displayName}
-                            </Text>
-                            <Image
-                                source={userIcon}
-                                tintColor={req.requester.color}
-                                style={styles.image}
-                            />
+                            <View>
+                                <Text style={[styles.requesterName, { color: req.requester.color }]}>
+                                    {req.requester.displayName}
+                                </Text>
+                            </View>
+                            <View style={styles.iconBox}>
+                                <Image
+                                    source={userIcon}
+                                    tintColor={req.requester.color}
+                                    style={styles.image}
+                                />
+                            </View>
                         </View>
                     ))}
                 </View>
@@ -292,11 +299,15 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "royalblue",
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 48,
+        fontWeight: "bold"
     },
     requestRow: {
+        flexGrow: 1,
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: 'white',
         marginBottom: 8,
         borderRadius: 8,
@@ -306,8 +317,12 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     image: {
-        width: 64,
-        height: 64
+        width: 32,
+        height: 32
+    },
+    iconBox: {
+        justifyContent: "center",
+        marginBottom: 20
     },
     checkmarkSection: {
         justifyContent: "center",
@@ -315,51 +330,45 @@ const styles = StyleSheet.create({
         borderWidth: 0
     },
     itemDescriptionSection: {
-        backgroundColor: "#f0f0f0",  // faint gray background
-        borderRadius: 10,            // rounded corners
-        padding: 12,                 // inner spacing
+        backgroundColor: "#f0f0f0",  
+        borderRadius: 10,
+        padding: 12,
     },
     itemDescriptionText: {
         fontSize: 16,
-        color: "#333",               // dark gray text
+        color: "#333",               
     },
     groupRequestsContainer: {
-        flexDirection: "row",        // line up request items horizontally
-        flexWrap: "wrap",            // wrap to next line if too many
-        alignItems: "flex-start",    // align items to top
-        gap: 12,                     // spacing between items (RN 0.71+)
-        padding: 12,                 // inner spacing inside container
-        backgroundColor: "#f0f0f0",  // faint gray background
-        borderRadius: 10,            // rounded corners for the box
-        marginVertical: 8,
+        flexDirection: "row",
+        gap: 15,
+        backgroundColor: "#f0f0f0",
+        borderRadius: 10
     },
     requestItem: {
-        alignItems: "center",        // center text above image
+        alignItems: 'center'
     },
     requesterName: {
-        fontSize: 14,
-        marginBottom: 4,             // space between name and image
+        textAlign: "center",
+        fontSize: 16,
+        borderStyle: "solid",
+    },
+    row: {
+        flexDirection: "row",
+        gap: 20
     },
     demoSetup: {
         flex: 1,
-        padding: 1,
         backgroundColor: "#222", // dark style
     },
     label: {
-        color: "black",
-        marginTop: 12,
+        color: "white",
     },
     input: {
         borderWidth: 1,
         borderColor: "#555",
-        borderRadius: 6,
-        padding: 8,
         color: "white",
-        marginTop: 4,
-        marginBottom: 8,
     },
     picker: {
-        color: "white",
-        marginVertical: 8,
+        color: "black",
     }
 });
