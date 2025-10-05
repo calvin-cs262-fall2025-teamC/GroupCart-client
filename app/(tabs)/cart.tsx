@@ -1,8 +1,8 @@
+import { Picker } from "@react-native-picker/picker";
 import { useState } from 'react';
 import {
     Button,
     Image,
-    Picker,
     ScrollView,
     StyleSheet,
     Text,
