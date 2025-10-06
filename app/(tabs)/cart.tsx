@@ -14,17 +14,6 @@ import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
 
-const { width, height } = Dimensions.get('window');
-
-// Standard scaling functions
-const guidelineBaseWidth = 375;
-const guidelineBaseHeight = 812;
-
-const horizontalScale = (size: number) => (width / guidelineBaseWidth) * size;
-const verticalScale = (size: number) => (height / guidelineBaseHeight) * size;
-const moderateScale = (size: number, factor = 0.5) => size + (horizontalScale(size) - size)
-
-
 const exampleRequester = new Requester({
     id: "requester-id",
     displayName: "Mr.ExampleRequester",
