@@ -2,55 +2,28 @@ import { Picker } from "@react-native-picker/picker";
 import { useState } from 'react';
 import {
     Button,
-    Image,
+    Dimensions,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     View
 } from "react-native";
+import RequestRow from "../components/RequestRow";
+import { GroceryRequest } from "../models/GroceryRequest";
+import { GroupRequest } from "../models/GroupRequest";
+import { Requester } from "../models/Requester";
 
-const userIcon = require("@/assets/images/user-icon.png");
+const { width, height } = Dimensions.get('window');
 
-class Requester {
-    id: string;
-    displayName: string;
-    color: string;
+// Standard scaling functions
+const guidelineBaseWidth = 375;
+const guidelineBaseHeight = 812;
 
-    constructor({ id, displayName, color }: { id: string; displayName: string; color: string }) {
-        this.id = id;
-        this.displayName = displayName;
-        this.color = color;
-    }
-}
-class Request {
-    id: string;
-    requester: Requester;
-    item: string;
-    priority: number;
+const horizontalScale = (size: number) => (width / guidelineBaseWidth) * size;
+const verticalScale = (size: number) => (height / guidelineBaseHeight) * size;
+const moderateScale = (size: number, factor = 0.5) => size + (horizontalScale(size) - size)
 
-    constructor({ id, requester, item, priority = 1 }:
-        { id: string; requester: Requester; item: string; priority?: number }) {
-        this.id = id;
-        this.requester = requester;
-        this.item = item;
-        this.priority = priority;
-    }
-}
-class GroupRequest {
-    id: string;
-    completed: boolean;
-    itemName: string;
-    requests: Request[];
-
-    constructor({ id, completed = false, itemName, requests = [] }:
-        { id: string; completed?: boolean; itemName: string; requests?: Request[] }) {
-        this.id = id;
-        this.completed = completed;
-        this.itemName = itemName;
-        this.requests = requests;
-    }
-}
 
 const exampleRequester = new Requester({
     id: "requester-id",
@@ -58,7 +31,7 @@ const exampleRequester = new Requester({
     color: "gray",
 })
 
-const exampleRequest = new Request({
+const exampleRequest = new GroceryRequest({
     id: "request-id",
     requester: exampleRequester,
     item: "Eggs",
@@ -67,7 +40,7 @@ const exampleRequest = new Request({
 
 const exampleRequests = [
     exampleRequest,
-    new Request({
+    new GroceryRequest({
         ...exampleRequest,
         id: "request-2",
         item: "Eggs",
@@ -77,7 +50,7 @@ const exampleRequests = [
             color: "royalblue",
         }),
     }),
-    new Request({
+    new GroceryRequest({
         ...exampleRequest,
         id: "request-3",
         item: "Eggs",
@@ -149,50 +122,6 @@ export default function GroupCart() {
             </View>
         </ScrollView>
     )
-    function RequestRow({ groupRequest, setGroupRequests }: { groupRequest: GroupRequest, setGroupRequests: React.Dispatch<React.SetStateAction<GroupRequest[]>> }) {
-        return (
-            <View style={[styles.container, styles.requestRow]}>
-                <View style={styles.row}>
-
-                    <View style={styles.checkmarkSection}>
-                        <Button
-                            title={groupRequest.completed ? "Complete" : "Incomplete"}
-                            onPress={() => setGroupRequests(prev =>
-                                prev.map(gr =>
-                                    gr.id === groupRequest.id
-                                        ? new GroupRequest({ ...gr, completed: !gr.completed })
-                                        : gr
-                                )
-                            )}
-                            color={groupRequest.completed ? "green" : "gray"} // optional coloring
-                        />
-                    </View>
-                    <View style={styles.itemDescriptionSection}>
-                        <Text style={styles.itemDescriptionText}>{groupRequest.itemName}</Text>
-                    </View>
-                </View>
-                <View style={styles.groupRequestsContainer}>
-                    {groupRequest.requests.map((req) => (
-                        <View key={req.id} style={styles.requestItem}>
-                            <View>
-                                <Text style={[styles.requesterName, { color: req.requester.color }]}>
-                                    {req.requester.displayName}
-                                </Text>
-                            </View>
-                            <View style={styles.iconBox}>
-                                <Image
-                                    source={userIcon}
-                                    tintColor={req.requester.color}
-                                    style={styles.image}
-                                />
-                            </View>
-                        </View>
-                    ))}
-                </View>
-
-            </View>
-        )
-    }
 }
 
 interface DemoSetupProps {
@@ -216,7 +145,7 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
     const handleSubmit = () => {
         if (!itemName) return; // simple validation
 
-        const newRequest = new Request({
+        const newRequest = new GroceryRequest({
             id: `request-${Date.now()}`,
             requester: selectedRequester,
             item: itemName,
@@ -292,83 +221,30 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "lightgray",
-        flexShrink: 1,
-        padding: 10
-    },
-    title: {
-        color: "royalblue",
-        textAlign: "center",
-        fontSize: 48,
-        fontWeight: "bold"
-    },
-    requestRow: {
-        flexGrow: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'white',
-        marginBottom: 8,
-        borderRadius: 8,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-    },
-    image: {
-        width: 32,
-        height: 32
-    },
-    iconBox: {
-        justifyContent: "center",
-        marginBottom: 20
-    },
-    checkmarkSection: {
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 0
-    },
-    itemDescriptionSection: {
-        backgroundColor: "#f0f0f0",  
-        borderRadius: 10,
-        padding: 12,
-    },
-    itemDescriptionText: {
-        fontSize: 16,
-        color: "#333",               
-    },
-    groupRequestsContainer: {
-        flexDirection: "row",
-        gap: 15,
-        backgroundColor: "#f0f0f0",
-        borderRadius: 10
-    },
-    requestItem: {
-        alignItems: 'center'
-    },
-    requesterName: {
-        textAlign: "center",
-        fontSize: 16,
-        borderStyle: "solid",
-    },
-    row: {
-        flexDirection: "row",
-        gap: 20
-    },
-    demoSetup: {
-        flex: 1,
-        backgroundColor: "#222", // dark style
-    },
-    label: {
-        color: "white",
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#555",
-        color: "white",
-    },
-    picker: {
-        color: "black",
-    }
+  container: {
+    backgroundColor: "lightgray",
+    flexShrink: 1,
+    padding: 10,
+  },
+  title: {
+    color: "royalblue",
+    textAlign: "center",
+    fontSize: 48,
+    fontWeight: "bold",
+  },
+  demoSetup: {
+    flex: 1,
+    backgroundColor: "#222", // dark style
+  },
+  label: {
+    color: "white",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#555",
+    color: "white",
+  },
+  picker: {
+    color: "black",
+  },
 });
