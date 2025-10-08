@@ -18,7 +18,7 @@ const backgroundGray = "#f0f0f0";
 
 const exampleRequester = new Requester({
     id: "requester-id",
-    displayName: "Mr.ExampleRequester",
+    displayName: "Keith",
     color: "darkgreen",
 })
 
