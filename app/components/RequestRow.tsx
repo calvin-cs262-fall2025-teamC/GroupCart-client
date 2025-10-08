@@ -17,7 +17,7 @@ export default function RequestRow({ groupRequest, setGroupRequests }: { groupRe
 
                 <View style={styles.checkmarkSection}>
                     <Button
-                        title={groupRequest.completed ? "Complete" : "Incomplete"}
+                        title={groupRequest.completed ? "Completed" : "Incomplete"}
                         onPress={() => setGroupRequests(prev =>
                             prev.map(gr =>
                                 gr.id === groupRequest.id
@@ -86,24 +86,24 @@ const styles = StyleSheet.create({
   itemDescriptionSection: {
     backgroundColor: "#f0f0f0",
     borderRadius: (20),
-    padding: (20),
+    padding: (5),
   },
   itemDescriptionText: {
-    fontSize: (20),
+    fontSize: (15),
     color: "#333",
   },
   groupRequestsContainer: {
     flexDirection: "row",
-    gap: (20),
+    gap: (5),
     backgroundColor: "#f0f0f0",
-    borderRadius: (20),
+    borderRadius: (5),
   },
   requestItem: {
     alignItems: "center",
   },
   requesterName: {
     textAlign: "center",
-    fontSize: (20),
+    fontSize: (15),
     borderStyle: "solid",
   },
   iconBox: {

@@ -252,7 +252,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#222", // dark style
     },
     label: {
-        color: "white",
+        color: "yellow",
+        backgroundColor: "#222"
     },
     input: {
         borderWidth: 1,
@@ -260,6 +261,6 @@ const styles = StyleSheet.create({
         color: "white",
     },
     picker: {
-        color: "black",
+        color: "white",
     },
 });
