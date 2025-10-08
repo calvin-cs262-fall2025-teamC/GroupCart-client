@@ -13,10 +13,13 @@ import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
 
+const themeColor = "#0079ff";
+const backgroundGray = "#f0f0f0";
+
 const exampleRequester = new Requester({
     id: "requester-id",
     displayName: "Mr.ExampleRequester",
-    color: "gray",
+    color: "darkgreen",
 })
 
 const exampleRequest = new GroceryRequest({
@@ -68,37 +71,46 @@ export default function GroupCart() {
                 </View>
 
                 <View style={styles.container}>
-                    <View>
-                        <Text>NEEDED ITEMS</Text>
-                    </View>
 
-                    <View>
-                        {groupRequests.map(gr => (
-                            !gr.completed
-                            &&
-                            <RequestRow
-                                key={gr.id}
-                                groupRequest={gr}
-                                setGroupRequests={setGroupRequests}
-                            />
-                        ))}
-                    </View>
+                    {groupRequests.some(c => c.completed == false) && (
+                        <View>
+                            <View>
+                                <Text style={styles.subTitle}>NEEDED ITEMS</Text>
+                            </View>
 
-                    <View>
-                        <Text>COLLECTED ITEMS</Text>
-                    </View>
+                            <View>
+                                {groupRequests.map(gr => (
+                                    !gr.completed
+                                    &&
+                                    <RequestRow
+                                        key={gr.id}
+                                        groupRequest={gr}
+                                        setGroupRequests={setGroupRequests}
+                                    />
+                                ))}
+                            </View>
+                        </View>
+                    )}
 
-                    <View>
-                        {groupRequests.map(gr => (
-                            gr.completed
-                            &&
-                            <RequestRow
-                                key={gr.id}
-                                groupRequest={gr}
-                                setGroupRequests={setGroupRequests}
-                            />
-                        ))}
-                    </View>
+                    {groupRequests.some(c => c.completed == true) && (
+                        <View>
+                            <View>
+                                <Text style={styles.subTitle}>COLLECTED ITEMS</Text>
+                            </View>
+
+                            <View>
+                                {groupRequests.map(gr => (
+                                    gr.completed
+                                    &&
+                                    <RequestRow
+                                        key={gr.id}
+                                        groupRequest={gr}
+                                        setGroupRequests={setGroupRequests}
+                                    />
+                                ))}
+                            </View>
+                        </View>
+                    )}
 
                 </View>
                 <View style={styles.demoSetup}>
@@ -219,15 +231,21 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "lightgray",
+        backgroundColor: backgroundGray,
         flexShrink: 1,
         padding: 10,
     },
     title: {
-        color: "royalblue",
+        color: themeColor,
         textAlign: "center",
         fontSize: 48,
         fontWeight: "bold",
+    },
+    subTitle: {
+        color: themeColor,
+        textAlign: "center",
+        fontSize: 24,
+        fontWeight: "bold"
     },
     demoSetup: {
         flex: 1,
