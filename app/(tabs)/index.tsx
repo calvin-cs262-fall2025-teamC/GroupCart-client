@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
   // Background image covering entire screen
   backgroundImage: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    width: "auto",
+    height: "120%",
   },
 
   // Header section with back button and title
