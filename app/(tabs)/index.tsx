@@ -220,8 +220,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     // extend header width so it covers list item borders (wider by ~20px)
     marginHorizontal: -20,
-    paddingTop: 32,
-    paddingBottom: 16,
+    paddingTop: 12,
+    paddingBottom: 8,
     zIndex: 1000, // Ensures header stays above scrolling content
     elevation: 50,
     overflow: "visible",
@@ -234,8 +234,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 28,
     fontWeight: "600",
-    color: "#000000", // User's specified black text color
-    marginBottom: 24,
+    color: "#000000", // black text color
+    marginBottom: 12,
   },
 
   // Products header with count and add button
@@ -243,14 +243,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 4,
   },
 
   // "Products (4)" text
   productsCount: {
     fontSize: 17,
-    fontWeight: "500",
-    color: "#000000", // User's specified black text color
+    fontWeight: "400",
+    color: "#000000", // black text color
   },
 
   addButton: {
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 32,
     fontWeight: "300",
-    color: "#581046", // User's specified dark purple color
+    color: "#581046", // dark purple color
     transform: [{ rotate: "45deg" }], // Rotates × to look like +
   },
 
