@@ -1,15 +1,14 @@
 import {
-    Button,
-    Image,
-    StyleSheet,
-    Text,
-    View
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  View
 } from "react-native";
 import { GroupRequest } from "../models/GroupRequest";
-import { horizontalScale, moderateScale, verticalScale } from "../utils/scaling";
+// import { horizontalScale, moderateScale, verticalScale } from "../utils/scaling";
 
 const userIcon = require("@/assets/images/user-icon.png");
-
 
 export default function RequestRow({ groupRequest, setGroupRequests }: { groupRequest: GroupRequest, setGroupRequests: React.Dispatch<React.SetStateAction<GroupRequest[]>> }) {
     return (
@@ -18,7 +17,7 @@ export default function RequestRow({ groupRequest, setGroupRequests }: { groupRe
 
                 <View style={styles.checkmarkSection}>
                     <Button
-                        title={groupRequest.completed ? "Complete" : "Incomplete"}
+                        title={groupRequest.completed ? "Completed" : "Incomplete"}
                         onPress={() => setGroupRequests(prev =>
                             prev.map(gr =>
                                 gr.id === groupRequest.id
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "lightgray",
     flexShrink: 1,
-    padding: horizontalScale(1),
+    padding: 20,
   },
   requestRow: {
     flexGrow: 1,
@@ -68,16 +67,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "white",
-    marginBottom: verticalScale(1),
-    borderRadius: moderateScale(8),
+    marginBottom: 1,
+    borderRadius: 1,
     shadowColor: "#000",
     shadowOpacity: 0.1,
-    shadowRadius: moderateScale(2),
+    shadowRadius: (20),
     elevation: 2,
   },
   row: {
     flexDirection: "row",
-    gap: horizontalScale(20),
+    gap: (20),
   },
   checkmarkSection: {
     justifyContent: "center",
@@ -86,34 +85,33 @@ const styles = StyleSheet.create({
   },
   itemDescriptionSection: {
     backgroundColor: "#f0f0f0",
-    borderRadius: moderateScale(10),
-    padding: horizontalScale(12),
+    borderRadius: (20),
+    padding: (5),
   },
   itemDescriptionText: {
-    fontSize: moderateScale(1),
+    fontSize: (15),
     color: "#333",
   },
   groupRequestsContainer: {
     flexDirection: "row",
-    gap: horizontalScale(15),
+    gap: (5),
     backgroundColor: "#f0f0f0",
-    borderRadius: moderateScale(10),
+    borderRadius: (5),
   },
   requestItem: {
     alignItems: "center",
   },
   requesterName: {
     textAlign: "center",
-    fontSize: moderateScale(1),
+    fontSize: (15),
     borderStyle: "solid",
   },
   iconBox: {
     justifyContent: "center",
-    marginBottom: verticalScale(20),
+    marginBottom: (20),
   },
   image: {
-    width: horizontalScale(10),
-    height: verticalScale(10),
+    width: (20),
+    height: (20),
   },
 });
-

@@ -2,7 +2,6 @@ import { Picker } from "@react-native-picker/picker";
 import { useState } from 'react';
 import {
     Button,
-    Dimensions,
     ScrollView,
     StyleSheet,
     Text,
@@ -14,10 +13,13 @@ import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
 
+const themeColor = "#0079ff";
+const backgroundGray = "#f0f0f0";
+
 const exampleRequester = new Requester({
     id: "requester-id",
-    displayName: "Mr.ExampleRequester",
-    color: "gray",
+    displayName: "Keith",
+    color: "darkgreen",
 })
 
 const exampleRequest = new GroceryRequest({
@@ -69,37 +71,46 @@ export default function GroupCart() {
                 </View>
 
                 <View style={styles.container}>
-                    <View>
-                        <Text>NEEDED ITEMS</Text>
-                    </View>
 
-                    <View>
-                        {groupRequests.map(gr => (
-                            gr.completed
-                            &&
-                            <RequestRow
-                                key={gr.id}
-                                groupRequest={gr}
-                                setGroupRequests={setGroupRequests}
-                            />
-                        ))}
-                    </View>
+                    {groupRequests.some(c => c.completed == false) && (
+                        <View>
+                            <View>
+                                <Text style={styles.subTitle}>NEEDED ITEMS</Text>
+                            </View>
 
-                    <View>
-                        <Text>COLLECTED ITEMS</Text>
-                    </View>
+                            <View>
+                                {groupRequests.map(gr => (
+                                    !gr.completed
+                                    &&
+                                    <RequestRow
+                                        key={gr.id}
+                                        groupRequest={gr}
+                                        setGroupRequests={setGroupRequests}
+                                    />
+                                ))}
+                            </View>
+                        </View>
+                    )}
 
-                    <View>
-                        {groupRequests.map(gr => (
-                            !gr.completed
-                            &&
-                            <RequestRow
-                                key={gr.id}
-                                groupRequest={gr}
-                                setGroupRequests={setGroupRequests}
-                            />
-                        ))}
-                    </View>
+                    {groupRequests.some(c => c.completed == true) && (
+                        <View>
+                            <View>
+                                <Text style={styles.subTitle}>COLLECTED ITEMS</Text>
+                            </View>
+
+                            <View>
+                                {groupRequests.map(gr => (
+                                    gr.completed
+                                    &&
+                                    <RequestRow
+                                        key={gr.id}
+                                        groupRequest={gr}
+                                        setGroupRequests={setGroupRequests}
+                                    />
+                                ))}
+                            </View>
+                        </View>
+                    )}
 
                 </View>
                 <View style={styles.demoSetup}>
@@ -121,6 +132,7 @@ interface DemoSetupProps {
 function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
     // Form state (local)
     const [selectedRequester, setSelectedRequester] = useState<Requester>(exampleRequester);
+    const [showDemo, setShowDemo] = useState(false);
     const [itemName, setItemName] = useState("");
     const [priority, setPriority] = useState(1);
 
@@ -168,72 +180,87 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
     };
 
     return (
-        <View style={styles.demoSetup}>
-            <Text style={styles.label}>Select Requester:</Text>
-            <Picker
-                selectedValue={selectedRequester.id}
-                onValueChange={id => setSelectedRequester(requesterOptions.find(r => r.id === id)!)}
-                style={styles.picker}
-            >
-                {requesterOptions.map(r => (
-                    <Picker.Item key={r.id} label={r.displayName} value={r.id} />
-                ))}
-            </Picker>
-
-            <Text style={styles.label}>Food Item:</Text>
-            <TextInput
-                value={itemName}
-                onChangeText={setItemName}
-                placeholder="Enter food item"
-                style={styles.input}
-                placeholderTextColor="#aaa"
+        <View>
+            <Button
+                title={showDemo ? "Hide Demo Input" : "Show Demo Input"}
+                onPress={() => setShowDemo(prev => !prev)}
             />
+            {showDemo && (
+                <View style={styles.demoSetup}>
+                    <Text style={styles.label}>Select Requester:</Text>
+                    <Picker
+                        selectedValue={selectedRequester.id}
+                        onValueChange={id => setSelectedRequester(requesterOptions.find(r => r.id === id)!)}
+                        style={styles.picker}
+                    >
+                        {requesterOptions.map(r => (
+                            <Picker.Item key={r.id} label={r.displayName} value={r.id} />
+                        ))}
+                    </Picker>
 
-            <Text style={styles.label}>Priority:</Text>
-            <TextInput
-                value={priority.toString()}
-                onChangeText={text => setPriority(Number(text))}
-                keyboardType="numeric"
-                style={styles.input}
-            />
+                    <Text style={styles.label}>Food Item:</Text>
+                    <TextInput
+                        value={itemName}
+                        onChangeText={setItemName}
+                        placeholder="Enter food item"
+                        style={styles.input}
+                        placeholderTextColor="#aaa"
+                    />
 
-            <Button title="Submit" onPress={handleSubmit} color="#1e90ff" />
+                    <Text style={styles.label}>Priority:</Text>
+                    <TextInput
+                        value={priority.toString()}
+                        onChangeText={text => setPriority(Number(text))}
+                        keyboardType="numeric"
+                        style={styles.input}
+                    />
 
-            <Text style={[styles.label, { marginTop: 20 }]}>Current Group Requests:</Text>
-            {groupRequests.map(gr => (
-                <Text key={gr.id} style={{ color: "white" }}>
-                    {gr.itemName} ({gr.requests.length} requests)
-                </Text>
-            ))}
+                    <Button title="Submit" onPress={handleSubmit} color="#1e90ff" />
+
+                    <Text style={[styles.label, { marginTop: 20 }]}>Current Group Requests:</Text>
+                    {groupRequests.map(gr => (
+                        <Text key={gr.id} style={{ color: "white" }}>
+                            {gr.itemName} ({gr.requests.length} requests)
+                        </Text>
+                    ))}
+                </View>
+            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "lightgray",
-    flexShrink: 1,
-    padding: 10,
-  },
-  title: {
-    color: "royalblue",
-    textAlign: "center",
-    fontSize: 48,
-    fontWeight: "bold",
-  },
-  demoSetup: {
-    flex: 1,
-    backgroundColor: "#222", // dark style
-  },
-  label: {
-    color: "white",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#555",
-    color: "white",
-  },
-  picker: {
-    color: "black",
-  },
+    container: {
+        backgroundColor: backgroundGray,
+        flexShrink: 1,
+        padding: 10,
+    },
+    title: {
+        color: themeColor,
+        textAlign: "center",
+        fontSize: 48,
+        fontWeight: "bold",
+    },
+    subTitle: {
+        color: themeColor,
+        textAlign: "center",
+        fontSize: 24,
+        fontWeight: "bold"
+    },
+    demoSetup: {
+        flex: 1,
+        backgroundColor: "#222", // dark style
+    },
+    label: {
+        color: "yellow",
+        backgroundColor: "#222"
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#555",
+        color: "white",
+    },
+    picker: {
+        color: "white",
+    },
 });
