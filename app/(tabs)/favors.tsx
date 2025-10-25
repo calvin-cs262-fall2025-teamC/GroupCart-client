@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+//import {AngularGradient} from "expo-angular-gradient";
 interface Favor {
   id: number;
   buyer?: string;
@@ -29,13 +30,13 @@ export default function FavorsTab() {
   const [notifications, setNotifications] = useState<string[]>([]);
 
   const toggleFavorOwed = (id: number) => {
-    setFavorsOwed(favorsOwed.map(favor => 
+    setFavorsOwed(favorsOwed.map(favor =>
       favor.id === id ? { ...favor, completed: !favor.completed } : favor
     ));
   };
 
   const toggleFavorCompleted = (id: number) => {
-    setFavorsCompleted(favorsCompleted.map(favor => 
+    setFavorsCompleted(favorsCompleted.map(favor =>
       favor.id === id ? { ...favor, reimbursed: !favor.reimbursed } : favor
     ));
   };
@@ -57,6 +58,21 @@ export default function FavorsTab() {
     .reduce((sum, f) => sum + f.amount, 0);
 
   return (
+    <LinearGradient
+          // Gradient colors from your design
+          // #FF5EFF - Vibrant hot pink/magenta (was #EC89F5)
+          // #A77FFF - Vibrant purple (was #CCB5F0)
+          // #FF9FE0 - Vibrant light pink (was #E9C5D2)
+          // #1D31FF - Vibrant blue (unchanged, already vibrant)
+          colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
+          // Gradient direction: starts from top-right, flows to bottom-left
+          // [x1, y1] = start point, [x2, y2] = end point
+          start={{ x: 1, y: 0}} // Top right
+          end={{ x: 0, y: 1 }} // Bottom left
+
+          locations={[0.1, 0.3, 0.6, 1]}
+          style={[styles.background]}
+        >
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Favors</Text>
@@ -77,8 +93,8 @@ export default function FavorsTab() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>You Owe</Text>
         {favorsOwed.map(favor => (
-          <View 
-            key={favor.id} 
+          <View
+            key={favor.id}
             style={[
               styles.card,
               favor.completed ? styles.cardCompleted : styles.cardOwed
@@ -94,13 +110,13 @@ export default function FavorsTab() {
                 <Text style={styles.amountOwed}>${favor.amount.toFixed(2)}</Text>
               </View>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.checkboxContainer}
               onPress={() => toggleFavorOwed(favor.id)}
             >
               <View style={styles.checkbox}>
                 {favor.completed && (
-                  <Ionicons name="checkmark" size={16} color="#fff" />
+                  <Ionicons name="checkmark" size={16} color="#00c911ff" />
                 )}
               </View>
               <Text style={styles.checkboxLabel}>
@@ -114,8 +130,8 @@ export default function FavorsTab() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>You Completed</Text>
         {favorsCompleted.map(favor => (
-          <View 
-            key={favor.id} 
+          <View
+            key={favor.id}
             style={[
               styles.card,
               favor.reimbursed ? styles.cardCompleted : styles.cardCompleted2
@@ -132,13 +148,13 @@ export default function FavorsTab() {
               </View>
             </View>
             <View style={styles.cardFooter}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.checkboxContainer}
                 onPress={() => toggleFavorCompleted(favor.id)}
               >
                 <View style={styles.checkbox}>
                   {favor.reimbursed && (
-                    <Ionicons name="checkmark" size={16} color="#fff" />
+                    <Ionicons name="checkmark" size={16} color="#00c911ff" />
                   )}
                 </View>
                 <Text style={styles.checkboxLabel}>
@@ -146,7 +162,7 @@ export default function FavorsTab() {
                 </Text>
               </TouchableOpacity>
               {!favor.reimbursed && (
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.remindButton}
                   onPress={() => sendReminder(favor.recipient!, favor.amount)}
                 >
@@ -159,10 +175,14 @@ export default function FavorsTab() {
         ))}
       </View>
     </ScrollView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f9fafb',
@@ -279,10 +299,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 2,
-    borderColor: '#3b82f6',
+    borderColor: '#c9c9c9ff',
     borderRadius: 4,
     marginRight: 8,
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#ffffffff',
     justifyContent: 'center',
     alignItems: 'center',
   },

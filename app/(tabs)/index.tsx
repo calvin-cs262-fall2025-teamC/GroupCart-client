@@ -1,19 +1,19 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import {
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-
+import ShoppingItemRow from '../components/ShoppingItemRow';
 interface ShoppingItem {
   id: string;
   text: string;
   completed: boolean;
-  priority: number; // 1 = low (!), 2 = moderate (!!), 3 = high (!!!)
+  priority: number;
 }
 
 export default function MyList() {
@@ -27,7 +27,7 @@ export default function MyList() {
         id: Date.now().toString(),
         text: newItem.trim(),
         completed: false,
-        priority: priority
+        priority,
       };
       setItems([...items, newShoppingItem]);
       setNewItem('');
@@ -42,16 +42,7 @@ export default function MyList() {
   };
 
   const deleteItem = (id: string) => {
-    Alert.alert(
-      'Delete Item',
-      'Are you sure you want to delete this item?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () =>
-          setItems(items.filter(item => item.id !== id))
-        }
-      ]
-    );
+    setItems(prev => prev.filter(item => item.id !== id));
   };
 
   const getPriorityText = (priority: number) => {
@@ -65,103 +56,97 @@ export default function MyList() {
 
   const getPriorityColor = (priority: number) => {
     switch (priority) {
-      case 1: return '#4CAF50'; // Green for low
-      case 2: return '#FF9800'; // Orange for moderate
-      case 3: return '#F44336'; // Red for high
+      case 1: return '#4CAF50';
+      case 2: return '#FF9800';
+      case 3: return '#F44336';
       default: return '#4CAF50';
     }
   };
 
-  const renderItem = ({ item }: { item: ShoppingItem }) => (
-    <View style={styles.itemContainer}>
-      <TouchableOpacity
-        style={styles.itemContent}
-        onPress={() => toggleItem(item.id)}
-      >
-        <View style={styles.itemLeft}>
-          <Text style={[
-            styles.itemText,
-            item.completed && styles.completedText
-          ]}>
-            {item.text}
-          </Text>
-        </View>
-        <View style={styles.itemRight}>
-          <Text style={[
-            styles.priorityText,
-            { color: getPriorityColor(item.priority) }
-          ]}>
-            {getPriorityText(item.priority)}
-          </Text>
-          <Text style={styles.itemNumber}>
-            {items.indexOf(item) + 1}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => deleteItem(item.id)}
-      >
-        <Text style={styles.deleteButtonText}>×</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Shopping List Items</Text>
+    <LinearGradient
+      // Gradient colors from your design
+      // #FF5EFF - Vibrant hot pink/magenta (was #EC89F5)
+      // #A77FFF - Vibrant purple (was #CCB5F0)
+      // #FF9FE0 - Vibrant light pink (was #E9C5D2)
+      // #1D31FF - Vibrant blue (unchanged, already vibrant)
+      colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
+      // Gradient direction: starts from top-right, flows to bottom-left
+      // [x1, y1] = start point, [x2, y2] = end point
+      start={{ x: 1, y: 0}} // Top right
+      end={{ x: 0, y: 1 }} // Bottom left
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Add new item..."
-          value={newItem}
-          onChangeText={setNewItem}
-          onSubmitEditing={addItem}
-        />
+      locations={[0.1, 0.3, 0.6, 1]}
+      style={[styles.background]}
+    >
 
-        <View style={styles.priorityContainer}>
-          <Text style={styles.priorityLabel}>Priority:</Text>
-          {[1, 2, 3].map((level) => (
-            <TouchableOpacity
-              key={level}
-              style={[
-                styles.priorityButton,
-                priority === level && styles.selectedPriority
-              ]}
-              onPress={() => setPriority(level)}
-            >
-              <Text style={[
-                styles.priorityButtonText,
-                { color: getPriorityColor(level) }
-              ]}>
-                {getPriorityText(level)}
-              </Text>
-            </TouchableOpacity>
-          ))}
+      <View style={styles.overlay}>
+        <Text style={styles.title}>Shopping List Items</Text>
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Add new item..."
+            value={newItem}
+            onChangeText={setNewItem}
+            onSubmitEditing={addItem}
+          />
+
+          <View style={styles.priorityContainer}>
+            <Text style={styles.priorityLabel}>Priority:</Text>
+            {[1, 2, 3].map((level) => (
+              <TouchableOpacity
+                key={level}
+                style={[
+                  styles.priorityButton,
+                  priority === level && styles.selectedPriority,
+                ]}
+                onPress={() => setPriority(level)}
+              >
+                <Text style={[
+                  styles.priorityButtonText,
+                  { color: getPriorityColor(level) },
+                ]}>
+                  {getPriorityText(level)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <TouchableOpacity style={styles.addButton} onPress={addItem}>
+            <Text style={styles.addButtonText}>Add Item</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.addButton} onPress={addItem}>
-          <Text style={styles.addButtonText}>Add Item</Text>
-        </TouchableOpacity>
+        <FlatList
+          data={items}
+          renderItem={({ item, index }) => (
+            <ShoppingItemRow
+              item={item}
+              index={index}
+              onToggle={toggleItem}
+              onDelete={deleteItem}
+              getPriorityText={getPriorityText}
+              getPriorityColor={getPriorityColor}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          style={styles.list}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
-
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.list}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+  },
+  overlay: {
+    flex: 1,
     padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // optional for readability
   },
   title: {
     fontSize: 24,
@@ -175,10 +160,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 3,
   },
   textInput: {
@@ -227,63 +208,5 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    marginBottom: 8,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  itemContent: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-  },
-  itemLeft: {
-    flex: 1,
-  },
-  itemText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  completedText: {
-    textDecorationLine: 'line-through',
-    color: '#999',
-  },
-  itemRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  priorityText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  itemNumber: {
-    fontSize: 14,
-    color: '#666',
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    minWidth: 24,
-    textAlign: 'center',
-  },
-  deleteButton: {
-    padding: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  deleteButtonText: {
-    fontSize: 20,
-    color: '#f44336',
-    fontWeight: 'bold',
   },
 });
