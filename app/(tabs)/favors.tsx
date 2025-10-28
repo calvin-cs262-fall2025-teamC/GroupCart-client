@@ -73,9 +73,9 @@ export default function FavorsTab() {
           locations={[0.1, 0.3, 0.6, 1]}
           style={[styles.background]}
         >
+    <View style={styles.overlay}>
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Favors</Text>
         <View style={styles.totalsContainer}>
           <Text style={styles.totalOwed}>You owe: ${totalOwed.toFixed(2)}</Text>
           <Text style={styles.totalToReceive}>Owed to you: ${totalToReceive.toFixed(2)}</Text>
@@ -175,7 +175,8 @@ export default function FavorsTab() {
         ))}
       </View>
     </ScrollView>
-    </LinearGradient>
+    </View>
+  </LinearGradient>
   );
 }
 
@@ -183,33 +184,37 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)', // optional for readability
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
     padding: 16,
+    fontFamily: 'System',
   },
   header: {
-    marginBottom: 24,
+    marginBottom: 25,
+    marginTop: 10,
+    fontFamily: 'System',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 8,
-  },
+
   totalsContainer: {
     flexDirection: 'row',
-    gap: 16,
+    gap: '20%',
+    fontFamily: 'System',
   },
   totalOwed: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '700',
     color: '#dc2626',
+    fontFamily: 'System',
   },
   totalToReceive: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '700',
     color: '#16a34a',
+    fontFamily: 'System',
   },
   notificationContainer: {
     backgroundColor: '#eff6ff',
@@ -218,19 +223,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
+    fontFamily: 'System',
   },
   notificationText: {
-    color: '#1e40af',
+    color: '#1e40ad',
     fontSize: 14,
+    fontFamily: 'System',
   },
   section: {
     marginBottom: 32,
+    fontFamily: 'System',
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     color: '#374151',
     marginBottom: 12,
+    fontFamily: 'System',
   },
   card: {
     backgroundColor: '#fff',
@@ -243,21 +252,25 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
     borderWidth: 1,
+    fontFamily: 'System',
   },
   cardOwed: {
-    borderColor: '#fee2e2',
+    borderColor: 'white',
   },
   cardCompleted: {
     opacity: 0.5,
     borderColor: '#e5e7eb',
+    fontFamily: 'System',
   },
   cardCompleted2: {
-    borderColor: '#dcfce7',
+    borderColor: 'white',
+    fontFamily: 'System',
   },
   cardContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 12,
+    fontFamily: 'System',
   },
   cardLeft: {
     flex: 1,
@@ -267,29 +280,35 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#1f2937',
     marginBottom: 4,
+    fontFamily: 'System',
   },
   cardItems: {
     fontSize: 14,
     color: '#6b7280',
     marginBottom: 4,
+    fontFamily: 'System',
   },
   cardDate: {
     fontSize: 12,
     color: '#9ca3af',
+    fontFamily: 'System',
   },
   cardRight: {
     justifyContent: 'flex-start',
     marginLeft: 8,
+    fontFamily: 'System',
   },
   amountOwed: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#dc2626',
+    fontFamily: 'System',
   },
   amountToReceive: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#16a34a',
+    fontFamily: 'System',
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -305,15 +324,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffffff',
     justifyContent: 'center',
     alignItems: 'center',
+    fontFamily: 'System',
   },
   checkboxLabel: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#374151',
+    fontFamily: 'System',
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    fontFamily: 'System',
   },
   remindButton: {
     flexDirection: 'row',
@@ -323,10 +345,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 6,
     gap: 4,
+    fontFamily: 'System',
   },
   remindButtonText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '500',
+    fontFamily: 'System',
   },
 });

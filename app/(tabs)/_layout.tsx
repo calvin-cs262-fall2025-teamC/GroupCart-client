@@ -17,7 +17,7 @@ function AnimatedTabIcon({ source, color, focused }: { source: any; color: strin
       friction: 5,
       useNativeDriver: true,
     }).start();
-  }, [focused]);
+  });
 
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
@@ -37,7 +37,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "My List",
+          title: "Shopping List",
+          headerTitleStyle: { fontWeight: "bold", fontSize: 24 },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={listIcon} color={color} focused={focused} />
           ),
@@ -46,7 +47,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="favors"
         options={{
-          title: "Completed Favors",
+          title: "Favors",
+           headerTitleStyle: { fontWeight: "bold", fontSize: 24 },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={favorIcon} color={color} focused={focused} />
           ),
@@ -56,6 +58,7 @@ export default function TabLayout() {
         name="cart"
         options={{
           title: "Group Cart",
+           headerTitleStyle: { fontWeight: "bold",  fontSize: 24 },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={cartIcon} color={color} focused={focused} />
           ),
@@ -67,7 +70,8 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   image: {
-    width: 24,
-    height: 24,
+    width: 22,
+    height: 22,
+    marginBottom: 'auto',
   },
 });

@@ -81,7 +81,7 @@ export default function MyList() {
     >
 
       <View style={styles.overlay}>
-        <Text style={styles.title}>Shopping List Items</Text>
+
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -146,39 +146,38 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // optional for readability
+    backgroundColor: 'rgba(255, 255, 255, 0.6)', // optional for readability
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#333',
-  },
+
   inputContainer: {
     backgroundColor: 'white',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 20,
     elevation: 3,
+    fontFamily: 'System',
+    marginTop: 10,
   },
   textInput: {
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 30,
     padding: 12,
     fontSize: 16,
     marginBottom: 15,
+    fontFamily: 'System',
   },
   priorityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
+    fontFamily: 'System',
   },
   priorityLabel: {
     fontSize: 16,
     marginRight: 10,
     color: '#333',
+    fontFamily: 'System',
   },
   priorityButton: {
     paddingHorizontal: 12,
@@ -187,6 +186,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#ddd',
+    fontFamily: 'System',
   },
   selectedPriority: {
     backgroundColor: '#e3f2fd',
@@ -194,19 +194,23 @@ const styles = StyleSheet.create({
   priorityButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'System',
   },
   addButton: {
     backgroundColor: '#2196F3',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+    fontFamily: 'System',
   },
   addButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'System',
   },
   list: {
     flex: 1,
+
   },
 });
