@@ -1,5 +1,5 @@
 import { Picker } from "@react-native-picker/picker";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Button,
     ScrollView,
@@ -12,15 +12,16 @@ import RequestRow from "../components/RequestRow";
 import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
+import { useUser } from "../contexts/UserContext";
 
 const themeColor = "#0079ff";
 const backgroundGray = "#f0f0f0";
 
 const exampleRequester = new Requester({
-    id: "requester-id",
+    id: "keith-id",
     displayName: "Keith",
     color: "darkgreen",
-})
+});
 
 const exampleRequest = new GroceryRequest({
     id: "request-id",
@@ -130,21 +131,34 @@ interface DemoSetupProps {
 }
 
 function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
+    const { user } = useUser();
+    
     // Form state (local)
-    const [selectedRequester, setSelectedRequester] = useState<Requester>(exampleRequester);
+    const [selectedRequester, setSelectedRequester] = useState<Requester | null>(null);
     const [showDemo, setShowDemo] = useState(false);
     const [itemName, setItemName] = useState("");
     const [priority, setPriority] = useState(1);
 
-    // Requester options
+    // Requester options - include current user if available
     const requesterOptions = [
         new Requester({ id: "nick-id", displayName: "Nick", color: "royalblue" }),
         new Requester({ id: "adam-id", displayName: "Adam", color: "red" }),
-        exampleRequester,
+        new Requester({ id: "keith-id", displayName: "Keith", color: "darkgreen" }),
+        ...(user ? [user] : []),
     ];
 
+    // Set default selected requester when user is loaded
+    useEffect(() => {
+        if (user && !selectedRequester) {
+            setSelectedRequester(user);
+        } else if (!user && !selectedRequester) {
+            const defaultRequester = new Requester({ id: "nick-id", displayName: "Nick", color: "royalblue" });
+            setSelectedRequester(defaultRequester);
+        }
+    }, [user]);
+
     const handleSubmit = () => {
-        if (!itemName) return; // simple validation
+        if (!itemName || !selectedRequester) return; // simple validation
 
         const newRequest = new GroceryRequest({
             id: `request-${Date.now()}`,
@@ -176,7 +190,7 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
         // Reset form
         setItemName("");
         setPriority(1);
-        setSelectedRequester(exampleRequester);
+        setSelectedRequester(user || new Requester({ id: "nick-id", displayName: "Nick", color: "royalblue" }));
     };
 
     return (
@@ -189,7 +203,7 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
                 <View style={styles.demoSetup}>
                     <Text style={styles.label}>Select Requester:</Text>
                     <Picker
-                        selectedValue={selectedRequester.id}
+                        selectedValue={selectedRequester?.id}
                         onValueChange={id => setSelectedRequester(requesterOptions.find(r => r.id === id)!)}
                         style={styles.picker}
                     >
