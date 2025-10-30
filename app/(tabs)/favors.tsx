@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useFonts } from "expo-font";
 import { LinearGradient } from 'expo-linear-gradient';
+import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-//import {AngularGradient} from "expo-angular-gradient";
+
 interface Favor {
   id: number;
   buyer?: string;
@@ -15,6 +17,10 @@ interface Favor {
 }
 
 export default function FavorsTab() {
+  let [fontsLoaded] = useFonts({
+        'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+        'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
+      });
   const [favorsOwed, setFavorsOwed] = useState<Favor[]>([
     { id: 1, buyer: 'Sarah', items: 'Eggs (12 ct), Milk', amount: 8.50, date: '10/06/2025', completed: false },
     { id: 2, buyer: 'Mike', items: 'Bread, Butter', amount: 6.25, date: '10/05/2025', completed: false },
@@ -56,14 +62,14 @@ export default function FavorsTab() {
   const totalToReceive = favorsCompleted
     .filter(f => !f.reimbursed)
     .reduce((sum, f) => sum + f.amount, 0);
+     if (!fontsLoaded) {
+        SplashScreen.preventAutoHideAsync();
+        return null;
+      }
 
   return (
     <LinearGradient
-          // Gradient colors from your design
-          // #FF5EFF - Vibrant hot pink/magenta (was #EC89F5)
-          // #A77FFF - Vibrant purple (was #CCB5F0)
-          // #FF9FE0 - Vibrant light pink (was #E9C5D2)
-          // #1D31FF - Vibrant blue (unchanged, already vibrant)
+
           colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
           // Gradient direction: starts from top-right, flows to bottom-left
           // [x1, y1] = start point, [x2, y2] = end point
@@ -116,7 +122,7 @@ export default function FavorsTab() {
             >
               <View style={styles.checkbox}>
                 {favor.completed && (
-                  <Ionicons name="checkmark" size={16} color="#00c911ff" />
+                  <Ionicons name="checkmark-sharp" size={17}  color="green" weight={30} />
                 )}
               </View>
               <Text style={styles.checkboxLabel}>
@@ -154,7 +160,7 @@ export default function FavorsTab() {
               >
                 <View style={styles.checkbox}>
                   {favor.reimbursed && (
-                    <Ionicons name="checkmark" size={16} color="#00c911ff" />
+                    <Ionicons name="checkmark-sharp" size={17} color="green" />
                   )}
                 </View>
                 <Text style={styles.checkboxLabel}>
@@ -186,35 +192,35 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', // optional for readability
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },
   container: {
     flex: 1,
     padding: 16,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   header: {
     marginBottom: 25,
     marginTop: 10,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
 
   totalsContainer: {
     flexDirection: 'row',
     gap: '20%',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   totalOwed: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#dc2626',
-    fontFamily: 'System',
+    color: 'red',
+    fontFamily: 'Montserrat',
   },
   totalToReceive: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#16a34a',
-    fontFamily: 'System',
+    color: 'green',
+    fontFamily: 'Montserrat',
   },
   notificationContainer: {
     backgroundColor: '#eff6ff',
@@ -223,23 +229,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   notificationText: {
     color: '#1e40ad',
     fontSize: 14,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   section: {
     marginBottom: 32,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#374151',
     marginBottom: 12,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   card: {
     backgroundColor: '#fff',
@@ -250,9 +256,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 2,
     borderWidth: 1,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardOwed: {
     borderColor: 'white',
@@ -260,17 +266,17 @@ const styles = StyleSheet.create({
   cardCompleted: {
     opacity: 0.5,
     borderColor: '#e5e7eb',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardCompleted2: {
     borderColor: 'white',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 12,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardLeft: {
     flex: 1,
@@ -280,35 +286,35 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#1f2937',
     marginBottom: 4,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardItems: {
     fontSize: 14,
     color: '#6b7280',
     marginBottom: 4,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardDate: {
     fontSize: 12,
     color: '#9ca3af',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardRight: {
     justifyContent: 'flex-start',
     marginLeft: 8,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   amountOwed: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#dc2626',
-    fontFamily: 'System',
+    color: 'red',
+    fontFamily: 'Montserrat',
   },
   amountToReceive: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#16a34a',
-    fontFamily: 'System',
+    color: 'green',
+    fontFamily: 'Montserrat',
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -324,33 +330,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffffff',
     justifyContent: 'center',
     alignItems: 'center',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   checkboxLabel: {
     fontSize: 16,
     color: '#374151',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   remindButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#360479ff',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,
     gap: 4,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   remindButtonText: {
     color: '#fff',
     fontSize: 12,
     fontWeight: '500',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
+
 });

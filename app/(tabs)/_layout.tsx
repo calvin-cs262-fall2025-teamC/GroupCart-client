@@ -1,6 +1,7 @@
 // app/_layout.tsx
+import { useFonts } from "expo-font";
 import { Image } from "expo-image";
-import { Tabs } from "expo-router";
+import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 
@@ -8,7 +9,15 @@ const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
 
-function AnimatedTabIcon({ source, color, focused }: { source: any; color: string; focused: boolean }) {
+function AnimatedTabIcon({
+  source,
+  color,
+  focused,
+}: {
+  source: any;
+  color: string;
+  focused: boolean;
+}) {
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -17,7 +26,7 @@ function AnimatedTabIcon({ source, color, focused }: { source: any; color: strin
       friction: 5,
       useNativeDriver: true,
     }).start();
-  });
+  }, [focused]);
 
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
@@ -27,18 +36,37 @@ function AnimatedTabIcon({ source, color, focused }: { source: any; color: strin
 }
 
 export default function TabLayout() {
+  const [fontsLoaded] = useFonts({
+    Shanti: require("../../assets/images/Shanti-Regular.ttf"),
+    Montserrat: require("../../assets/images/Montserrat-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#222",
+        tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "#555",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 24,
+          fontFamily: "Montserrat",
+        },
+        tabBarStyle: {
+          borderTopWidth: 0,
+          elevation: 0,
+          backgroundColor: "white",
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Shopping List",
-          headerTitleStyle: { fontWeight: "bold", fontSize: 24 },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={listIcon} color={color} focused={focused} />
           ),
@@ -48,7 +76,6 @@ export default function TabLayout() {
         name="favors"
         options={{
           title: "Favors",
-           headerTitleStyle: { fontWeight: "bold", fontSize: 24 },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={favorIcon} color={color} focused={focused} />
           ),
@@ -58,7 +85,6 @@ export default function TabLayout() {
         name="cart"
         options={{
           title: "Group Cart",
-           headerTitleStyle: { fontWeight: "bold",  fontSize: 24 },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={cartIcon} color={color} focused={focused} />
           ),
@@ -72,6 +98,6 @@ const styles = StyleSheet.create({
   image: {
     width: 22,
     height: 22,
-    marginBottom: 'auto',
+    marginBottom: "auto",
   },
 });

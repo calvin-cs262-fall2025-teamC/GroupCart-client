@@ -1,4 +1,7 @@
+import { useFonts } from "expo-font";
+
 import { LinearGradient } from 'expo-linear-gradient';
+import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
 import {
   FlatList,
@@ -9,6 +12,8 @@ import {
   View,
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
+
+
 interface ShoppingItem {
   id: string;
   text: string;
@@ -16,10 +21,24 @@ interface ShoppingItem {
   priority: number;
 }
 
+
 export default function MyList() {
+  let [fontsLoaded] = useFonts({
+    'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+    'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
+  });
+
+  // ✅ Move these above the return
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [newItem, setNewItem] = useState('');
   const [priority, setPriority] = useState<number>(1);
+
+if (!fontsLoaded) {
+  SplashScreen.preventAutoHideAsync();
+  return null;
+}
+
+
 
   const addItem = () => {
     if (newItem.trim()) {
@@ -65,11 +84,7 @@ export default function MyList() {
 
   return (
     <LinearGradient
-      // Gradient colors from your design
-      // #FF5EFF - Vibrant hot pink/magenta (was #EC89F5)
-      // #A77FFF - Vibrant purple (was #CCB5F0)
-      // #FF9FE0 - Vibrant light pink (was #E9C5D2)
-      // #1D31FF - Vibrant blue (unchanged, already vibrant)
+
       colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
       // Gradient direction: starts from top-right, flows to bottom-left
       // [x1, y1] = start point, [x2, y2] = end point
@@ -139,6 +154,7 @@ export default function MyList() {
   );
 }
 
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -146,7 +162,7 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', // optional for readability
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },
 
   inputContainer: {
@@ -155,7 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginBottom: 20,
     elevation: 3,
-    fontFamily: 'System',
+   fontFamily: 'Montserrat',
     marginTop: 10,
   },
   textInput: {
@@ -165,19 +181,19 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     marginBottom: 15,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   priorityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   priorityLabel: {
     fontSize: 16,
     marginRight: 10,
     color: '#333',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   priorityButton: {
     paddingHorizontal: 12,
@@ -186,7 +202,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#ddd',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   selectedPriority: {
     backgroundColor: '#e3f2fd',
@@ -194,20 +210,20 @@ const styles = StyleSheet.create({
   priorityButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   addButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#360479ff',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   addButtonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    fontFamily: 'System',
+    fontFamily: 'Montserrat',
   },
   list: {
     flex: 1,

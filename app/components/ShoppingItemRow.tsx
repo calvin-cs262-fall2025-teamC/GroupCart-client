@@ -1,6 +1,7 @@
+import { useFonts } from "expo-font";
+import { SplashScreen } from 'expo-router';
 import React, { useRef } from 'react';
 import { Alert, Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
 interface Props {
   item: {
     id: string;
@@ -24,6 +25,15 @@ export default function ShoppingItemRow({
   getPriorityColor,
 }: Props) {
   const opacity = useRef(new Animated.Value(1)).current;
+ let [fontsLoaded] = useFonts({
+    'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+    'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
+  });
+
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
 
   const handleDelete = () => {
     Alert.alert('Delete Item', 'Are you sure?', [
@@ -82,7 +92,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   itemLeft: { flex: 1 },
-  itemText: { fontSize: 16, color: '#333' },
+  itemText: { fontSize: 16, color: '#333', fontFamily:'Shanti' },
   completedText: { textDecorationLine: 'line-through', color: '#999' },
   itemRight: { flexDirection: 'row', alignItems: 'center' },
   priorityText: { fontSize: 18, fontWeight: 'bold', marginRight: 10 },
