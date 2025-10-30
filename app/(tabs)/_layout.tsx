@@ -1,5 +1,5 @@
-import { Tabs } from "expo-router";
 import { Image } from "expo-image";
+import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
 
 const listIcon = require("@/assets/images/shopping-list.png");
