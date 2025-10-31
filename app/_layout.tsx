@@ -1,10 +1,11 @@
-import { Slot } from 'expo-router';
-import { UserProvider } from './contexts/UserContext';
-
-export default function RootLayout() {
+import { Stack } from 'expo-router';
+import React from 'react';
+// ...existing code...
+export default function RootLayout(): React.ReactElement {
   return (
-    <UserProvider>
-      <Slot />
-    </UserProvider>
+    <Stack>
+      {/* Render the (tabs) group as the default/main area */}
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
