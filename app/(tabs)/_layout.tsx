@@ -4,6 +4,8 @@ import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
 
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
@@ -87,6 +89,15 @@ export default function TabLayout() {
           title: "Group Cart",
           tabBarIcon: ({ color, focused }) => (
             <AnimatedTabIcon source={cartIcon} color={color} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="settings-outline" size={24} color={color} />
           ),
         }}
       />
