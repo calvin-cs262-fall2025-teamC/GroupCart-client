@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
@@ -45,6 +46,15 @@ export default function TabLayout() {
               tintColor={color}
               style={styles.image}
             />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="settings-outline" size={24} color={color} />
           ),
         }}
       />
