@@ -1,38 +1,85 @@
-import { Ionicons } from "@expo/vector-icons";
+// app/_layout.tsx
+import { useFonts } from "expo-font";
 import { Image } from "expo-image";
-import { Tabs } from "expo-router";
-import { StyleSheet } from "react-native";
+import { SplashScreen, Tabs } from "expo-router";
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
 
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
 
-export default function TabLayout() {
+function AnimatedTabIcon({
+  source,
+  color,
+  focused,
+}: {
+  source: any;
+  color: string;
+  focused: boolean;
+}) {
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.spring(scale, {
+      toValue: focused ? 1.15 : 1,
+      friction: 5,
+      useNativeDriver: true,
+    }).start();
+  }, [focused]);
+
   return (
-    <Tabs>
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <Image source={source} tintColor={color} style={styles.image} />
+    </Animated.View>
+  );
+}
+
+export default function TabLayout() {
+  const [fontsLoaded] = useFonts({
+    Shanti: require("../../assets/images/Shanti-Regular.ttf"),
+    Montserrat: require("../../assets/images/Montserrat-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
+
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "#555",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 24,
+          fontFamily: "Montserrat",
+        },
+        tabBarStyle: {
+          borderTopWidth: 0,
+          elevation: 0,
+          backgroundColor: "white",
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: "My List",
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={listIcon}
-              tintColor={color}
-              style={styles.image}
-            />
+          title: "Shopping List",
+          tabBarIcon: ({ color, focused }) => (
+            <AnimatedTabIcon source={listIcon} color={color} focused={focused} />
           ),
         }}
       />
       <Tabs.Screen
         name="favors"
         options={{
-          title: "Completed Favors",
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={favorIcon}
-              tintColor={color}
-              style={styles.image}
-            />
+          title: "Favors",
+          tabBarIcon: ({ color, focused }) => (
+            <AnimatedTabIcon source={favorIcon} color={color} focused={focused} />
           ),
         }}
       />
@@ -40,12 +87,8 @@ export default function TabLayout() {
         name="cart"
         options={{
           title: "Group Cart",
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={cartIcon}
-              tintColor={color}
-              style={styles.image}
-            />
+          tabBarIcon: ({ color, focused }) => (
+            <AnimatedTabIcon source={cartIcon} color={color} focused={focused} />
           ),
         }}
       />
@@ -59,12 +102,13 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   image: {
-    width: 24,
-    height: 24,
-  }
+    width: 22,
+    height: 22,
+    marginBottom: "auto",
+  },
 });
