@@ -4,12 +4,12 @@ import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
+const settingsIcon = require("@/assets/images/setting.png");
 
 function AnimatedTabIcon({
   source,
@@ -50,9 +50,12 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
+      // Allow per-route headerTitle to be provided via route params (e.g. { headerTitle: 'My Title' })
+      screenOptions={({ route }: { route: any }) => ({
         tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "#555",
+        // Use headerTitle from route params when available; otherwise fall back to default title behavior
+        headerTitle: route?.params?.headerTitle ?? undefined,
         headerTitleStyle: {
           fontWeight: "bold",
           fontSize: 24,
@@ -63,7 +66,7 @@ export default function TabLayout() {
           elevation: 0,
           backgroundColor: "white",
         },
-      }}
+      })}
     >
       <Tabs.Screen
         name="index"
@@ -93,11 +96,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="dev"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="settings-outline" size={24} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <AnimatedTabIcon source={settingsIcon} color={color} focused={focused} />
+
           ),
         }}
       />

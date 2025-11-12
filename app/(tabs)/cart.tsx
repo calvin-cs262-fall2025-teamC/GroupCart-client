@@ -3,7 +3,7 @@ import { useFonts } from "expo-font";
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreen } from 'expo-router';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -13,10 +13,10 @@ import {
     View
 } from "react-native";
 import RequestRow from "../components/RequestRow";
+import { useUser } from "../contexts/UserContext";
 import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
-import { useUser } from "../contexts/UserContext";
 
 
 
@@ -154,7 +154,7 @@ interface DemoSetupProps {
 
 function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
     const { user } = useUser();
-    
+
     // Form state (local)
     const [selectedRequester, setSelectedRequester] = useState<Requester | null>(null);
     const [showDemo, setShowDemo] = useState(false);
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#360479ff",
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 15,
     alignItems: "center",
     marginVertical: 10,
   },
