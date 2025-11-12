@@ -1,10 +1,10 @@
 // app/_layout.tsx
+import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 
 const listIcon = require("@/assets/images/shopping-list.png");
@@ -93,11 +93,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="dev"
         options={{
-          title: "Settings",
+          title: "Dev Tab",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="settings-outline" size={24} color={color} />
+            <Ionicons source={listIcon} size={24} color={color} />
           ),
         }}
       />
