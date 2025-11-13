@@ -15,9 +15,9 @@ export class ApiClient {
   }
 
   // Example endpoints
-  async getUsers() {
+  static async getUsers(): Promise<string[]> {
     // return this.request('/users');
-    return "['good', 'job']"
+    return ['good', 'job'];
   }
 
   async getUser(id: string) {

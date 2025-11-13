@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { ApiClient } from '../services/ApiClient';
 
 export default function TestPage() {
-    const users = ["Guli", "Adam", "Aisha", "Faith", "Nick"];
-    const shoppingLists = { "1234": ["eggs", "pancakes", "milk", "ramen"] };
+    const [users, setUsers] = useState<string[]>([]);
+
+      useEffect(() => {
+    const fetchUsers = async () => {
+      const result =
+        (await ApiClient.getUsers()) || [
+          "Local",
+          "Guli",
+          "Adam",
+          "Aisha",
+          "Faith",
+          "Nick",
+        ];
+      setUsers(result);
+    };
+
+    fetchUsers();
+  }, []);
+
+
+    const shoppingLists = {  "1234": ["eggs", "pancakes", "milk", "ramen"] };
     const groups = { "999": ["1234", "2345", "3456", "4567"] }
     return (
         <View>
