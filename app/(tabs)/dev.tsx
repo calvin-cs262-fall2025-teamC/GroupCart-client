@@ -5,6 +5,7 @@ import { Alert, Button, ScrollView, StyleSheet, Text, View } from 'react-native'
 const PAGES = [
     // Adjust these entries to match the route names you registered in your root/layout navigator.
     { label: 'Demo Page', route: 'pages/demo' },
+    { label: 'API Test Page', route: 'pages/ApiTestPage' },
     { label: 'Groups Login Page', route: 'pages/JoinGroupPage' },
     { label: 'Color Picker',  route: 'pages/colorpicker'}
     // Add more pages here as you create them, e.g.
