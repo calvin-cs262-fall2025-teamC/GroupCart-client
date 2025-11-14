@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
 	Alert,
@@ -11,6 +12,8 @@ import {
 
 export default function UserLoginPage(): React.ReactElement {
 	const [code, setCode] = useState('');
+	const navigation = useNavigation();
+	
 
 	const onLogin = () => {
 		if (!code.trim()) {
@@ -19,6 +22,7 @@ export default function UserLoginPage(): React.ReactElement {
 		}
 		// TODO: wire up real join logic / navigation
 		Alert.alert('Logging in User', `User entered: ${code}`);
+		(navigation as any).navigate('pages/JoinGroupPage');
 	};
 
 	const onCreate = () => {

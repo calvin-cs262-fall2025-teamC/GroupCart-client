@@ -47,6 +47,7 @@ export default function JoinGroupPage(): React.ReactElement | null {
 		}
 		// TODO: wire up real join logic / navigation
 		Alert.alert('Joining group', `Code: ${code}`);
+		(navigation as any).navigate('(tabs)');
 	};
 
 	const onCreate = () => {
