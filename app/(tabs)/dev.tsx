@@ -15,10 +15,10 @@ const PAGES = [
 export default function DevTab() {
     const navigation = useNavigation();
 
-    function goTo(route: string) {
+    function goTo(route: string, headerTitle?: string) {
         try {
             // Try navigating; if the route isn't registered this will typically throw or do nothing.
-            // Cast to any to avoid strict typing issues with different navigator types.
+            // Pass the desired headerTitle as a param so the layout can pick it up from route.params.
             (navigation as any).navigate(route);
         } catch (err) {
             Alert.alert('Navigation error', `Could not navigate to "${route}".\n\n${String(err)}`);

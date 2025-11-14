@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#360479ff',
     paddingVertical: 6,
     paddingHorizontal: 12,
-    borderRadius: 6,
+    borderRadius: 15,
     gap: 4,
     fontFamily: 'Montserrat',
   },
