@@ -1,4 +1,5 @@
 // app/_layout.tsx
+import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
