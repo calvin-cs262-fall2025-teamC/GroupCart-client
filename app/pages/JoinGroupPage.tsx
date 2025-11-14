@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
 import {
 	Alert,
@@ -10,60 +11,87 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import LoadingCircle from '../components/LoadingCircle';
 
 export default function JoinGroupPage(): React.ReactElement | null {
+	// ===== Hooks =====
 	const navigation = useNavigation();
+	const [code, setCode] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
-		// Ensure the native header uses the friendly title instead of the file route
-		React.useLayoutEffect(() => {
-			try {
-				(navigation as any).setOptions({ headerTitle: 'Login',
-					headerTitleStyle: {
-          fontWeight: 'bold',
-          fontSize: 24,
-          fontFamily: 'Montserrat',
-        },
-				 });
-			} catch {
-				// ignore if navigator doesn't support setOptions in this environment
-			}
-		}, [navigation]);
-	const [fontsLoaded] = useFonts({
-					'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
-					'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
-				});
-			const [code, setCode] = useState('');
+	let [fontsLoaded] = useFonts({
+		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+		'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
+	});
 
-				if (!fontsLoaded) {
-					// Wait until fonts are loaded before rendering to ensure fontFamily takes effect
-					return null;
-				}
+	// ===== Effects =====
+	React.useLayoutEffect(() => {
+		try {
+			(navigation as any).setOptions({
+				headerTitle: '',
+				headerTitleStyle: {
+					fontWeight: 'bold',
+					fontSize: 24,
+					fontFamily: 'Montserrat',
+				},
+			});
+		} catch (error: unknown) {
+			console.error(error);
+		}
+	}, [navigation]);
 
+	if (!fontsLoaded) {
+		SplashScreen.preventAutoHideAsync();
+		return null;
+	}
 
-	const onJoin = () => {
+	// ===== Handlers =====
+	const onJoin = async () => {
 		if (!code.trim()) {
 			Alert.alert('Missing code', 'Please enter a group code to join.');
 			return;
 		}
-		// TODO: wire up real join logic / navigation
-		Alert.alert('Joining group', `Code: ${code}`);
+
+		setIsLoading(true);
+		try {
+			// TODO: Replace with real API call
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			Alert.alert('Success', `Joined group: ${code}`);
+			// TODO: Navigate to group screen
+		} catch {
+			Alert.alert('Error', 'Failed to join group');
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
-	const onCreate = () => {
-		// TODO: navigate to create group screen
-		Alert.alert('Create group', 'Navigate to create group flow');
+	const onCreate = async () => {
+		setIsLoading(true);
+		try {
+			// TODO: Replace with real navigation or API call
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			// TODO: Navigate to create group screen
+			Alert.alert('Create group', 'Navigate to create group flow');
+		} catch {
+			Alert.alert('Error', 'Failed to create group');
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
+	// ===== Render =====
 	return (
-
-
 		<View style={styles.container}>
+			{/* Logo */}
 			<Image
-        style={styles.image}
-        source={require('@/assets/images/logo.png')}
-      />
-			<Text style={styles.title}>Join A Group</Text>
+				style={styles.image}
+				source={require('@/assets/images/logo.png')}
+			/>
 
+
+
+
+			{/* Code Input */}
 			<TextInput
 				style={styles.input}
 				placeholder="Enter Group Code"
@@ -72,42 +100,64 @@ export default function JoinGroupPage(): React.ReactElement | null {
 				onChangeText={setCode}
 				autoCapitalize="none"
 				keyboardType="default"
+				editable={!isLoading}
 			/>
 
-			<TouchableOpacity style={styles.joinButton} onPress={onJoin} activeOpacity={0.8}>
+			{/* Join Button */}
+			<TouchableOpacity
+				style={styles.joinButton}
+				onPress={onJoin}
+				activeOpacity={0.8}
+				disabled={isLoading}
+			>
 				<Text style={styles.joinButtonText}>Join</Text>
 			</TouchableOpacity>
 
+			{/* Divider */}
 			<View style={styles.dividerRow}>
 				<View style={styles.divider} />
 				<Text style={styles.orText}>OR</Text>
 				<View style={styles.divider} />
 			</View>
 
-			<TouchableOpacity style={styles.createButton} onPress={onCreate} activeOpacity={0.8}>
+			{/* Create Button */}
+			<TouchableOpacity
+				style={styles.createButton}
+				onPress={onCreate}
+				activeOpacity={0.8}
+				disabled={isLoading}
+			>
 				<Text style={styles.createButtonText}>Create Group</Text>
 			</TouchableOpacity>
-		</View>
 
+			{/* Loading Modal Overlay */}
+			{isLoading && (
+				<View style={styles.loadingOverlay}>
+					<LoadingCircle size={80} color="#360479" strokeWidth={5} />
+				</View>
+			)}
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-		container: {
+	// ===== Container =====
+	container: {
 		flex: 1,
 		padding: 24,
 		justifyContent: 'flex-start',
 		backgroundColor: '#ffffff',
-
 	},
 
-	image:{
+	// ===== Image =====
+	image: {
 		width: '100%',
 		height: '30%',
 		resizeMode: 'contain',
 		marginBottom: -20,
 	},
 
+	// ===== Typography =====
 	title: {
 		fontSize: 28,
 		fontWeight: '700',
@@ -116,6 +166,8 @@ const styles = StyleSheet.create({
 		color: '#111',
 		fontFamily: 'Montserrat',
 	},
+
+	// ===== Input =====
 	input: {
 		borderWidth: 1,
 		borderColor: '#ddd',
@@ -126,49 +178,68 @@ const styles = StyleSheet.create({
 		color: '#111',
 		fontFamily: 'Montserrat',
 	},
+
+	// ===== Join Button =====
 	joinButton: {
 		backgroundColor: '#360479ff',
 		padding: 12,
 		borderRadius: 15,
-		borderWidth:1,
 		alignItems: 'center',
-
 	},
+
 	joinButtonText: {
 		color: '#fff',
 		fontWeight: 'bold',
-		fontFamily: 'Montserrat',
 		fontSize: 16,
+		fontFamily: 'Montserrat',
 	},
+
+	// ===== Divider =====
 	dividerRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		marginVertical: 20,
-
 	},
+
 	divider: {
 		flex: 1,
 		height: 1,
 		backgroundColor: '#eee',
 	},
+
 	orText: {
 		marginHorizontal: 12,
 		color: '#666',
 		fontWeight: '600',
 		fontFamily: 'Montserrat',
 	},
+
+	// ===== Create Button =====
 	createButton: {
 		borderWidth: 1,
 		borderColor: '#360479ff',
 		padding: 12,
 		borderRadius: 15,
 		alignItems: 'center',
-		fontFamily: 'Montserrat',
 	},
+
 	createButtonText: {
 		color: '#360479ff',
 		fontWeight: 'bold',
 		fontSize: 16,
 		fontFamily: 'Montserrat',
+	},
+
+	// ===== Loading Overlay =====
+	// White background overlay that displays the loading circle during async operations
+	loadingOverlay: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		justifyContent: 'center',
+		alignItems: 'center',
+		 backgroundColor: '#ffffffbe',// Clean white background instead of dark overlay
 	},
 });
