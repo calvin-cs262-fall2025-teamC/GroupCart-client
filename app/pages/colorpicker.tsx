@@ -18,6 +18,7 @@ const PRESET_COLORS = [
   '#0079ff', '#FF5722', '#4CAF50', '#FF9800', '#9C27B0',
   '#00BCD4', '#F44336', '#8BC34A', '#FFC107', '#E91E63',
   '#2196F3', '#795548', '#009688', '#FF6F00', '#673AB7',
+  '#FF69B4',
 ];
 
 export default function Settings() {
