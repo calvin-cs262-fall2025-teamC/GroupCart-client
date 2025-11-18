@@ -1,3 +1,4 @@
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
@@ -9,11 +10,12 @@ export default function CreateUserPage(): React.ReactElement | null {
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
-  let [fontsLoaded] = useFonts({
-      'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
-      'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
-    });
+	let [fontsLoaded] = useFonts({
+		'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
+	});
 
 	// ===== Effects =====
 	React.useLayoutEffect(() => {
@@ -25,23 +27,23 @@ export default function CreateUserPage(): React.ReactElement | null {
 			console.error(error);
 		}
 	}, [navigation]);
-  if (!fontsLoaded) {
-      SplashScreen.preventAutoHideAsync();
-      return null;
-    }
+
+	if (!fontsLoaded) {
+		SplashScreen.preventAutoHideAsync();
+		return null;
+	}
+
 	// ===== Handlers =====
 	const onCreate = async () => {
-		if (!username.trim()) {
-			Alert.alert('Missing username', 'Please enter a username');
+		if (!username.trim() || !email.trim() || !password.trim()) {
+			Alert.alert('Missing fields', 'Please fill in all fields');
 			return;
 		}
 
 		setIsLoading(true);
 		try {
-			// TODO: Replace with real API call
 			await new Promise((resolve) => setTimeout(resolve, 2000));
 			Alert.alert('Success', `Account created: ${username}`);
-			// TODO: Navigate to home screen
 		} catch {
 			Alert.alert('Error', 'Failed to create account');
 		} finally {
@@ -52,16 +54,46 @@ export default function CreateUserPage(): React.ReactElement | null {
 	// ===== Render =====
 	return (
 		<View style={styles.container}>
-			{/* Title */}
+			{/* Logo Placeholder */}
+			<View style={styles.logoContainer}>
+				<View style={styles.logoPlaceholder} />
+			</View>
+
+			{/* Title Section */}
 			<Text style={styles.title}>Create Account</Text>
+			<Text style={styles.subtitle}>Hello! Welcome to Group Cart</Text>
 
 			{/* Username Input */}
+			<Text style={styles.label}>Username*</Text>
 			<TextInput
 				style={styles.input}
-				placeholder="Username"
+				placeholder="Enter your username"
 				value={username}
 				onChangeText={setUsername}
 				autoCapitalize="none"
+				editable={!isLoading}
+			/>
+
+			{/* Email Input */}
+			<Text style={styles.label}>Email*</Text>
+			<TextInput
+				style={styles.input}
+				placeholder="Enter your email"
+				value={email}
+				onChangeText={setEmail}
+				keyboardType="email-address"
+				autoCapitalize="none"
+				editable={!isLoading}
+			/>
+
+			{/* Password Input */}
+			<Text style={styles.label}>Password*</Text>
+			<TextInput
+				style={styles.input}
+				placeholder="Enter your password"
+				value={password}
+				onChangeText={setPassword}
+				secureTextEntry
 				editable={!isLoading}
 			/>
 
@@ -71,8 +103,36 @@ export default function CreateUserPage(): React.ReactElement | null {
 				onPress={onCreate}
 				disabled={isLoading}
 			>
-				<Text style={styles.buttonText}>Create</Text>
+				<Text style={styles.buttonText}>Create account</Text>
 			</TouchableOpacity>
+
+			{/* Divider */}
+			<View style={styles.dividerContainer}>
+				<View style={styles.divider} />
+				<Text style={styles.dividerText}>OR</Text>
+				<View style={styles.divider} />
+			</View>
+
+			{/* Social Login Buttons */}
+			<View style={styles.socialContainer}>
+				<TouchableOpacity style={styles.socialButton}>
+					<FontAwesome name="google" size={24} color="#111" />
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.socialButton}>
+					<FontAwesome name="facebook" size={24} color="#111" />
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.socialButton}>
+					<FontAwesome5 name="apple" size={24} color="#111" />
+				</TouchableOpacity>
+			</View>
+
+			{/* Log In Link */}
+			<View style={styles.loginContainer}>
+				<Text style={styles.loginText}>Have an account? </Text>
+				<TouchableOpacity>
+					<Text style={styles.loginLink}>Log in</Text>
+				</TouchableOpacity>
+			</View>
 
 			{/* Loading Modal Overlay */}
 			{isLoading && (
@@ -82,7 +142,6 @@ export default function CreateUserPage(): React.ReactElement | null {
 			)}
 		</View>
 	);
-
 }
 
 const styles = StyleSheet.create({
@@ -90,18 +149,45 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		justifyContent: 'center',
 		backgroundColor: '#fff',
-    marginTop: -100,
+		marginTop: -100,
+	},
+
+	// ===== Logo =====
+	logoContainer: {
+		paddingTop: 20,
+		paddingBottom: 40,
+	},
+
+	logoPlaceholder: {
+		width: 60,
+		height: 60,
+		borderWidth: 2,
+		borderColor: '#ddd',
+		borderRadius: 8,
+		backgroundColor: '#f5f5f5',
 	},
 
 	// ===== Typography =====
 	title: {
-		fontSize: 24,
+		fontSize: 28,
 		fontWeight: 'bold',
-		marginBottom: 24,
-		textAlign: 'center',
+		marginBottom: 8,
 		color: '#111',
+		fontFamily: 'Montserrat',
+	},
+
+	subtitle: {
+		fontSize: 14,
+		color: '#666',
+		marginBottom: 32,
+		fontFamily: 'Montserrat',
+	},
+
+	label: {
+		fontSize: 14,
+		color: '#111',
+		marginBottom: 8,
 		fontFamily: 'Montserrat',
 	},
 
@@ -109,20 +195,23 @@ const styles = StyleSheet.create({
 	input: {
 		borderWidth: 1,
 		borderColor: '#ddd',
-		borderRadius: 30,
-		padding: 12,
-		marginBottom: 12,
-		fontSize: 16,
+		borderRadius: 20,
+		padding: 14,
+		marginBottom: 16,
+		fontSize: 14,
 		color: '#111',
 		fontFamily: 'Montserrat',
+		backgroundColor: '#f9f9f9',
 	},
 
 	// ===== Create Button =====
 	button: {
-		backgroundColor: '#360479ff',
-		padding: 12,
-		borderRadius: 15,
+		backgroundColor: '#360479',
+		padding: 14,
+		borderRadius: 25,
 		alignItems: 'center',
+		marginTop: 8,
+		marginBottom: 24,
 	},
 
 	buttonText: {
@@ -132,8 +221,66 @@ const styles = StyleSheet.create({
 		fontFamily: 'Montserrat',
 	},
 
+	// ===== Divider =====
+	dividerContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginVertical: 24,
+	},
+
+	divider: {
+		flex: 1,
+		height: 1,
+		backgroundColor: '#ddd',
+	},
+
+	dividerText: {
+		marginHorizontal: 12,
+		color: '#999',
+		fontSize: 12,
+		fontFamily: 'Montserrat',
+	},
+
+	// ===== Social Buttons =====
+	socialContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		gap: 24,
+		marginBottom: 24,
+	},
+
+	socialButton: {
+		width: 50,
+		height: 50,
+		borderRadius: 12,
+		backgroundColor: '#f5f5f5',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderWidth: 1,
+		borderColor: '#ddd',
+	},
+
+	// ===== Login Link =====
+	loginContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginTop: 16,
+	},
+
+	loginText: {
+		fontSize: 14,
+		color: '#666',
+		fontFamily: 'Montserrat',
+	},
+
+	loginLink: {
+		fontSize: 14,
+		color: '#360479',
+		fontWeight: '600',
+		fontFamily: 'Montserrat',
+	},
+
 	// ===== Loading Overlay =====
-	// White background overlay that displays the loading circle during async operations
 	loadingOverlay: {
 		position: 'absolute',
 		top: 0,
@@ -142,6 +289,6 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		justifyContent: 'center',
 		alignItems: 'center',
-	 backgroundColor: '#ffffffbe',// Clean white background instead of dark overlay
+		backgroundColor: '#ffffffbe',
 	},
 });

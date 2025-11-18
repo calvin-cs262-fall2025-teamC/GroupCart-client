@@ -151,10 +151,12 @@ const styles = StyleSheet.create({
 
 	// ===== Image =====
 	image: {
-		width: '100%',
-		height: '30%',
+		width: '50%',
+		height: '35%',
 		resizeMode: 'contain',
-		marginBottom: -20,
+		marginBottom: 10,
+		marginTop: 40,
+		alignSelf: 'center',
 	},
 
 	// ===== Typography =====

@@ -148,11 +148,12 @@ const styles = StyleSheet.create({
 
 	// ===== Image =====
 	image: {
-		width: '100%',
+		width: '50%',
 		height: '35%',
 		resizeMode: 'contain',
 		marginTop: -150,
-		marginBottom: 20,
+		marginBottom: 10,
+		alignSelf: 'center',
 	},
 
 	// ===== Input =====
