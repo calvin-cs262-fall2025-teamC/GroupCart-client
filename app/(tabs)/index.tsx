@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
 
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';

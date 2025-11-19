@@ -7,7 +7,7 @@ export default function RootLayout(): React.ReactElement {
     <UserProvider>
       <Stack>
         {/* Render the (tabs) group as the default/main area */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="pages/UserLoginPage" options={{ headerShown: false }} />
       </Stack>
     </UserProvider>
   );
