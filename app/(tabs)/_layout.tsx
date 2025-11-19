@@ -6,8 +6,6 @@ import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 import { UserProvider } from '../contexts/UserContext';
 
-
-
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
