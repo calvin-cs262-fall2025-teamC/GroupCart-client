@@ -8,20 +8,15 @@ export default function TestPage() {
       useEffect(() => {
     const fetchUsers = async () => {
       const result =
-        (await ApiClient.getUsers()) || [
-          "Local",
-          "Guli",
-          "Adam",
-          "Aisha",
-          "Faith",
-          "Nick",
+        (await ApiClient.getGroup("0")) || [
+          "FAIL",
+          "At ApiClient.getUsers()"
         ];
-      setUsers(result);
+      setUsers(result.users);
     };
 
     fetchUsers();
   }, []);
-
 
     const shoppingLists = {  "1234": ["eggs", "pancakes", "milk", "ramen"] };
     const groups = { "999": ["1234", "2345", "3456", "4567"] }
@@ -31,7 +26,7 @@ export default function TestPage() {
                 <Text style={styles.title}>Testing ApiClient Endpoints</Text>
                 <View>
                     <View>
-                        <Text style={styles.todo}>Getting Users (show 3)</Text>
+                        <Text style={styles.notice}>Getting Users (show 3)</Text>
                         {users.slice(0, 3).map(u => <Text key={u}>{u}</Text>)}
                         {users.length > 3 && <Text>... And {users.length - 3} more</Text>}
                     </View>

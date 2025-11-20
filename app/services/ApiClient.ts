@@ -1,33 +1,45 @@
+import { Favor } from '../models/Favor';
+import { Group } from '../models/Group';
+import { User } from '../models/User';
+import { UserListItem } from '../models/UserListItem';
+
 export class ApiClient {
-  private baseUrl: string;
+  // private static BASE_URL: string = `https://groupcart-ggadhpaze4axhxhf.mexicocentral-01.azurewebsites.net/`;
+  private static BASE_URL: string = `http://153.106.212.79:3333/`;
 
-  constructor(baseUrl: string = 'https://your-api.com') {
-    this.baseUrl = baseUrl;
-  }
-
-  private async request(path: string, options: RequestInit = {}) {
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      headers: { 'Content-Type': 'application/json', ...options.headers },
-      ...options,
+  private static async request(path: string, method: string = "GET", body?: any) {
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxHIT request");
+    const response = await fetch(`${this.BASE_URL}${path}`, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: body ? JSON.stringify(body) : undefined
     });
+
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxGOT response");
+
     if (!response.ok) throw new Error(`Error ${response.status}`);
-    return response.json();
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxGOT response GOOD");
+
+    return await response.json();
   }
 
-  // Example endpoints
-  static async getUsers(): Promise<string[]> {
-    // return this.request('/users');
-    return ['good', 'job'];
+  // Get group by group id
+  public static async getGroup(id: string): Promise<Group> {
+    return this.request(`group/${id}`, "GET");
+  }
+  
+  // Get user info by username
+  public static async getUser(username: string): Promise<User> {
+    return this.request(`user/${username}`, "GET");
   }
 
-  async getUser(id: string) {
-    return this.request(`/users/${id}`);
+  // Get personal grocery list for a user
+  public static async getUserList(username: string): Promise<UserListItem[]> {
+    return this.request(`list/${username}`, "GET");
   }
 
-  async createUser(data: any) {
-    return this.request('/users', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+  // Get favors fulfilled by a user
+  public static async getFavorsByUser(username: string): Promise<Favor[]> {
+    return this.request(`favors/by/${username}`, "GET");
   }
 }
