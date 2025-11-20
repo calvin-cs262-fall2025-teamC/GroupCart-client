@@ -4,21 +4,18 @@ import { User } from '../models/User';
 import { UserListItem } from '../models/UserListItem';
 
 export class ApiClient {
-  // private static BASE_URL: string = `https://groupcart-ggadhpaze4axhxhf.mexicocentral-01.azurewebsites.net/`;
-  private static BASE_URL: string = `http://153.106.212.79:3333/`;
+  private static BASE_URL: string = `https://groupcart-ggadhpaze4axhxhf.mexicocentral-01.azurewebsites.net/`;
 
+  // Send a request to the service, meant to be used by the other methods
+  // NOT meant to be used directly within other components. (use methods marked "public" for components)
   private static async request(path: string, method: string = "GET", body?: any) {
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxHIT request");
     const response = await fetch(`${this.BASE_URL}${path}`, {
       method,
       headers: { "Content-Type": "application/json" },
       body: body ? JSON.stringify(body) : undefined
     });
 
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxGOT response");
-
     if (!response.ok) throw new Error(`Error ${response.status}`);
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxGOT response GOOD");
 
     return await response.json();
   }

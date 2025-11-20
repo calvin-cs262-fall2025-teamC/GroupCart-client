@@ -1,54 +1,95 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { ApiClient } from '../services/ApiClient';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Group } from '../models/Group';
+import { UserListItem } from "../models/UserListItem";
+import { ApiClient } from "../services/ApiClient";
 
 export default function TestPage() {
-    const [users, setUsers] = useState<string[]>([]);
+  const [groupUsers, setGroupUsers] = useState<string[]>([]);
+  const [shoppingList, setShoppingList] = useState<UserListItem[]>([]);
+  const [favors, setFavors] = useState<any[]>([]);
 
-      useEffect(() => {
-    const fetchUsers = async () => {
-      const result =
-        (await ApiClient.getGroup("0")) || [
-          "FAIL",
-          "At ApiClient.getUsers()"
-        ];
-      setUsers(result.users);
+  // ------------------- Fetch group users -------------------
+  useEffect(() => {
+    const fetchGroupUsers = async () => {
+      try {
+        const group: Group = await ApiClient.getGroup("0"); // working example
+        setGroupUsers(group.users);
+      } catch (err) {
+        console.error("Failed to fetch group:", err);
+        setGroupUsers(["FAIL", "At ApiClient.getGroup()"]);
+      }
     };
 
-    fetchUsers();
+    fetchGroupUsers();
   }, []);
 
-    const shoppingLists = {  "1234": ["eggs", "pancakes", "milk", "ramen"] };
-    const groups = { "999": ["1234", "2345", "3456", "4567"] }
-    return (
-        <View>
-            <View style={styles.container}>
-                <Text style={styles.title}>Testing ApiClient Endpoints</Text>
-                <View>
-                    <View>
-                        <Text style={styles.notice}>Getting Users (show 3)</Text>
-                        {users.slice(0, 3).map(u => <Text key={u}>{u}</Text>)}
-                        {users.length > 3 && <Text>... And {users.length - 3} more</Text>}
-                    </View>
-                    <View>
-                        <Text style={styles.todo}>Getting Shopping List for User by ID(show 3)</Text>
-                        {shoppingLists["1234"].slice(0, 3).map(u => <Text key={u}>{u}</Text>)}
-                        {shoppingLists["1234"].length > 3 && <Text>... And {shoppingLists["1234"].length - 3} more</Text>}
-                    </View>
-                    <View>
-                        <Text style={styles.todo}>Getting Users by a Group ID(show 3)</Text>
-                        {groups["999"].slice(0, 3).map(u => <Text key={u}>{u}</Text>)}
-                        {groups["999"].length > 3 && <Text>... And {groups["999"].length - 3} more</Text>}
-                    </View>
-                    <View>
-                        <Text style={styles.todo}>Getting Group IDs(show 3)</Text>
-                        {Object.keys(groups).slice(0, 3).map(u => <Text key={u}>{u}</Text>)}
-                        {Object.keys(groups).length > 3 && <Text>... And {groups["999"].length - 3} more</Text>}
-                    </View>
-                </View>
-            </View>
-        </View>
-    );
+  // ------------------- Fetch shopping list -------------------
+  useEffect(() => {
+    const fetchShoppingList = async () => {
+      try {
+        const list = await ApiClient.getUserList("alice"); // example username
+        setShoppingList(list);
+      } catch (err) {
+        console.error("Failed to fetch shopping list:", err);
+        setShoppingList([]);
+      }
+    };
+
+    fetchShoppingList();
+  }, []);
+
+  // ------------------- Fetch favors by user -------------------
+  useEffect(() => {
+    const fetchFavors = async () => {
+      try {
+        const result = await ApiClient.getFavorsByUser("bob"); // example username
+        setFavors(result);
+      } catch (err) {
+        console.error("Failed to fetch favors:", err);
+        setFavors([]);
+      }
+    };
+
+    fetchFavors();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Testing ApiClient Endpoints</Text>
+
+      {/* Group Users */}
+      <View>
+        <Text style={styles.notice}>Getting Users from Group (show 3)</Text>
+        {groupUsers.slice(0, 3).map((u) => (
+          <Text key={u}>{u}</Text>
+        ))}
+        {groupUsers.length > 3 && <Text>... And {groupUsers.length - 3} more</Text>}
+      </View>
+
+      {/* Shopping List */}
+      <View>
+        <Text style={styles.notice}>Getting Shopping List for User alice(show 3)</Text>
+        {shoppingList.slice(0, 3).map((item) => (
+          <Text key={item.id}>
+            {item.item} (Priority {item.priority})
+          </Text>
+        ))}
+        {shoppingList.length > 3 && <Text>... And {shoppingList.length - 3} more</Text>}
+      </View>
+
+      {/* Favors */}
+      <View>
+        <Text style={styles.notice}>Getting Favors Fulfilled by User Bob(show 3)</Text>
+        {favors.slice(0, 3).map((f) => (
+          <Text key={f.id}>
+            {f.item} for {f.for} at {new Date(f.fulfilledAt).toLocaleString()}
+          </Text>
+        ))}
+        {favors.length > 3 && <Text>... And {favors.length - 3} more</Text>}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
