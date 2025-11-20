@@ -18,6 +18,8 @@ export default function UserLoginPage(): React.ReactElement | null {
 	const navigation = useNavigation();
 	const [code, setCode] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+	const navigation = useNavigation();
+	
 
 	let [fontsLoaded] = useFonts({
 		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
@@ -63,6 +65,9 @@ export default function UserLoginPage(): React.ReactElement | null {
 		} finally {
 			setIsLoading(false);
 		}
+		// TODO: wire up real join logic / navigation
+		Alert.alert('Logging in User', `User entered: ${code}`);
+		(navigation as any).navigate('pages/JoinGroupPage');
 	};
 
 	const onCreate = async () => {
