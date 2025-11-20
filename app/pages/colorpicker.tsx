@@ -8,6 +8,8 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 import { useUser } from '../contexts/UserContext';
 
 const PRESET_COLORS = [
@@ -17,6 +19,29 @@ const PRESET_COLORS = [
 ];
 
 export default function Settings() {
+  const navigation = useNavigation();
+
+  // Ensure the native header uses the friendly title instead of the file route
+  React.useLayoutEffect(() => {
+    try {
+      (navigation as any).setOptions({
+        headerTitle: 'Profile Settings',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 24,
+          fontFamily: 'Montserrat',
+        },
+      });
+    } catch {
+      // ignore if navigator does not support set options in this environment
+    }
+  }, [navigation]);
+  
+  const [fontsLoaded] = useFonts({
+    'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+    'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
+  });
+
   const { user, updateUserColor, updateUserDisplayName } = useUser();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [selectedColor, setSelectedColor] = useState(user?.color || '#0079ff');
