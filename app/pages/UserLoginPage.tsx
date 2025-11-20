@@ -17,9 +17,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [code, setCode] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
-	const navigation = useNavigation();
-	
+	const [isLoading, setIsLoading] = useState(false);	
 
 	let [fontsLoaded] = useFonts({
 		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
