@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
 
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: '#360479ff',
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 15,
     alignItems: 'center',
     fontFamily: 'Montserrat',
   },
