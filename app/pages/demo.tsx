@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { verticalScale,horizontalScale,moderateScale } from '../utils/scaling';
 
 export default function DemoPage() {
 	const navigation = useNavigation();
@@ -11,7 +12,7 @@ export default function DemoPage() {
 				(navigation as any).setOptions({ headerTitle: 'Demo Page',
 					headerTitleStyle: {
           fontWeight: 'bold',
-          fontSize: 24,
+          fontSize: moderateScale(24),
           fontFamily: 'Montserrat',
         },
 				});

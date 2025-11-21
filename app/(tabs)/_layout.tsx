@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
+import { verticalScale, horizontalScale, moderateScale } from "../utils/scaling";
 
 
 const listIcon = require("@/assets/images/shopping-list.png");
