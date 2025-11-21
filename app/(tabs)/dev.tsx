@@ -7,7 +7,9 @@ const PAGES = [
     { label: 'Demo Page', route: 'pages/demo' },
     { label: 'Color Picker',  route: 'pages/colorpicker'},
     { label: 'Join Groups Page', route: 'pages/JoinGroupPage' },
-    { label: 'User Login Page',  route: 'pages/UserLoginPage'}
+    { label: 'User Login Page',  route: 'pages/UserLoginPage'},
+    { label: 'API Test Page', route: 'pages/ApiTestPage' },
+
     // Add more pages here as you create them, e.g.
     // { label: 'Some Page', route: 'SomePage' },
 ];
