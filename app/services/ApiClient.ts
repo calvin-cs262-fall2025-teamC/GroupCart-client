@@ -4,7 +4,7 @@ import { User } from '../models/User';
 import { UserListItem } from '../models/UserListItem';
 
 export class ApiClient {
-  private static BASE_URL: string = `https://groupcart-ggadhpaze4axhxhf.mexicocentral-01.azurewebsites.net/`;
+  private static BASE_URL: string = `http://153.106.212.79:3333/`;
 
   // Send a request to the service, meant to be used by the other methods
   // NOT meant to be used directly within other components. (use methods marked "public" for components)
