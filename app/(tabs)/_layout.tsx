@@ -28,7 +28,7 @@ function AnimatedTabIcon({
       friction: 5,
       useNativeDriver: true,
     }).start();
-  }, [focused]);
+  }, [focused, scale]);
 
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
