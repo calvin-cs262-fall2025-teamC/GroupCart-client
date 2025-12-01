@@ -3,15 +3,16 @@ import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
 import {
-	Alert,
-	Image,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
+    Alert,
+    Image,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 export default function JoinGroupPage(): React.ReactElement | null {
 	// ===== Hooks =====
@@ -31,7 +32,7 @@ export default function JoinGroupPage(): React.ReactElement | null {
 				headerTitle: '',
 				headerTitleStyle: {
 					fontWeight: 'bold',
-					fontSize: 24,
+					fontSize: moderateScale(24),
 					fontFamily: 'Montserrat',
 				},
 			});
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
 	// ===== Container =====
 	container: {
 		flex: 1,
-		padding: 24,
+		padding: horizontalScale(24),
 		justifyContent: 'flex-start',
 		backgroundColor: '#ffffff',
 	},
@@ -157,29 +158,29 @@ const styles = StyleSheet.create({
 		width: '50%',
 		height: '35%',
 		resizeMode: 'contain',
-		marginBottom: 10,
-		marginTop: 40,
+		marginBottom: verticalScale(10),
+		marginTop: verticalScale(40),
 		alignSelf: 'center',
 	},
 
 	// ===== Typography =====
 	title: {
-		fontSize: 28,
+		fontSize: moderateScale(28),
 		fontWeight: '700',
 		textAlign: 'center',
-		marginBottom: 24,
+		marginBottom: verticalScale(24),
 		color: '#111',
 		fontFamily: 'Montserrat',
 	},
 
 	// ===== Input =====
 	input: {
-		borderWidth: 1,
+		borderWidth: moderateScale(1),
 		borderColor: '#ddd',
-		borderRadius: 30,
-		padding: 12,
-		marginBottom: 12,
-		fontSize: 16,
+		borderRadius: moderateScale(30),
+		padding: verticalScale(12),
+		marginBottom: verticalScale(12),
+		fontSize: moderateScale(16),
 		color: '#111',
 		fontFamily: 'Montserrat',
 	},
@@ -187,15 +188,15 @@ const styles = StyleSheet.create({
 	// ===== Join Button =====
 	joinButton: {
 		backgroundColor: '#360479ff',
-		padding: 12,
-		borderRadius: 15,
+		padding: verticalScale(12),
+		borderRadius: moderateScale(15),
 		alignItems: 'center',
 	},
 
 	joinButtonText: {
 		color: '#fff',
 		fontWeight: 'bold',
-		fontSize: 16,
+		fontSize: moderateScale(16),
 		fontFamily: 'Montserrat',
 	},
 
@@ -203,17 +204,17 @@ const styles = StyleSheet.create({
 	dividerRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginVertical: 20,
+		marginVertical: verticalScale(20),
 	},
 
 	divider: {
 		flex: 1,
-		height: 1,
+		height: verticalScale(1),
 		backgroundColor: '#eee',
 	},
 
 	orText: {
-		marginHorizontal: 12,
+		marginHorizontal: horizontalScale(12),
 		color: '#666',
 		fontWeight: '600',
 		fontFamily: 'Montserrat',
@@ -221,17 +222,17 @@ const styles = StyleSheet.create({
 
 	// ===== Create Button =====
 	createButton: {
-		borderWidth: 1,
+		borderWidth: moderateScale(1),
 		borderColor: '#360479ff',
-		padding: 12,
-		borderRadius: 15,
+		padding: verticalScale(12),
+		borderRadius: moderateScale(15),
 		alignItems: 'center',
 	},
 
 	createButtonText: {
 		color: '#360479ff',
 		fontWeight: 'bold',
-		fontSize: 16,
+		fontSize: moderateScale(16),
 		fontFamily: 'Montserrat',
 	},
 

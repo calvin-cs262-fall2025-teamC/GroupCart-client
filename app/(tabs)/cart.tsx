@@ -17,6 +17,7 @@ import { useUser } from "../contexts/UserContext";
 import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 
 
@@ -284,16 +285,16 @@ const styles = StyleSheet.create({
   subTitle: {
     color: "black",
     textAlign: "left",
-    fontSize: 20,
+    fontSize: moderateScale(20),
     fontWeight: "700",
-     marginBottom: 12,
+     marginBottom: verticalScale(12),
     fontFamily: "Montserrat",
   },
   demoSetup: {
     backgroundColor: "white",
-    padding: 15,
-    borderRadius: 15,
-    marginVertical: 20,
+    padding: horizontalScale(15),
+    borderRadius: moderateScale(15),
+    marginVertical: verticalScale(20),
     elevation: 3,
     fontFamily: "Montserrat",
   },
@@ -301,33 +302,33 @@ const styles = StyleSheet.create({
     color: "black",
     backgroundColor: "white",
     fontFamily: "Montserrat",
-    fontSize: 16,
-    marginBottom: 8,
+    fontSize: moderateScale(16),
+    marginBottom: verticalScale(8),
   },
   input: {
-    borderWidth: 1,
+    borderWidth: moderateScale(1),
     borderColor: "#ddd",
-    borderRadius: 30,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 15,
+    borderRadius: moderateScale(30),
+    padding: verticalScale(12),
+    fontSize: moderateScale(16),
+    marginBottom: verticalScale(15),
     fontFamily: "Montserrat",
     color: "black",
   },
   picker: {
     color: "black",
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
   },
   button: {
     backgroundColor: "#360479ff",
-    padding: 12,
-    borderRadius: 15,
+    padding: verticalScale(12),
+    borderRadius: moderateScale(15),
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: "bold",
     fontFamily: "Montserrat",
   },

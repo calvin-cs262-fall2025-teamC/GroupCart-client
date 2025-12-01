@@ -4,12 +4,12 @@ import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { UserProvider } from '../contexts/UserContext';
+import { moderateScale } from '../utils/scaling';
 
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
-const settingsIcon = require("@/assets/images/setting.png");
+const profileIcon = require("@/assets/images/user.png");
 
 function AnimatedTabIcon({
   source,
@@ -49,30 +49,31 @@ export default function TabLayout() {
   }
 
   return (
-    <UserProvider>
-      <Tabs
-        // Allow per-route headerTitle to be provided via route params (e.g. { headerTitle: 'My Title' })
-        screenOptions={({ route }: { route: any }) => ({
-          tabBarActiveTintColor: "black",
-          tabBarInactiveTintColor: "#555",
-          // Use headerTitle from route params when available; otherwise fall back to default title behavior
-          headerTitle: route?.params?.headerTitle ?? undefined,
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 24,
-            fontFamily: "Montserrat",
-          },
-          tabBarStyle: {
-            borderTopWidth: 0,
-            elevation: 0,
-            backgroundColor: "white",
-          },
-        })}
-      >
+    <Tabs
+      screenOptions={({ route }: { route: any }) => ({
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "#555",
+        headerShown: true,
+        headerTitle: route?.params?.headerTitle ?? undefined,
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: moderateScale(24),
+          fontFamily: "Montserrat",
+        },
+        headerStyle: {
+          backgroundColor: "white",
+        },
+        tabBarStyle: {
+          borderTopWidth: 0,
+          elevation: 0,
+          backgroundColor: "white",
+        },
+      })}
+    >
         <Tabs.Screen
           name="index"
           options={{
-            title: "Shopping List",
+            title: " ",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={listIcon} color={color} focused={focused} />
             ),
@@ -81,7 +82,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="favors"
           options={{
-            title: "Favors",
+            title: " ",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={favorIcon} color={color} focused={focused} />
             ),
@@ -90,32 +91,30 @@ export default function TabLayout() {
         <Tabs.Screen
           name="cart"
           options={{
-            title: "Group Cart",
+            title: " Group Cart",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={cartIcon} color={color} focused={focused} />
             ),
           }}
         />
         <Tabs.Screen
-          name="dev"
+          name="profile"
           options={{
-            title: "Settings",
+            title: "Profile",
             tabBarIcon: ({ color, focused }) => (
-              <AnimatedTabIcon source={settingsIcon} color={color} focused={focused} />
+              <AnimatedTabIcon source={profileIcon} color={color} focused={focused} />
 
             ),
           }}
         />
-      </Tabs>
-    </UserProvider>
-
+    </Tabs>
   );
 }
 
 const styles = StyleSheet.create({
   image: {
-    width: 22,
-    height: 22,
+    width: moderateScale(22),
+    height: moderateScale(22),
     marginBottom: "auto",
   },
 });

@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 import { useUser } from '../contexts/UserContext';
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 const PRESET_COLORS = [
   '#0079ff', '#FF5722', '#4CAF50', '#FF9800', '#9C27B0',
@@ -31,7 +32,7 @@ export default function Settings() {
         headerTitle: 'Profile Settings',
         headerTitleStyle: {
           fontWeight: 'bold',
-          fontSize: 24,
+          fontSize: moderateScale(24),
           fontFamily: 'Montserrat',
         },
       });
@@ -61,7 +62,15 @@ if (!fontsLoaded) {
   const handleSaveName = async () => {
     if (displayName.trim()) {
       await updateUserDisplayName(displayName.trim());
-      Alert.alert('Success', 'Display name updated!');
+      Alert.alert('Success', 'Display name updated!', [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Navigate back to profile page
+            (navigation as any).goBack();
+          },
+        },
+      ]);
     } else {
       Alert.alert('Error', 'Display name cannot be empty');
     }
@@ -70,6 +79,15 @@ if (!fontsLoaded) {
   const handleColorSelect = async (color: string) => {
     setSelectedColor(color);
     await updateUserColor(color);
+    Alert.alert('Success', 'Profile color updated!', [
+      {
+        text: 'OK',
+        onPress: () => {
+          // Navigate back to profile page
+          (navigation as any).goBack();
+        },
+      },
+    ]);
   };
 
   if (!user) {
@@ -176,91 +194,91 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },
   content: {
-    padding: 20,
+    padding: horizontalScale(20),
   },
   title: {
-    fontSize: 32,
+    fontSize: moderateScale(32),
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 30,
+    marginBottom: verticalScale(30),
     textAlign: 'left',
     fontFamily: 'Montserrat',
   },
   section: {
     backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 20,
+    borderRadius: moderateScale(15),
+    padding: horizontalScale(20),
+    marginBottom: verticalScale(20),
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: verticalScale(2) },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: moderateScale(4),
     elevation: 3,
   },
   label: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: '600',
     color: '#333',
-    marginBottom: 12,
+    marginBottom: verticalScale(12),
     fontFamily: 'Montserrat',
   },
   description: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     color: '#666',
-    marginBottom: 20,
-    lineHeight: 20,
+    marginBottom: verticalScale(20),
+    lineHeight: moderateScale(20),
     fontFamily: 'Montserrat',
   },
   inputRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: horizontalScale(10),
   },
   input: {
     flex: 1,
-    borderWidth: 1,
+    borderWidth: moderateScale(1),
     borderColor: '#ddd',
-    borderRadius: 30,
-    padding: 12,
-    fontSize: 16,
+    borderRadius: moderateScale(30),
+    padding: verticalScale(12),
+    fontSize: moderateScale(16),
     backgroundColor: '#f9f9f9',
     color: '#333',
     fontFamily: 'Montserrat',
   },
   saveButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 15,
+    paddingHorizontal: horizontalScale(24),
+    paddingVertical: verticalScale(12),
+    borderRadius: moderateScale(15),
     justifyContent: 'center',
     alignItems: 'center',
   },
   saveButtonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontFamily: 'Montserrat',
   },
   colorGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 20,
+    gap: horizontalScale(12),
+    marginBottom: verticalScale(20),
   },
   colorOption: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: horizontalScale(50),
+    height: verticalScale(50),
+    borderRadius: moderateScale(25),
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: verticalScale(2) },
     shadowOpacity: 0.2,
-    shadowRadius: 3,
+    shadowRadius: moderateScale(3),
     elevation: 3,
   },
   checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 15,
+    width: horizontalScale(24),
+    height: verticalScale(24),
+    borderRadius: moderateScale(15),
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -268,42 +286,42 @@ const styles = StyleSheet.create({
   checkmarkText: {
     color: '#000',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontFamily: 'Montserrat',
   },
   previewSection: {
-    marginTop: 20,
-    paddingTop: 20,
-    borderTopWidth: 1,
+    marginTop: verticalScale(20),
+    paddingTop: verticalScale(20),
+    borderTopWidth: moderateScale(1),
     borderTopColor: '#eee',
   },
   previewLabel: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: '600',
     color: '#333',
-    marginBottom: 12,
+    marginBottom: verticalScale(12),
     fontFamily: 'Montserrat',
   },
   previewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: horizontalScale(12),
   },
   previewAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: horizontalScale(48),
+    height: verticalScale(48),
+    borderRadius: moderateScale(24),
     justifyContent: 'center',
     alignItems: 'center',
   },
   previewAvatarText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: moderateScale(20),
     fontWeight: 'bold',
     fontFamily: 'Montserrat',
   },
   previewName: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: 'bold',
     fontFamily: 'Montserrat',
   },
