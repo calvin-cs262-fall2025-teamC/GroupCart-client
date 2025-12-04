@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useUser } from '../contexts/UserContext';
 
 const PRESET_COLORS = [
   '#0079ff', '#FF5722', '#4CAF50', '#FF9800', '#9C27B0',

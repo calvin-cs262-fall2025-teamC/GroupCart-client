@@ -1,14 +1,15 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { UserProvider } from './contexts/UserContext';
+import { AppProvider } from './contexts/AppContext';
 // ...existing code...
 export default function RootLayout(): React.ReactElement {
   return (
-    <UserProvider>
+      <AppProvider>
+
       <Stack>
         {/* Render the (tabs) group as the default/main area */}
         <Stack.Screen name="pages/UserLoginPage" options={{ headerShown: false }} />
       </Stack>
-    </UserProvider>
+      </AppProvider>
   );
 }

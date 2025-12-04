@@ -13,10 +13,10 @@ import {
     View
 } from "react-native";
 import RequestRow from "../components/RequestRow";
-import { useUser } from "../contexts/UserContext";
 import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
+
 
 
 
@@ -153,7 +153,6 @@ interface DemoSetupProps {
 }
 
 function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
-    const { user } = useUser();
 
     // Form state (local)
     const [selectedRequester, setSelectedRequester] = useState<Requester | null>(null);
