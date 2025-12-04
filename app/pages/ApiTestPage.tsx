@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Group } from '../models/Group';
 import { UserListItem } from "../models/UserListItem";
 import { ApiClient } from "../services/ApiClient";
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 export default function TestPage() {
   const [groupUsers, setGroupUsers] = useState<string[]>([]);
@@ -94,19 +95,19 @@ export default function TestPage() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        padding: horizontalScale(20),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#2196f3',
     },
     title: {
-        fontSize: 20,
+        fontSize: moderateScale(20),
         fontWeight: '600',
-        marginBottom: 8,
+        marginBottom: verticalScale(8),
         color: '#fff',
     },
     subtitle: {
-        fontSize: 14,
+        fontSize: moderateScale(14),
         color: '#fff',
         textAlign: 'center',
     },

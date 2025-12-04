@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Alert, Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 const PAGES = [
     // Adjust these entries to match the route names you registered in your root/layout navigator.
@@ -50,19 +51,19 @@ export default function DevTab() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        padding: horizontalScale(16),
     },
     header: {
-        fontSize: 18,
-        marginBottom: 12,
+        fontSize: moderateScale(18),
+        marginBottom: verticalScale(12),
         fontWeight: '600',
     },
     item: {
-        marginBottom: 10,
+        marginBottom: verticalScale(10),
     },
     note: {
-        marginTop: 20,
-        marginBottom: 10
+        marginTop: verticalScale(20),
+        marginBottom: verticalScale(10)
     },
     noteText: {
         color: '#666',

@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, router } from 'expo-router';
+
 import React, { useState } from 'react';
 import {
 	Alert,
@@ -12,12 +13,13 @@ import {
 	View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [code, setCode] = useState('');
-	const [isLoading, setIsLoading] = useState(false);	
+	const [isLoading, setIsLoading] = useState(false);
 
 	let [fontsLoaded] = useFonts({
 		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
@@ -31,7 +33,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 				headerTitle: 'Login',
 				headerTitleStyle: {
 					fontWeight: 'bold',
-					fontSize: 24,
+					fontSize: moderateScale(24),
 					fontFamily: 'Montserrat',
 				},
 			});
@@ -65,7 +67,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 		}
 		// TODO: wire up real join logic / navigation
 		Alert.alert('Logging in User', `User entered: ${code}`);
-		(navigation as any).navigate('pages/JoinGroupPage');
+		router.push('/pages/JoinGroupPage');
 	};
 
 	const onCreate = async () => {
@@ -73,7 +75,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 		try {
 			// TODO: Replace with real API call
 			await new Promise((resolve) => setTimeout(resolve, 2000));
-			(navigation as any).navigate('pages/CreateUserPage');
+			router.push('/pages/CreateUserPage');
 		} catch {
 			Alert.alert('Error', 'Failed to navigate to create account');
 		} finally {
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		flexDirection: 'column',
-		padding: 24,
+		padding: horizontalScale(24),
 		justifyContent: 'center',
 		backgroundColor: '#ffffff',
 	},
@@ -154,19 +156,19 @@ const styles = StyleSheet.create({
 		width: '50%',
 		height: '35%',
 		resizeMode: 'contain',
-		marginTop: -150,
-		marginBottom: 10,
+		marginTop: verticalScale(-150),
+		marginBottom: verticalScale(10),
 		alignSelf: 'center',
 	},
 
 	// ===== Input =====
 	input: {
-		borderWidth: 1,
+		borderWidth: moderateScale(1),
 		borderColor: '#ddd',
-		borderRadius: 30,
-		padding: 12,
-		marginBottom: 12,
-		fontSize: 16,
+		borderRadius: moderateScale(30),
+		padding: verticalScale(12),
+		marginBottom: verticalScale(12),
+		fontSize: moderateScale(16),
 		color: '#111',
 		fontFamily: 'Montserrat',
 	},
@@ -174,15 +176,15 @@ const styles = StyleSheet.create({
 	// ===== Login Button =====
 	loginButton: {
 		backgroundColor: '#360479ff',
-		padding: 12,
-		borderRadius: 15,
+		padding: verticalScale(12),
+		borderRadius: moderateScale(15),
 		alignItems: 'center',
 	},
 
 	loginButtonText: {
 		color: '#fff',
 		fontWeight: 'bold',
-		fontSize: 16,
+		fontSize: moderateScale(16),
 		fontFamily: 'Montserrat',
 	},
 
@@ -190,17 +192,17 @@ const styles = StyleSheet.create({
 	dividerRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginVertical: 20,
+		marginVertical: verticalScale(20),
 	},
 
 	divider: {
 		flex: 1,
-		height: 1,
+		height: verticalScale(1),
 		backgroundColor: '#eee',
 	},
 
 	orText: {
-		marginHorizontal: 12,
+		marginHorizontal: horizontalScale(12),
 		color: '#666',
 		fontWeight: '600',
 		fontFamily: 'Montserrat',
@@ -208,17 +210,17 @@ const styles = StyleSheet.create({
 
 	// ===== Create Button =====
 	createButton: {
-		borderWidth: 1,
+		borderWidth: moderateScale(1),
 		borderColor: '#360479ff',
-		padding: 12,
-		borderRadius: 15,
+		padding: verticalScale(12),
+		borderRadius: moderateScale(15),
 		alignItems: 'center',
 	},
 
 	createButtonText: {
 		color: '#360479ff',
 		fontWeight: 'bold',
-		fontSize: 16,
+		fontSize: moderateScale(16),
 		fontFamily: 'Montserrat',
 	},
 

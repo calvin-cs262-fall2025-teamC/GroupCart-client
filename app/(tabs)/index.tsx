@@ -1,8 +1,7 @@
 import { useFonts } from "expo-font";
-
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen } from "expo-router";
+
 import React, { useState } from 'react';
 import {
   FlatList,
@@ -13,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
+import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 
 interface ShoppingItem {
@@ -24,10 +24,14 @@ interface ShoppingItem {
 
 
 export default function MyList() {
+
+
+
   let [fontsLoaded] = useFonts({
     'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
     'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
   });
+
 
   // ✅ Move these above the return
   const [items, setItems] = useState<ShoppingItem[]>([]);
@@ -83,7 +87,10 @@ if (!fontsLoaded) {
     }
   };
 
+
+
   return (
+
     <LinearGradient
 
       colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
@@ -152,6 +159,7 @@ if (!fontsLoaded) {
         />
       </View>
     </LinearGradient>
+
   );
 }
 
@@ -162,46 +170,46 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    padding: 20,
+    padding: horizontalScale(20),
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },
 
   inputContainer: {
     backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 20,
+    padding: horizontalScale(15),
+    borderRadius: moderateScale(15),
+    marginBottom: verticalScale(20),
     elevation: 3,
    fontFamily: 'Montserrat',
-    marginTop: 10,
+    marginTop: verticalScale(10),
   },
   textInput: {
-    borderWidth: 1,
+    borderWidth: moderateScale(1),
     borderColor: '#ddd',
-    borderRadius: 30,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 15,
+    borderRadius: moderateScale(30),
+    padding: verticalScale(12),
+    fontSize: moderateScale(16),
+    marginBottom: verticalScale(15),
     fontFamily: 'Montserrat',
   },
   priorityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
     fontFamily: 'Montserrat',
   },
   priorityLabel: {
-    fontSize: 16,
-    marginRight: 10,
+    fontSize: moderateScale(16),
+    marginRight: horizontalScale(10),
     color: '#333',
     fontFamily: 'Montserrat',
   },
   priorityButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginRight: 8,
-    borderRadius: 6,
-    borderWidth: 1,
+    paddingHorizontal: horizontalScale(12),
+    paddingVertical: verticalScale(8),
+    marginRight: horizontalScale(8),
+    borderRadius: moderateScale(6),
+    borderWidth: moderateScale(1),
     borderColor: '#ddd',
     fontFamily: 'Montserrat',
   },
@@ -209,20 +217,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#e3f2fd',
   },
   priorityButtonText: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: 'bold',
     fontFamily: 'Montserrat',
   },
   addButton: {
     backgroundColor: '#360479ff',
-    padding: 12,
-    borderRadius: 15,
+    padding: verticalScale(12),
+    borderRadius: moderateScale(15),
     alignItems: 'center',
     fontFamily: 'Montserrat',
   },
   addButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: 'bold',
     fontFamily: 'Montserrat',
   },

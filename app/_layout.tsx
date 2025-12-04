@@ -3,6 +3,7 @@ import React from 'react';
 import { UserProvider } from './contexts/UserContext';
 // ...existing code...
 export default function RootLayout(): React.ReactElement {
+
   return (
     <UserProvider>
       <Stack>
