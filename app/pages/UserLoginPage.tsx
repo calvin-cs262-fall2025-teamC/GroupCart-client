@@ -1,15 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, router } from 'expo-router';
+
 import React, { useState } from 'react';
 import {
-    Alert,
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+	Alert,
+	Image,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
 import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
@@ -66,7 +67,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 		}
 		// TODO: wire up real join logic / navigation
 		Alert.alert('Logging in User', `User entered: ${code}`);
-		(navigation as any).navigate('pages/JoinGroupPage');
+		router.push('/pages/JoinGroupPage');
 	};
 
 	const onCreate = async () => {
@@ -74,7 +75,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 		try {
 			// TODO: Replace with real API call
 			await new Promise((resolve) => setTimeout(resolve, 2000));
-			(navigation as any).navigate('pages/CreateUserPage');
+			router.push('/pages/CreateUserPage');
 		} catch {
 			Alert.alert('Error', 'Failed to navigate to create account');
 		} finally {

@@ -65,10 +65,6 @@ if (!fontsLoaded) {
       Alert.alert('Success', 'Display name updated!', [
         {
           text: 'OK',
-          onPress: () => {
-            // Navigate back to profile page
-            (navigation as any).goBack();
-          },
         },
       ]);
     } else {
@@ -82,10 +78,7 @@ if (!fontsLoaded) {
     Alert.alert('Success', 'Profile color updated!', [
       {
         text: 'OK',
-        onPress: () => {
-          // Navigate back to profile page
-          (navigation as any).goBack();
-        },
+
       },
     ]);
   };

@@ -1,25 +1,40 @@
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+	Alert,
+	Image,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { useUser } from '../contexts/UserContext';
+import { Group } from '../models/Group';
 import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
 
 export default function JoinGroupPage(): React.ReactElement | null {
 	// ===== Hooks =====
+
 	const navigation = useNavigation();
 	const [code, setCode] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+const { user, setGroup } = useUser();
 
+const handleJoin = async () => {
+ const newGroup: Group = {
+  id: `group-${Date.now()}`,
+  name: "My Group",
+  users: [user?.id ?? ""], // assuming Requester has an id
+  userColors: new Map([[user?.id ?? "", "#0079ff"]]), // ✅ map of userId → color
+};
+
+  await setGroup(newGroup);   // ✅ persist group
+  router.replace("/(tabs)");  // ✅ go to tabs
+};
 	let [fontsLoaded] = useFonts({
 		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
 		'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
@@ -52,6 +67,9 @@ export default function JoinGroupPage(): React.ReactElement | null {
 			Alert.alert('Missing code', 'Please enter a group code to join.');
 			return;
 		}
+		else {
+			router.push("/(tabs)")
+		}
 
 		setIsLoading(true);
 		try {
@@ -70,18 +88,23 @@ export default function JoinGroupPage(): React.ReactElement | null {
 	};
 
 	const onCreate = async () => {
-		setIsLoading(true);
-		try {
-			// TODO: Replace with real navigation or API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			// TODO: Navigate to create group screen
-			Alert.alert('Create group', 'Navigate to create group flow');
-		} catch {
-			Alert.alert('Error', 'Failed to create group');
-		} finally {
-			setIsLoading(false);
-		}
-	};
+  setIsLoading(true);
+  try {
+    // Simulate API call or group creation
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Show confirmation
+    Alert.alert("Success", "Group created!");
+
+    // Navigate into the tabbed app
+
+  } catch {
+    Alert.alert("Error", "Failed to create group");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
 	// ===== Render =====
 	return (

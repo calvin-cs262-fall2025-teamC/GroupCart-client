@@ -1,5 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFonts } from "expo-font";
 import { Image } from 'expo-image';
+import { SplashScreen, router } from 'expo-router';
 import React, { useCallback } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -47,6 +49,15 @@ const ProfileScreen = () => {
 		{ id: 3, icon: about, label: 'About', nextIcon: transferIcon },
 		{ id: 4, icon: logouticon, label: 'Log Out', nextIcon: transferIcon },
 	];
+	const [fontsLoaded] = useFonts({
+			Shanti: require("../../assets/images/Shanti-Regular.ttf"),
+			Montserrat: require("../../assets/images/Montserrat-Regular.ttf"),
+		});
+
+		if (!fontsLoaded) {
+			SplashScreen.preventAutoHideAsync();
+			return null;
+		}
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -74,7 +85,6 @@ const ProfileScreen = () => {
 					{/* User Info */}
 					<View style={styles.userInfo} key={`user-info-${displayName}`}>
 						<Text style={[styles.userText, styles.firstUserText]}>{displayName}</Text>
-						<Text style={styles.userText}>1234567890</Text>
 						<Text style={styles.userText}>ssdfiua@gmail.com</Text>
 					</View>
 
@@ -113,6 +123,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#ffffff',
+		fontFamily: 'Montserrat',
 	},
 	scrollView: {
 		flex: 1,
@@ -121,11 +132,13 @@ const styles = StyleSheet.create({
 		paddingHorizontal: horizontalScale(20),
 		alignItems: 'center',
 		paddingBottom: verticalScale(40),
+		fontFamily: 'Montserrat',
 	},
 	profileContainer: {
 		alignItems: 'center',
 		marginTop: verticalScale(40),
 		width: '100%',
+		fontFamily: 'Montserrat',
 	},
 	profileFrameInner: {
 		width: moderateScale(130),
@@ -135,6 +148,7 @@ const styles = StyleSheet.create({
 		borderColor: '#e0e0e0',
 		alignItems: 'center',
 		justifyContent: 'center',
+		fontFamily: 'Montserrat',
 	},
 	profileImageContainer: {
 		width: moderateScale(100),
@@ -143,6 +157,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'relative',
+		fontFamily: 'Montserrat',
 	},
 	profileImageText: {
 		color: 'white',
@@ -156,14 +171,20 @@ const styles = StyleSheet.create({
 		right: moderateScale(6),
 		width: moderateScale(22),
 		height: moderateScale(22),
+		fontWeight: "600",
+		fontFamily: 'Montserrat',
 	},
 	editIcon: {
 		width: moderateScale(22),
 		height: moderateScale(22),
+		fontWeight: "600",
+		fontFamily: 'Montserrat',
 	},
 	userInfo: {
 		alignItems: 'center',
 		marginTop: verticalScale(16),
+
+		fontFamily: 'Montserrat',
 	},
 	userText: {
 		fontSize: moderateScale(14),
@@ -172,9 +193,11 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		marginTop: verticalScale(4),
 		fontFamily: 'Montserrat',
+
 	},
 	firstUserText: {
 		marginTop: 0,
+		fontFamily: 'Montserrat',
 	},
 	menuContainer: {
 		width: '100%',
@@ -187,6 +210,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
+		fontFamily: 'Montserrat',
 	},
 	iconContainer: {
 		width: moderateScale(32),
@@ -197,13 +221,16 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderWidth: moderateScale(1),
 		borderColor: '#e0e0e0',
+		fontFamily: 'Montserrat',
 	},
 	menuIcon: {
 		width: moderateScale(24),
+		fontFamily: 'Montserrat',
 		height: moderateScale(24),
 	},
 	labelContainer: {
 		width: '56%',
+		fontFamily: 'Montserrat',
 		marginHorizontal: horizontalScale(20),
 	},
 	menuLabel: {

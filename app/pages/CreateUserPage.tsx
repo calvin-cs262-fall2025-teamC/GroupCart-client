@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
@@ -249,9 +249,10 @@ export default function CreateUserPage(): React.ReactElement | null {
 			{/* Log In Link */}
 			<View style={styles.loginContainer}>
 				<Text style={styles.loginText}>Have an account? </Text>
-				<TouchableOpacity>
-					<Text style={styles.loginLink}>Log in</Text>
-				</TouchableOpacity>
+				<TouchableOpacity onPress={() => router.push("/pages/UserLoginPage")}>
+  <Text style={styles.loginLink}>Log in</Text>
+</TouchableOpacity>
+
 			</View>
 
 			{/* Loading Modal Overlay */}

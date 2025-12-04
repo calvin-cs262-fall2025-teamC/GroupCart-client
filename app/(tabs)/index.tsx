@@ -1,15 +1,15 @@
 import { useFonts } from "expo-font";
-
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen } from "expo-router";
+
 import React, { useState } from 'react';
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
 import { horizontalScale, moderateScale, verticalScale } from '../utils/scaling';
@@ -24,10 +24,14 @@ interface ShoppingItem {
 
 
 export default function MyList() {
+
+
+
   let [fontsLoaded] = useFonts({
     'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
     'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
   });
+
 
   // ✅ Move these above the return
   const [items, setItems] = useState<ShoppingItem[]>([]);
@@ -83,7 +87,10 @@ if (!fontsLoaded) {
     }
   };
 
+
+
   return (
+
     <LinearGradient
 
       colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
@@ -152,6 +159,7 @@ if (!fontsLoaded) {
         />
       </View>
     </LinearGradient>
+
   );
 }
 

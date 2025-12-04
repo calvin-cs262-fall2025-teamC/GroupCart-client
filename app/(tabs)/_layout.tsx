@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 import { moderateScale } from '../utils/scaling';
 
+
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
@@ -28,7 +29,7 @@ function AnimatedTabIcon({
       friction: 5,
       useNativeDriver: true,
     }).start();
-  }, [focused]);
+  }, [focused,scale]);
 
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
@@ -48,13 +49,18 @@ export default function TabLayout() {
     return null;
   }
 
+
+
   return (
+
+
+
+
     <Tabs
       screenOptions={({ route }: { route: any }) => ({
         tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "#555",
-        headerShown: true,
-        headerTitle: route?.params?.headerTitle ?? undefined,
+        headerShown: false,
         headerTitleStyle: {
           fontWeight: "bold",
           fontSize: moderateScale(24),
@@ -70,10 +76,18 @@ export default function TabLayout() {
         },
       })}
     >
+      <Tabs.Screen
+  name="pages/UserLoginPage"
+  options={{ title: "Login" }}
+/>
+<Tabs.Screen
+  name="pages/JoinGrouPage"
+  options={{ title: "Join Group" }}
+/>
         <Tabs.Screen
           name="index"
           options={{
-            title: " ",
+            title: "Shopping List",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={listIcon} color={color} focused={focused} />
             ),
@@ -82,7 +96,8 @@ export default function TabLayout() {
         <Tabs.Screen
           name="favors"
           options={{
-            title: " ",
+            headerTitle: "Favors",
+            title: "Favors",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={favorIcon} color={color} focused={focused} />
             ),
@@ -91,6 +106,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="cart"
           options={{
+             headerTitle: "Group Cart",
             title: " Group Cart",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={cartIcon} color={color} focused={focused} />
@@ -100,6 +116,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="profile"
           options={{
+             headerTitle: "Profile",
             title: "Profile",
             tabBarIcon: ({ color, focused }) => (
               <AnimatedTabIcon source={profileIcon} color={color} focused={focused} />
