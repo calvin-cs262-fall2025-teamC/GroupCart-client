@@ -1,6 +1,5 @@
 import { useFonts } from "expo-font";
 
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,6 +12,8 @@ import {
   View,
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
+import { useAppContext } from "../contexts/AppContext";
+import { ApiClient } from "../services/ApiClient";
 
 
 interface ShoppingItem {
@@ -33,13 +34,13 @@ export default function MyList() {
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [newItem, setNewItem] = useState('');
   const [priority, setPriority] = useState<number>(1);
+  const {user} = useAppContext();
+
 
 if (!fontsLoaded) {
   SplashScreen.preventAutoHideAsync();
   return null;
 }
-
-
 
   const addItem = () => {
     if (newItem.trim()) {
@@ -50,6 +51,10 @@ if (!fontsLoaded) {
         priority,
       };
       setItems([...items, newShoppingItem]);
+      if (user)
+      {
+      const response = ApiClient.addItemToUserList("abyle", {item: "gum", priority: 2 })
+      }
       setNewItem('');
       setPriority(1);
     }

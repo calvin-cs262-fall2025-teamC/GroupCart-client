@@ -25,7 +25,7 @@ export class ApiClient {
   public static async getGroup(id: string): Promise<Group> {
     return this.request(`group/${id}`, "GET");
   }
-  
+
   // Get user info by username
   public static async getUser(username: string): Promise<User> {
     return this.request(`user/${username}`, "GET");
@@ -42,11 +42,18 @@ export class ApiClient {
   }
 
   public static async getFavorsForUser(username: string): Promise<Favor[]> {
-  return this.request(`favors/for/${username}`, "GET");
+    return this.request(`favors/for/${username}`, "GET");
   }
 
   public static async getGroupGroceryList(): Promise<SharedShoppingItem[]> {
-  return this.request(`shop`, "GET");
+    return this.request(`shop`, "GET");
   }
 
+  // Add item to List
+  public static async addItemToUserList(
+    username: string,
+    data: { item: string; priority: number }
+  ): Promise<any> {
+    return this.request(`list/${username}`, "POST", data);
+  }
 }

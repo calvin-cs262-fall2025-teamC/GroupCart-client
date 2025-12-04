@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAppContext } from '../contexts/AppContext';
 
 const PRESET_COLORS = [
   '#0079ff', '#FF5722', '#4CAF50', '#FF9800', '#9C27B0',
@@ -19,7 +20,6 @@ const PRESET_COLORS = [
   '#2196F3', '#795548', '#009688', '#FF6F00', '#673AB7',
   '#FF69B4',
 ];
-
 export default function Settings() {
   const navigation = useNavigation();
 
@@ -43,14 +43,14 @@ let [fontsLoaded] = useFonts({
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
       });
 
-  const { user, updateUserColor, updateUserDisplayName } = useUser();
-  const [displayName, setDisplayName] = useState(user?.displayName || '');
-  const [selectedColor, setSelectedColor] = useState(user?.color || '#0079ff');
+  const { user } = useAppContext();
+  const [displayName, setDisplayName] = useState(user && user.firstName || '');
+  const [selectedColor, setSelectedColor] = useState('#0079ff');
 
   React.useEffect(() => {
     if (user) {
-      setDisplayName(user.displayName);
-      setSelectedColor(user.color);
+      setDisplayName(user.firstName);
+      // setSelectedColor(user.color);
     }
   }, [user]);
 if (!fontsLoaded) {
@@ -59,7 +59,7 @@ if (!fontsLoaded) {
 }
   const handleSaveName = async () => {
     if (displayName.trim()) {
-      await updateUserDisplayName(displayName.trim());
+      // await updateUserDisplayName(displayName.trim());
       Alert.alert('Success', 'Display name updated!');
     } else {
       Alert.alert('Error', 'Display name cannot be empty');
@@ -68,7 +68,7 @@ if (!fontsLoaded) {
 
   const handleColorSelect = async (color: string) => {
     setSelectedColor(color);
-    await updateUserColor(color);
+    // await updateUserColor(color);
   };
 
   if (!user) {
