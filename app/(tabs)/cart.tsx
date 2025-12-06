@@ -1,7 +1,7 @@
 import { Picker } from "@react-native-picker/picker";
 import { useFonts } from "expo-font";
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, Stack, router } from 'expo-router';
 
 import { useEffect, useState } from 'react';
 import {
@@ -65,85 +65,99 @@ const exampleGroupRequest = new GroupRequest({
 });
 
 export default function GroupCart() {
-     let [fontsLoaded] = useFonts({
+    let [fontsLoaded] = useFonts({
         'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
-      });
+    });
     const [groupRequests, setGroupRequests] = useState<GroupRequest[]>([exampleGroupRequest]);
-      if (!fontsLoaded) {
+    if (!fontsLoaded) {
         SplashScreen.preventAutoHideAsync();
         return null;
-      }
+    }
     return (
-         <LinearGradient
+        <LinearGradient
 
-              colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
-              // Gradient direction: starts from top-right, flows to bottom-left
-              // [x1, y1] = start point, [x2, y2] = end point
-              start={{ x: 1, y: 0}} // Top right
-              end={{ x: 0, y: 1 }} // Bottom left
+            colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
+            // Gradient direction: starts from top-right, flows to bottom-left
+            // [x1, y1] = start point, [x2, y2] = end point
+            start={{ x: 1, y: 0 }} // Top right
+            end={{ x: 0, y: 1 }} // Bottom left
 
-              locations={[0.1, 0.3, 0.6, 1]}
-              style={[styles.background]}
+            locations={[0.1, 0.3, 0.6, 1]}
+            style={[styles.background]}
+        >
+
+      <Stack.Screen
+        options={{
+          title: "Group Cart",
+          headerRight: () => (
+            <Text
+              style={styles.headerHelp}
+              onPress={() => router.push("/pages/help/GroupCartHelpPage")}
             >
-                <View style = {styles.overlay}>
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-            <View>
+              Help
+            </Text>
+          ),
+        }}
+      />
+            <View style={styles.overlay}>
+                <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+                    <View>
 
 
 
 
-                    {groupRequests.some(c => c.completed === false) && (
-                        <View>
+                        {groupRequests.some(c => c.completed === false) && (
                             <View>
-                                <Text style={styles.subTitle}>NEEDED ITEMS</Text>
-                            </View>
+                                <View>
+                                    <Text style={styles.subTitle}>NEEDED ITEMS</Text>
+                                </View>
 
-                            <View>
-                                {groupRequests.map(gr => (
-                                    !gr.completed
-                                    &&
-                                    <RequestRow
-                                        key={gr.id}
-                                        groupRequest={gr}
-                                        setGroupRequests={setGroupRequests}
-                                    />
-                                ))}
+                                <View>
+                                    {groupRequests.map(gr => (
+                                        !gr.completed
+                                        &&
+                                        <RequestRow
+                                            key={gr.id}
+                                            groupRequest={gr}
+                                            setGroupRequests={setGroupRequests}
+                                        />
+                                    ))}
+                                </View>
                             </View>
+                        )}
+
+                        {groupRequests.some(c => c.completed === true) && (
+                            <View>
+                                <View>
+                                    <Text style={styles.subTitle}>COLLECTED ITEMS</Text>
+                                </View>
+
+                                <View>
+                                    {groupRequests.map(gr => (
+                                        gr.completed
+                                        &&
+                                        <RequestRow
+                                            key={gr.id}
+                                            groupRequest={gr}
+                                            setGroupRequests={setGroupRequests}
+                                        />
+                                    ))}
+                                </View>
+                            </View>
+                        )}
+
+
+                        <View style={styles.demoSetup}>
+                            <DemoSetup
+                                groupRequests={groupRequests}
+                                setGroupRequests={setGroupRequests}
+                            />
                         </View>
-                    )}
-
-                    {groupRequests.some(c => c.completed === true) && (
-                        <View>
-                            <View>
-                                <Text style={styles.subTitle}>COLLECTED ITEMS</Text>
-                            </View>
-
-                            <View>
-                                {groupRequests.map(gr => (
-                                    gr.completed
-                                    &&
-                                    <RequestRow
-                                        key={gr.id}
-                                        groupRequest={gr}
-                                        setGroupRequests={setGroupRequests}
-                                    />
-                                ))}
-                            </View>
-                        </View>
-                    )}
-
-
-                <View style={styles.demoSetup}>
-                    <DemoSetup
-                        groupRequests={groupRequests}
-                        setGroupRequests={setGroupRequests}
-                    />
-                </View>
+                    </View>
+                </ScrollView>
             </View>
-        </ScrollView>
-        </View>
-    </LinearGradient>
+        </LinearGradient>
     )
 }
 
@@ -218,9 +232,9 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
     return (
         <View>
             <TouchableOpacity style={styles.button} onPress={() => setShowDemo(prev => !prev)}>
-            <Text style={styles.buttonText}>
-                {showDemo ? "Hide Demo Input" : "Show Demo Input"}
-            </Text>
+                <Text style={styles.buttonText}>
+                    {showDemo ? "Hide Demo Input" : "Show Demo Input"}
+                </Text>
             </TouchableOpacity>
 
             {showDemo && (
@@ -246,21 +260,21 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
                     />
 
                     <Text style={styles.label}>Priority:</Text>
-                        <Picker
+                    <Picker
                         selectedValue={priority}
                         onValueChange={(value) => setPriority(value)}
                         style={styles.picker}
-                        >
+                    >
                         <Picker.Item label="1 (Low)" value={1} />
                         <Picker.Item label="2 (Medium)" value={2} />
                         <Picker.Item label="3 (High)" value={3} />
-                        </Picker>
+                    </Picker>
 
                     <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                         <Text style={styles.buttonText}>Submit</Text>
-                        </TouchableOpacity>
+                    </TouchableOpacity>
 
-                    <Text style={[styles.label, { marginTop: 20  }]}>Current Group Requests:</Text>
+                    <Text style={[styles.label, { marginTop: 20 }]}>Current Group Requests:</Text>
                     {groupRequests.map(gr => (
                         <Text key={gr.id} style={{ color: "black" }}>
                             {gr.itemName} ({gr.requests.length} requests)
@@ -273,62 +287,65 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-  },
-
-  subTitle: {
-    color: "black",
-    textAlign: "left",
-    fontSize: 20,
-    fontWeight: "700",
-     marginBottom: 12,
-    fontFamily: "Montserrat",
-  },
-  demoSetup: {
-    backgroundColor: "white",
-    padding: 15,
-    borderRadius: 15,
-    marginVertical: 20,
-    elevation: 3,
-    fontFamily: "Montserrat",
-  },
-  label: {
-    color: "black",
-    backgroundColor: "white",
-    fontFamily: "Montserrat",
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 30,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 15,
-    fontFamily: "Montserrat",
-    color: "black",
-  },
-  picker: {
-    color: "black",
-    marginBottom: 15,
-  },
-  button: {
-    backgroundColor: "#360479ff",
-    padding: 12,
-    borderRadius: 15,
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    fontFamily: "Montserrat",
-  },
+    headerHelp: {
+        marginRight: 24,
+        fontSize: 16,
+    },
+    background: {
+        flex: 1,
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    },
+    subTitle: {
+        color: "black",
+        textAlign: "left",
+        fontSize: 20,
+        fontWeight: "700",
+        marginBottom: 12,
+        fontFamily: "Montserrat",
+    },
+    demoSetup: {
+        backgroundColor: "white",
+        padding: 15,
+        borderRadius: 15,
+        marginVertical: 20,
+        elevation: 3,
+        fontFamily: "Montserrat",
+    },
+    label: {
+        color: "black",
+        backgroundColor: "white",
+        fontFamily: "Montserrat",
+        fontSize: 16,
+        marginBottom: 8,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 30,
+        padding: 12,
+        fontSize: 16,
+        marginBottom: 15,
+        fontFamily: "Montserrat",
+        color: "black",
+    },
+    picker: {
+        color: "black",
+        marginBottom: 15,
+    },
+    button: {
+        backgroundColor: "#360479ff",
+        padding: 12,
+        borderRadius: 15,
+        alignItems: "center",
+        marginVertical: 10,
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "bold",
+        fontFamily: "Montserrat",
+    },
 });
