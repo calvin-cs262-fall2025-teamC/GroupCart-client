@@ -1,8 +1,7 @@
 import { useFonts } from "expo-font";
 
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, Stack, router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   FlatList,
@@ -10,10 +9,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
-
 
 interface ShoppingItem {
   id: string;
@@ -21,7 +19,6 @@ interface ShoppingItem {
   completed: boolean;
   priority: number;
 }
-
 
 export default function MyList() {
   let [fontsLoaded] = useFonts({
@@ -34,12 +31,10 @@ export default function MyList() {
   const [newItem, setNewItem] = useState('');
   const [priority, setPriority] = useState<number>(1);
 
-if (!fontsLoaded) {
-  SplashScreen.preventAutoHideAsync();
-  return null;
-}
-
-
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
 
   const addItem = () => {
     if (newItem.trim()) {
@@ -89,15 +84,26 @@ if (!fontsLoaded) {
       colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
       // Gradient direction: starts from top-right, flows to bottom-left
       // [x1, y1] = start point, [x2, y2] = end point
-      start={{ x: 1, y: 0}} // Top right
+      start={{ x: 1, y: 0 }} // Top right
       end={{ x: 0, y: 1 }} // Bottom left
 
       locations={[0.1, 0.3, 0.6, 1]}
       style={[styles.background]}
     >
-
+      <Stack.Screen
+        options={{
+          title: "Personal List",
+          headerRight: () => (
+            <Text
+              style={styles.headerHelp}
+              onPress={() => router.push("/pages/help/ListHelpPage")}
+            >
+              Help
+            </Text>
+          ),
+        }}
+      />
       <View style={styles.overlay}>
-
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -166,13 +172,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },
 
+  headerHelp: {
+    marginRight: 24,
+    fontSize: 16,
+  },
+
   inputContainer: {
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 15,
     marginBottom: 20,
     elevation: 3,
-   fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat',
     marginTop: 10,
   },
   textInput: {
