@@ -96,16 +96,6 @@ export default function TabLayout() {
             ),
           }}
         />
-        <Tabs.Screen
-          name="dev"
-          options={{
-            title: "Settings",
-            tabBarIcon: ({ color, focused }) => (
-              <AnimatedTabIcon source={settingsIcon} color={color} focused={focused} />
-
-            ),
-          }}
-        />
       </Tabs>
     </UserProvider>
 
