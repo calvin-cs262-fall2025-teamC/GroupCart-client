@@ -177,7 +177,7 @@ function DemoSetup({ groupRequests, setGroupRequests }: DemoSetupProps) {
             const defaultRequester = new Requester({ id: "nick-id", displayName: "Nick", color: "royalblue" });
             setSelectedRequester(defaultRequester);
         }
-    }, [user]);
+    }, [selectedRequester, user]);
 
     const handleSubmit = () => {
         if (!itemName || !selectedRequester) return; // simple validation
