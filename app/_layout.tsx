@@ -3,6 +3,7 @@ import React from 'react';
 import { AppProvider } from './contexts/AppContext';
 // ...existing code...
 export default function RootLayout(): React.ReactElement {
+  // const navigation = useNavigation();
   return (
       <AppProvider>
 
