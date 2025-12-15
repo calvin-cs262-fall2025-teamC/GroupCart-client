@@ -56,4 +56,9 @@ export class ApiClient {
   ): Promise<any> {
     return this.request(`list/${username}`, "POST", data);
   }
+
+  public static async createUser(username: string): Promise<void>{
+    const data = {firstname : "deffirstname", lastname : "deflastname"};
+    return this.request(`user/${username}`, "POST", data);
+  }
 }
