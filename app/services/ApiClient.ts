@@ -49,16 +49,31 @@ export class ApiClient {
     return this.request(`shop`, "GET");
   }
   
-  public static async createUser(username: string): Promise<any>{
+
+  public static async createUser(username: string): Promise<void>{
     const data = {firstName : "deffirstname", lastName : "deflastname"};
     return this.request(`user/${username}`, "POST", data);
   }
 
-  //createGroup
+  public static async createGroup(id: string, name: string, users: string[]): Promise<void>{
+    const data = {name: name, users: users};
+    return this.request(`group/${id}`, "POST", data);
+  }
 
-  //createItem
+  public static async fulfillFavor(itemId: number, item: string, by: string, forUser: string, amount: number): Promise<void>{
+    const data = {itemId: itemId, item: item, by: by, for: forUser, amount: amount};
+    return this.request(`favor`, "POST", data);
+  }
 
-  //fufillFavor
+  public static async modifyListItem(username: string, id: number, item: string, priority: number): Promise<void>{
+    const data = {item: item, priority: priority};
+    return this.request(`list/${username}/${id}`, "PUT", data);
+  }
+
+  public static async modifyFavor(id: number, reimbursed: boolean, amount: number): Promise<void>{
+    const data = {reimbursed: reimbursed, amount: amount};
+    return this.request(`favor/${id}`, "PUT", data);
+  }
 
   // Add item to List
   public static async createItem(
@@ -67,7 +82,4 @@ export class ApiClient {
   ): Promise<void> {
     return this.request(`list/${username}`, "POST", data);
   }
-
-
-  public static async 
 }
