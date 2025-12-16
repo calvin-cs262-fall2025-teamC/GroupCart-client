@@ -19,6 +19,20 @@ interface AppContextType {
     setGroupGroceryCollection: (groceryList: SharedShoppingItem[]) => void;
     favors: Favor[] | null;
     setFavors: (favor: Favor[]) => void;
+
+    // Wrapper functions
+    loadUser: (username: string) => Promise<User>;
+    loadGroup: () => Promise<void>;
+    loadUserGroceryList: () => Promise<void>;
+    loadGroupGroceryList: () => Promise<void>;
+    loadFavorsForUser: () => Promise<void>;
+    loadFavorsByUser: () => Promise<void>;
+    createMyItem: (item: string, priority: number) => Promise<void>;
+    updateMyItem: (id: number, item: string, priority: number) => Promise<void>;
+    createNewUser: (username: string) => Promise<void>;
+    createNewGroup: (id: string, name: string, users: string[]) => Promise<void>;
+    createFavor: (itemId: number, item: string, forUser: string, amount: number) => Promise<void>;
+    updateFavor: (id: number, reimbursed: boolean, amount: number) => Promise<void>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -32,9 +46,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     const [groupGroceryCollection, setGroupGroceryCollection] = useState<SharedShoppingItem[] | null>(null);
     const [favors, setFavors] = useState<Favor[] | null>(null);
 
-    const loadUser = async () => {
+    const loadUser = async (username: string) => {
         // setUser({ username: "alice", firstName: "Unknown", lastName: "Unknown", groupId: "none" });
-        const retrievedUser = await ApiClient.getUser("abyle");
+        const retrievedUser = await ApiClient.getUser(username);
         setUser(retrievedUser);
     }
 
@@ -55,8 +69,53 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setGroupGroceryCollection(groupGroceryCollection);
     }
 
+    const loadFavorsForUser = async () => {
+        if (!user?.username) return;
+        const favorsForUser = await ApiClient.getFavorsForUser(user.username);
+        setFavors(favorsForUser);
+    }
+
+    const loadFavorsByUser = async () => {
+        if (!user?.username) return;
+        const favorsByUser = await ApiClient.getFavorsByUser(user.username);
+        setFavors(favorsByUser);
+    }
+
+    const createMyItem = async (item: string, priority: number) => {
+        if (!user?.username) return;
+        await ApiClient.createItem(user.username, { item, priority });
+        await loadUserGroceryList();
+    }
+
+    const updateMyItem = async (id: number, item: string, priority: number) => {
+        if (!user?.username) return;
+        await ApiClient.modifyListItem(user.username, id, item, priority);
+        await loadUserGroceryList();
+    }
+
+    const createNewUser = async (username: string) => {
+        await ApiClient.createUser(username);
+    }
+
+    const createNewGroup = async (id: string, name: string, users: string[]) => {
+        await ApiClient.createGroup(id, name, users);
+        if (id === group?.id) {
+            await loadGroup();
+        }
+    }
+
+    const createFavor = async (itemId: number, item: string, forUser: string, amount: number) => {
+        if (!user?.username) return;
+        await ApiClient.fulfillFavor(itemId, item, user.username, forUser, amount);
+        await loadFavorsByUser();
+    }
+
+    const updateFavor = async (id: number, reimbursed: boolean, amount: number) => {
+        await ApiClient.modifyFavor(id, reimbursed, amount);
+        await loadFavorsForUser();
+    }
+
     useEffect(() => {
-        loadUser();
         loadGroup();
         loadUserGroceryList();
         loadGroupGroceryList();
@@ -72,7 +131,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         groupGroceryCollection,
         setGroupGroceryCollection,
         favors,
-        setFavors
+        setFavors,
+        loadUser,
+        loadGroup,
+        loadUserGroceryList,
+        loadGroupGroceryList,
+        loadFavorsForUser,
+        loadFavorsByUser,
+        createMyItem,
+        updateMyItem,
+        createNewUser,
+        createNewGroup,
+        createFavor,
+        updateFavor
     };
 
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>

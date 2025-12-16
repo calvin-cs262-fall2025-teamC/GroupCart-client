@@ -16,10 +16,19 @@ export class ApiClient {
       body: body ? JSON.stringify(body) : undefined
     });
 
-    if (!response.ok) throw new Error(`Error ${response.status}`);
+    // Handle 404 gracefully
+    if (response.status === 404) return null;
 
-    return await response.json();
+    // Throw for other non-success responses
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`HTTP ${response.status}: ${text}`);
+    }
+
+    // Parse and return JSON
+    return response.json();
   }
+
 
   // Get group by group id
   public static async getGroup(id: string): Promise<Group> {
@@ -30,6 +39,7 @@ export class ApiClient {
   public static async getUser(username: string): Promise<User> {
     return this.request(`user/${username}`, "GET");
   }
+
 
   // Get user list by username
   public static async getUserGroceryList(username: string): Promise<ListItem[]> {
@@ -48,30 +58,30 @@ export class ApiClient {
   public static async getGroupGroceryList(): Promise<SharedShoppingItem[]> {
     return this.request(`shop`, "GET");
   }
-  
 
-  public static async createUser(username: string): Promise<void>{
-    const data = {firstName : "deffirstname", lastName : "deflastname"};
+
+  public static async createUser(username: string): Promise<void> {
+    const data = { firstName: "deffirstname", lastName: "deflastname" };
     return this.request(`user/${username}`, "POST", data);
   }
 
-  public static async createGroup(id: string, name: string, users: string[]): Promise<void>{
-    const data = {name: name, users: users};
+  public static async createGroup(id: string, name: string, users: string[]): Promise<void> {
+    const data = { name: name, users: users };
     return this.request(`group/${id}`, "POST", data);
   }
 
-  public static async fulfillFavor(itemId: number, item: string, by: string, forUser: string, amount: number): Promise<void>{
-    const data = {itemId: itemId, item: item, by: by, for: forUser, amount: amount};
+  public static async fulfillFavor(itemId: number, item: string, by: string, forUser: string, amount: number): Promise<void> {
+    const data = { itemId: itemId, item: item, by: by, for: forUser, amount: amount };
     return this.request(`favor`, "POST", data);
   }
 
-  public static async modifyListItem(username: string, id: number, item: string, priority: number): Promise<void>{
-    const data = {item: item, priority: priority};
+  public static async modifyListItem(username: string, id: number, item: string, priority: number): Promise<void> {
+    const data = { item: item, priority: priority };
     return this.request(`list/${username}/${id}`, "PUT", data);
   }
 
-  public static async modifyFavor(id: number, reimbursed: boolean, amount: number): Promise<void>{
-    const data = {reimbursed: reimbursed, amount: amount};
+  public static async modifyFavor(id: number, reimbursed: boolean, amount: number): Promise<void> {
+    const data = { reimbursed: reimbursed, amount: amount };
     return this.request(`favor/${id}`, "PUT", data);
   }
 

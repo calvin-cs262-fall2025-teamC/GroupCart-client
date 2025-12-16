@@ -12,12 +12,16 @@ import {
 	View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { useAppContext } from '../contexts/AppContext';
 
 export default function UserLoginPage(): React.ReactElement | null {
+	// ===== Contexts =====
+	const { user, loadUser } = useAppContext();
+
 	// ===== Hooks =====
 	const navigation = useNavigation();
-	const [code, setCode] = useState('');
-	const [isLoading, setIsLoading] = useState(false);	
+	const [username, setUsername] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
 	let [fontsLoaded] = useFonts({
 		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
@@ -47,26 +51,34 @@ export default function UserLoginPage(): React.ReactElement | null {
 
 	// ===== Handlers =====
 	const onLogin = async () => {
-		if (!code.trim()) {
-			Alert.alert('Missing code', 'Please enter a UserName.');
+		if (!username.trim()) {
+			Alert.alert('Missing Login', 'Please enter a UserName.');
 			return;
 		}
-
 		setIsLoading(true);
 		try {
-			// TODO: Replace with real API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			Alert.alert('Success', `Logged in: ${code}`);
-			// TODO: Navigate to home screen
-		} catch {
+			// Attempt to load user from API
+			const result = await loadUser(username);
+
+			// Only runs if loadUser succeeds
+			if (result)
+			{
+				
+			}
+			Alert.alert('Success', `Logged in2: ${username}`);
+
+			// Navigate only on success
+			(navigation as any).navigate('pages/JoinGroupPage');
+		} catch (error) {
+			// Runs if loadUser throws an error
 			Alert.alert('Error', 'Failed to login');
+			console.error('Login failed:', error);
 		} finally {
+			// Always reset loading state
 			setIsLoading(false);
 		}
-		// TODO: wire up real join logic / navigation
-		Alert.alert('Logging in User', `User entered: ${code}`);
-		(navigation as any).navigate('pages/JoinGroupPage');
 	};
+
 
 	const onCreate = async () => {
 		setIsLoading(true);
@@ -84,6 +96,9 @@ export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Render =====
 	return (
 		<View style={styles.container}>
+			{/* Debug */}
+			<Text>local username: {username} </Text>
+			<Text>context username: {user?.firstName}</Text>
 			{/* Logo */}
 			<Image
 				style={styles.image}
@@ -95,8 +110,8 @@ export default function UserLoginPage(): React.ReactElement | null {
 				style={styles.input}
 				placeholder="Enter Your Username"
 				placeholderTextColor="#888"
-				value={code}
-				onChangeText={setCode}
+				value={username}
+				onChangeText={setUsername}
 				autoCapitalize="none"
 				keyboardType="default"
 				editable={!isLoading}
@@ -232,6 +247,6 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		justifyContent: 'center',
 		alignItems: 'center',
-		 backgroundColor: '#ffffffbe',// Clean white background instead of dark overlay
+		backgroundColor: '#ffffffbe',// Clean white background instead of dark overlay
 	},
 });
