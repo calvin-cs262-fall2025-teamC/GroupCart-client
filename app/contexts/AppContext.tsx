@@ -21,7 +21,7 @@ interface AppContextType {
     setFavors: (favor: Favor[]) => void;
 
     // Wrapper functions
-    loadUser: (username: string) => Promise<User>;
+    loadUser: (username: string) => Promise<User | null>;
     loadGroup: () => Promise<void>;
     loadUserGroceryList: () => Promise<void>;
     loadGroupGroceryList: () => Promise<void>;
@@ -50,6 +50,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         // setUser({ username: "alice", firstName: "Unknown", lastName: "Unknown", groupId: "none" });
         const retrievedUser = await ApiClient.getUser(username);
         setUser(retrievedUser);
+        return retrievedUser;
     }
 
     const loadGroup = async () => {

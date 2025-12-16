@@ -63,12 +63,14 @@ export default function UserLoginPage(): React.ReactElement | null {
 			// Only runs if loadUser succeeds
 			if (result)
 			{
-				
+				// Navigate only on success
+				(navigation as any).navigate('pages/JoinGroupPage');
 			}
-			Alert.alert('Success', `Logged in2: ${username}`);
+			else
+			{
+				Alert.alert('Invalid Login', `Unable to find user: ${username}`);
+			}
 
-			// Navigate only on success
-			(navigation as any).navigate('pages/JoinGroupPage');
 		} catch (error) {
 			// Runs if loadUser throws an error
 			Alert.alert('Error', 'Failed to login');
