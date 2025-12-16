@@ -48,17 +48,26 @@ export class ApiClient {
   public static async getGroupGroceryList(): Promise<SharedShoppingItem[]> {
     return this.request(`shop`, "GET");
   }
+  
+  public static async createUser(username: string): Promise<any>{
+    const data = {firstName : "deffirstname", lastName : "deflastname"};
+    return this.request(`user/${username}`, "POST", data);
+  }
+
+  //createGroup
+
+  //createItem
+
+  //fufillFavor
 
   // Add item to List
-  public static async addItemToUserList(
+  public static async createItem(
     username: string,
     data: { item: string; priority: number }
-  ): Promise<any> {
+  ): Promise<void> {
     return this.request(`list/${username}`, "POST", data);
   }
 
-  public static async createUser(username: string): Promise<void>{
-    const data = {firstname : "deffirstname", lastname : "deflastname"};
-    return this.request(`user/${username}`, "POST", data);
-  }
+
+  public static async 
 }
