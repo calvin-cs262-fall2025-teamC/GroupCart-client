@@ -64,7 +64,6 @@ export default function CreateUserPage(): React.ReactElement | null {
 		} finally {
 			setIsLoading(false);
 		}
-
 	};
 
 	// ===== Render =====

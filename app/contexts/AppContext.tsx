@@ -53,7 +53,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
             const retrievedUser = await ApiClient.getUser(username);
             setUser(retrievedUser);
         } catch (err: any) {
-            throw new Error("Issue Loading User");
+            if (err.status === 404)
+            {
+                throw new Error("USER_NOT_FOUND");
+            }
+            throw new Error("NETWORK_ERROR");
         }
     }
 
@@ -111,9 +115,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
             // throw new Error("UNABLE_TO_CREATE_USER");
         }
     };
-
-
-
 
     const createNewGroup = async (id: string, name: string, users: string[]) => {
         await ApiClient.createGroup(id, name, users);

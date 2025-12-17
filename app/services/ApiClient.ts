@@ -61,7 +61,6 @@ export class ApiClient {
     return this.request(`shop`, "GET");
   }
 
-
   public static async createUser(username: string): Promise<{message: string, username: string, firstName: string, lastName: string}> {
     const data = { firstName: "deffirstname", lastName: "deflastname" };
     return this.request(`user/${username}`, "POST", data);

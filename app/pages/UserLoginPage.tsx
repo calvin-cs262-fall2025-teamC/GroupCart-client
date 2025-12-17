@@ -62,9 +62,18 @@ export default function UserLoginPage(): React.ReactElement | null {
 
 			// Navigate only on success
 			(navigation as any).navigate('pages/JoinGroupPage');
-		} catch {
-			// Runs if loadUser throws an error
-			Alert.alert('Invalid Login', `Unable to find user: ${username}`);
+		} catch (err: any) {
+			// Check the error message
+			switch (err.message) {
+				case "USER_NOT_FOUND":
+					Alert.alert('Invalid Login', `Unable to find user: ${username}`);
+					break;
+				case "NETWORK_ERROR":
+					Alert.alert("Error", "There was a problem connecting to the server. Try again later.");
+					break;
+				default:
+					Alert.alert("Error", "An unexpected error occurred.");
+			}
 		} finally {
 			// Always reset loading state
 			setIsLoading(false);
