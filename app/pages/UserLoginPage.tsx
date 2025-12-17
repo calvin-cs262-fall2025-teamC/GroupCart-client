@@ -16,7 +16,7 @@ import { useAppContext } from '../contexts/AppContext';
 
 export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Contexts =====
-	const { user, loadUser } = useAppContext();
+	const { user, loadUser, group, loadGroup } = useAppContext();
 
 	// ===== Hooks =====
 	const navigation = useNavigation();
@@ -58,23 +58,13 @@ export default function UserLoginPage(): React.ReactElement | null {
 		setIsLoading(true);
 		try {
 			// Attempt to load user from API
-			const result = await loadUser(username);
+			await loadUser(username);
 
-			// Only runs if loadUser succeeds
-			if (result)
-			{
-				// Navigate only on success
-				(navigation as any).navigate('pages/JoinGroupPage');
-			}
-			else
-			{
-				Alert.alert('Invalid Login', `Unable to find user: ${username}`);
-			}
-
-		} catch (error) {
+			// Navigate only on success
+			(navigation as any).navigate('pages/JoinGroupPage');
+		} catch {
 			// Runs if loadUser throws an error
-			Alert.alert('Error', 'Failed to login');
-			console.error('Login failed:', error);
+			Alert.alert('Invalid Login', `Unable to find user: ${username}`);
 		} finally {
 			// Always reset loading state
 			setIsLoading(false);
@@ -83,16 +73,7 @@ export default function UserLoginPage(): React.ReactElement | null {
 
 
 	const onCreate = async () => {
-		setIsLoading(true);
-		try {
-			// TODO: Replace with real API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			(navigation as any).navigate('pages/CreateUserPage');
-		} catch {
-			Alert.alert('Error', 'Failed to navigate to create account');
-		} finally {
-			setIsLoading(false);
-		}
+		(navigation as any).navigate('pages/CreateUserPage');
 	};
 
 	// ===== Render =====

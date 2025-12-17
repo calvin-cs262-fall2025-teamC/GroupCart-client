@@ -5,13 +5,16 @@ import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { useAppContext } from '../contexts/AppContext';
+
 
 export default function CreateUserPage(): React.ReactElement | null {
+	// ===== Contexts =====
+	const { user, loadUser, createNewUser } = useAppContext();
+
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	let [fontsLoaded] = useFonts({
 		'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
@@ -35,20 +38,33 @@ export default function CreateUserPage(): React.ReactElement | null {
 
 	// ===== Handlers =====
 	const onCreate = async () => {
-		if (!username.trim() || !email.trim() || !password.trim()) {
-			Alert.alert('Missing fields', 'Please fill in all fields');
+		if (!username.trim()) {
+			Alert.alert('Missing Username', 'Please fill in a username');
 			return;
 		}
 
 		setIsLoading(true);
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			Alert.alert('Success', `Account created: ${username}`);
-		} catch {
-			Alert.alert('Error', 'Failed to create account');
+			await createNewUser(username);
+
+			// Success!
+			Alert.alert("Success", "User created");
+		} catch (err: any) {
+			// Check the error message
+			switch (err.message) {
+				case "USER_ALREADY_EXISTS":
+					Alert.alert("Sorry", "This username is already taken. Please choose another.");
+					break;
+				case "NETWORK_ERROR":
+					Alert.alert("Error", "There was a problem connecting to the server. Try again later.");
+					break;
+				default:
+					Alert.alert("Error", "An unexpected error occurred.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
+
 	};
 
 	// ===== Render =====
@@ -71,29 +87,6 @@ export default function CreateUserPage(): React.ReactElement | null {
 				value={username}
 				onChangeText={setUsername}
 				autoCapitalize="none"
-				editable={!isLoading}
-			/>
-
-			{/* Email Input */}
-			<Text style={styles.label}>Email*</Text>
-			<TextInput
-				style={styles.input}
-				placeholder="Enter your email"
-				value={email}
-				onChangeText={setEmail}
-				keyboardType="email-address"
-				autoCapitalize="none"
-				editable={!isLoading}
-			/>
-
-			{/* Password Input */}
-			<Text style={styles.label}>Password*</Text>
-			<TextInput
-				style={styles.input}
-				placeholder="Enter your password"
-				value={password}
-				onChangeText={setPassword}
-				secureTextEntry
 				editable={!isLoading}
 			/>
 

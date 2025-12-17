@@ -21,8 +21,8 @@ interface AppContextType {
     setFavors: (favor: Favor[]) => void;
 
     // Wrapper functions
-    loadUser: (username: string) => Promise<User | null>;
-    loadGroup: () => Promise<void>;
+    loadUser: (username: string) => Promise<void>;
+    loadGroup: (groupID: string) => Promise<Group>;
     loadUserGroceryList: () => Promise<void>;
     loadGroupGroceryList: () => Promise<void>;
     loadFavorsForUser: () => Promise<void>;
@@ -46,17 +46,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     const [groupGroceryCollection, setGroupGroceryCollection] = useState<SharedShoppingItem[] | null>(null);
     const [favors, setFavors] = useState<Favor[] | null>(null);
 
+    // Use this for client component handlind:      return { status: "found", user };
     const loadUser = async (username: string) => {
         // setUser({ username: "alice", firstName: "Unknown", lastName: "Unknown", groupId: "none" });
-        const retrievedUser = await ApiClient.getUser(username);
-        setUser(retrievedUser);
-        return retrievedUser;
+        try {
+            const retrievedUser = await ApiClient.getUser(username);
+            setUser(retrievedUser);
+        } catch (err: any) {
+            throw new Error("Issue Loading User");
+        }
     }
 
     const loadGroup = async () => {
         const retrievedGroup = await ApiClient.getGroup("dev-team");
         console.log(retrievedGroup);
         setGroup(retrievedGroup);
+        return retrievedGroup
     }
 
     const loadUserGroceryList = async () => {
@@ -94,9 +99,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         await loadUserGroceryList();
     }
 
-    const createNewUser = async (username: string) => {
-        await ApiClient.createUser(username);
-    }
+    const createNewUser = async (username: string): Promise<void> => {
+        try {
+            await ApiClient.createUser(username);
+        } catch (err: any) {
+            console.log(err);
+            if (err.status === 409) {
+                throw new Error("USER_ALREADY_EXISTS");// throw new Error("USER_ALREADY_EXISTS");
+            }
+            throw new Error("NETWORK_ERROR");
+            // throw new Error("UNABLE_TO_CREATE_USER");
+        }
+    };
+
+
+
 
     const createNewGroup = async (id: string, name: string, users: string[]) => {
         await ApiClient.createGroup(id, name, users);

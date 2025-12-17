@@ -16,13 +16,15 @@ export class ApiClient {
       body: body ? JSON.stringify(body) : undefined
     });
 
-    // Handle 404 gracefully
-    if (response.status === 404) return null;
+    // // Handle 404 gracefully
+    // if (response.status === 404) return null;
 
     // Throw for other non-success responses
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`HTTP ${response.status}: ${text}`);
+      const error =  new Error(`HTTP ${response.status}: ${text}`);
+      (error as any).status = response.status;
+      throw error;
     }
 
     // Parse and return JSON
@@ -60,7 +62,7 @@ export class ApiClient {
   }
 
 
-  public static async createUser(username: string): Promise<void> {
+  public static async createUser(username: string): Promise<{message: string, username: string, firstName: string, lastName: string}> {
     const data = { firstName: "deffirstname", lastName: "deflastname" };
     return this.request(`user/${username}`, "POST", data);
   }
