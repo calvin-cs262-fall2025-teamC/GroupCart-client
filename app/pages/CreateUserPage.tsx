@@ -15,6 +15,8 @@ export default function CreateUserPage(): React.ReactElement | null {
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [username, setUsername] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	let [fontsLoaded] = useFonts({
 		'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
@@ -85,6 +87,28 @@ export default function CreateUserPage(): React.ReactElement | null {
 				placeholder="Enter your username"
 				value={username}
 				onChangeText={setUsername}
+				autoCapitalize="none"
+				editable={!isLoading}
+			/>
+
+			{/* Firstname Input */}
+			<Text style={styles.label}>First Name*</Text>
+			<TextInput
+				style={styles.input}
+				placeholder="Enter your First Name"
+				value={firstName}
+				onChangeText={setFirstName}
+				autoCapitalize="none"
+				editable={!isLoading}
+			/>
+
+			{/* Lastname Input */}
+			<Text style={styles.label}>Last Name*</Text>
+			<TextInput
+				style={styles.input}
+				placeholder="Enter your First Name"
+				value={lastName}
+				onChangeText={setLastName}
 				autoCapitalize="none"
 				editable={!isLoading}
 			/>

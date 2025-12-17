@@ -61,8 +61,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         }
     }
 
-    const loadGroup = async () => {
-        const retrievedGroup = await ApiClient.getGroup("dev-team");
+    const loadGroup = async (groupId: string) => {
+        const safeGroupId = ApiClient.slugify(groupId);
+        const retrievedGroup = await ApiClient.getGroup(safeGroupId);
         console.log(retrievedGroup);
         setGroup(retrievedGroup);
         return retrievedGroup
@@ -117,9 +118,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     const createNewGroup = async (id: string, name: string, users: string[]) => {
-        await ApiClient.createGroup(id, name, users);
+        const safeId = ApiClient.slugify(id);
+        await ApiClient.createGroup(safeId, name, users);
         if (id === group?.id) {
-            await loadGroup();
+            await loadGroup(safeId);
         }
     }
 
@@ -135,7 +137,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     useEffect(() => {
-        loadGroup();
         loadUserGroceryList();
         loadGroupGroceryList();
     }, []);

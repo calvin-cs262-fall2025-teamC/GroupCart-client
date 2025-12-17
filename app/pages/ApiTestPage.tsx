@@ -26,19 +26,24 @@ export default function TestPage() {
         {user && <Text>{user.firstName} { user.lastName }</Text>}
       <Text>Our group:</Text>
         {group && <Text>{group.id} { group.name }</Text>}
+      <Text>Our Users:</Text>
+        {group?.users.map((user) => (
+          <Text key={user}>{user}</Text>
+        ))}
+
         <Text>My list:</Text>
         {userGroceryList && userGroceryList[0] && <Text>{userGroceryList[0].item}</Text> }
         {/* <Button onPress={seeList} title="see list"></Button> */}
         <Text>Shared Grocery Collection:</Text>
         {groupGroceryCollection && groupGroceryCollection[0] && <Text>{groupGroceryCollection[0].item}</Text> }
         <Text>Make a new user:</Text>
-                  <TextInput
-                    placeholder="Add new user..."
-                    value={newCreatedUser}
-                    onChangeText={setCreatedUser}
-                    style={styles.textInput}
-                    placeholderTextColor="#e0e0e0"
-                  />
+        <TextInput
+          placeholder="Add new user..."
+          value={newCreatedUser}
+          onChangeText={setCreatedUser}
+          style={styles.textInput}
+          placeholderTextColor="#e0e0e0"
+        />
         <TouchableOpacity onPress={createUserClicked} style={styles.button}>
           <Text style={styles.buttonText}>Make a new user</Text>
         </TouchableOpacity>

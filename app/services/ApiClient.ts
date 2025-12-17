@@ -31,6 +31,15 @@ export class ApiClient {
     return response.json();
   }
 
+  // Provide this to users of ApiClient to make URL friendly values, like when creating a userID or a
+  public static slugify(input: string): string {
+  return input
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')  // remove special characters
+    .replace(/\s+/g, '-')      // replace whitespace with dashes
+    .replace(/-+/g, '-');      // collapse multiple dashes
+  }
 
   // Get group by group id
   public static async getGroup(id: string): Promise<Group> {
