@@ -8,19 +8,40 @@ import {
     View
 } from "react-native";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import RequestRow from "../components/RequestRow";
 import { useAppContext } from "../contexts/AppContext";
 import { GroupRequest } from "../models/GroupRequest";
 
 export default function GroupCart() {
-    const { groupGroceryCollection } = useAppContext();
+    const { groupGroceryCollection, loadGroupGroceryList } = useAppContext();
     let [fontsLoaded] = useFonts({
         'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
     });
     const [groupRequests, setGroupRequests] = useState<GroupRequest[]>([]);
+    
+    useEffect(() => {
+        const loadAndMapGroupRequests = async () => {
+            await loadGroupGroceryList();
+            if (groupGroceryCollection) {
+                console.log(groupGroceryCollection);
+                const mappedRequests = groupGroceryCollection.map((item, index) => 
+                    new GroupRequest({
+                        id: `${item.item}-${index}`,
+                        itemName: item.item,
+                        completed: false,
+                        requests: []
+                    })
+                );
+                setGroupRequests(mappedRequests);
+            }
+        };
+        
+        loadAndMapGroupRequests();
+    }, []);
+
     if (!fontsLoaded) {
         SplashScreen.preventAutoHideAsync();
         return null;
