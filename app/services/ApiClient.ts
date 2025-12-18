@@ -51,7 +51,6 @@ export class ApiClient {
     return this.request(`user/${username}`, "GET");
   }
 
-
   // Get user list by username
   public static async getUserGroceryList(username: string): Promise<ListItem[]> {
     return this.request(`list/${username}`, "GET");
@@ -70,9 +69,9 @@ export class ApiClient {
     return this.request(`shop`, "GET");
   }
 
-  public static async createUser(username: string): Promise<{message: string, username: string, firstName: string, lastName: string}> {
+  public static async createUser(newUser: Partial<User>): Promise<{message: string, username: string, firstName: string, lastName: string}> {
     const data = { firstName: "deffirstname", lastName: "deflastname" };
-    return this.request(`user/${username}`, "POST", data);
+    return this.request(`user/${newUser.username}`, "POST", data);
   }
 
   public static async createGroup(id: string, name: string, users: string[]): Promise<void> {
@@ -93,6 +92,13 @@ export class ApiClient {
   public static async modifyFavor(id: number, reimbursed: boolean, amount: number): Promise<void> {
     const data = { reimbursed: reimbursed, amount: amount };
     return this.request(`favor/${id}`, "PUT", data);
+  }
+
+public static async modifyUser(newInfo: Partial<User>): Promise<void> 
+  { 
+    const data = newInfo;
+    console.log("apiclient:", newInfo);
+    return this.request(`user/${newInfo.username}`, "PUT", data);
   }
 
   // Add item to List

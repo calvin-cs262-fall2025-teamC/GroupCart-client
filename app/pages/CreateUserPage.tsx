@@ -47,7 +47,8 @@ export default function CreateUserPage(): React.ReactElement | null {
 
 		setIsLoading(true);
 		try {
-			await createNewUser(username);
+			await createNewUser({username : username, firstName : firstName, lastName : lastName});
+			await loadUser(username);
 
 			// Success!
 			Alert.alert("Success", "User created");

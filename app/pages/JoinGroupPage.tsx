@@ -16,7 +16,7 @@ import { useAppContext } from '../contexts/AppContext';
 
 export default function JoinGroupPage(): React.ReactElement | null {
 	// ===== Contexts =====
-	const { loadGroup } = useAppContext();
+	const { loadGroup, updateMyUser } = useAppContext();
 
 	// ===== Hooks =====
 	const navigation = useNavigation();
@@ -60,6 +60,7 @@ export default function JoinGroupPage(): React.ReactElement | null {
 		try {
 			// Attempt to load group from API
 			await loadGroup(code);
+			await updateMyUser({groupId: code});
 
 			// Navigate only on success
 			(navigation as any).navigate('(tabs)');
@@ -73,7 +74,8 @@ export default function JoinGroupPage(): React.ReactElement | null {
 					Alert.alert("Error", "There was a problem connecting to the server. Try again later.");
 					break;
 				default:
-					Alert.alert("Error", "An unexpected error occurred.");
+					// Alert.alert("Error", "An unexpected error occurred.");
+					Alert.alert(err.message);
 			}
 		} finally {
 			setIsLoading(false);
