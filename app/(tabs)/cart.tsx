@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen, Stack, router } from 'expo-router';
+import { SplashScreen, Stack, router, useFocusEffect } from 'expo-router';
 import {
     ScrollView,
     StyleSheet,
@@ -8,39 +8,95 @@ import {
     View
 } from "react-native";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import RequestRow from "../components/RequestRow";
 import { useAppContext } from "../contexts/AppContext";
+import { GroceryRequest } from "../models/GroceryRequest";
 import { GroupRequest } from "../models/GroupRequest";
+import { Requester } from "../models/Requester";
+import { ApiClient } from "../services/ApiClient";
 
 export default function GroupCart() {
-    const { groupGroceryCollection, loadGroupGroceryList } = useAppContext();
+    const { group, groupGroceryCollection, loadGroupGroceryList } = useAppContext();
     let [fontsLoaded] = useFonts({
         'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
     });
     const [groupRequests, setGroupRequests] = useState<GroupRequest[]>([]);
-    
+    const hasRunRef = useRef(false);
+
+    const getUserColor = (username: string) => {
+        if (!group || !group.userColors) return "gray";
+        const anyColors: any = group.userColors as any;
+        if (anyColors instanceof Map) return anyColors.get(username) ?? "gray";
+        return (anyColors as Record<string, string>)[username] ?? "gray";
+    };
+
+    // Map groupGroceryCollection to groupRequests whenever it changes
     useEffect(() => {
-        const loadAndMapGroupRequests = async () => {
-            await loadGroupGroceryList();
+        const mapRequests = async () => {
             if (groupGroceryCollection) {
-                console.log(groupGroceryCollection);
-                const mappedRequests = groupGroceryCollection.map((item, index) => 
-                    new GroupRequest({
+                // Step 1: Extract all unique usernames
+                const usernames = new Set<string>();
+                groupGroceryCollection.forEach(item => {
+                    (item.neededBy || []).forEach(username => usernames.add(username));
+                });
+                
+                // Step 2: Fetch all users and create a username -> firstName map
+                const firstNameMap = new Map<string, string>();
+                for (const username of usernames) {
+                    try {
+                        const user = await ApiClient.getUser(username);
+                        firstNameMap.set(username, user.firstName || username);
+                    } catch (error) {
+                        console.error(`Failed to fetch user ${username}:`, error);
+                        firstNameMap.set(username, username);
+                    }
+                }
+                
+                // Step 3: Map requests using the firstNameMap
+                const mappedRequests = groupGroceryCollection.map((item, index) => {
+                    const requests = (item.neededBy || []).map((username, i) => new GroceryRequest({
+                        id: String(item.itemIds?.[i] ?? `${item.item}-${i}`),
+                        requester: new Requester({ 
+                            id: username, 
+                            displayName: firstNameMap.get(username) || username, 
+                            color: getUserColor(username) 
+                        }),
+                        item: item.item,
+                    }));
+
+                    return new GroupRequest({
                         id: `${item.item}-${index}`,
                         itemName: item.item,
-                        completed: false,
-                        requests: []
-                    })
-                );
+                        completed: false, 
+                        requests,
+                    });
+                });
                 setGroupRequests(mappedRequests);
             }
         };
         
-        loadAndMapGroupRequests();
-    }, []);
+        mapRequests();
+    }, [groupGroceryCollection, group]);
+
+    const populateCart = async () => {
+        await loadGroupGroceryList();
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!hasRunRef.current) {
+                populateCart();
+                hasRunRef.current = true;
+            }
+            
+            return () => {
+                hasRunRef.current = false;
+            };
+        }, [])
+    );
 
     if (!fontsLoaded) {
         SplashScreen.preventAutoHideAsync();
@@ -63,12 +119,20 @@ export default function GroupCart() {
         options={{
           title: "Group Cart",
           headerRight: () => (
-            <Text
-              style={styles.headerHelp}
-              onPress={() => router.push("/pages/help/GroupCartHelpPage")}
-            >
-              Help
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+              <Text
+                style={styles.headerHelp}
+                onPress={() => populateCart()}
+              >
+                Refresh
+              </Text>
+              <Text
+                style={styles.headerHelp}
+                onPress={() => router.push("/pages/help/GroupCartHelpPage")}
+              >
+                Help
+              </Text>
+            </View>
           ),
         }}
       />

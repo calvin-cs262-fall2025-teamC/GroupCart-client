@@ -49,6 +49,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     const [favors, setFavors] = useState<Favor[] | null>(null);
 
     // Use this for client component handlind:      return { status: "found", user };
+
     const loadUser = async (username: string) => {
         try {
             const retrievedUser: Partial<User> = await ApiClient.getUser(username);
