@@ -95,9 +95,6 @@ export default function JoinGroupPage(): React.ReactElement | null {
 				source={require('@/assets/images/logo.png')}
 			/>
 
-
-
-
 			{/* Code Input */}
 			<TextInput
 				style={styles.input}

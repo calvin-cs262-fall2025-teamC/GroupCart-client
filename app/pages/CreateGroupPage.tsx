@@ -113,14 +113,6 @@ export default function CreateGroupPage(): React.ReactElement | null {
                 </TouchableOpacity>
             </View>
 
-            {/* Log In Link */}
-            <View style={styles.loginContainer}>
-                <Text style={styles.loginText}>Have an account? </Text>
-                <TouchableOpacity>
-                    <Text style={styles.loginLink}>Log in</Text>
-                </TouchableOpacity>
-            </View>
-
             {/* Loading Modal Overlay */}
             {isLoading && (
                 <View style={styles.loadingOverlay}>

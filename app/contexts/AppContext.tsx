@@ -63,11 +63,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     const loadGroup = async (groupId: string) => {
-        const safeGroupId = ApiClient.slugify(groupId);
-        const retrievedGroup = await ApiClient.getGroup(safeGroupId);
-        console.log(retrievedGroup);
-        setGroup(retrievedGroup);
-        return retrievedGroup
+        try{
+            const safeGroupId = ApiClient.slugify(groupId);
+            const retrievedGroup = await ApiClient.getGroup(safeGroupId);
+            console.log(retrievedGroup);
+            setGroup(retrievedGroup);
+            return retrievedGroup
+        } catch (err: any){
+            throw new Error(err.status === 404 ? "GROUP_NOT_FOUND" : "NETWORK_ERROR");
+        }
     }
 
     const loadMyGroceryList = async () => {

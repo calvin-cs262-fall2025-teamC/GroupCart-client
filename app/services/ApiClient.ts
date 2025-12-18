@@ -70,8 +70,7 @@ export class ApiClient {
   }
 
   public static async createUser(newUser: Partial<User>): Promise<{ message: string, username: string, firstName: string, lastName: string }> {
-    const data = { firstName: "deffirstname", lastName: "deflastname" };
-    return this.request(`user/${newUser.username}`, "POST", data);
+    return this.request(`user/${newUser.username}`, "POST", newUser);
   }
 
   public static async createGroup(id: string, name: string, users: string[]): Promise<void> {

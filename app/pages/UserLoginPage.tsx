@@ -88,10 +88,6 @@ export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Render =====
 	return (
 		<View style={styles.container}>
-			{/* Debug */}
-			<Text>local username: {username} </Text>
-			<Text>context username: {user?.firstName}</Text>
-			{/* Logo */}
 			<Image
 				style={styles.image}
 				source={require('@/assets/images/logo.png')}
