@@ -4,14 +4,12 @@ import React, { useRef } from 'react';
 import { Alert, Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface Props {
   item: {
-    id: string;
-    text: string;
-    completed: boolean;
+    id: number;
+    item: string;
     priority: number;
   };
   index: number;
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   getPriorityText: (priority: number) => string;
   getPriorityColor: (priority: number) => string;
 }
@@ -19,7 +17,6 @@ interface Props {
 export default function ShoppingItemRow({
   item,
   index,
-  onToggle,
   onDelete,
   getPriorityText,
   getPriorityColor,
@@ -56,10 +53,10 @@ export default function ShoppingItemRow({
 
   return (
     <Animated.View style={[styles.itemContainer, { opacity }]}>
-      <TouchableOpacity style={styles.itemContent} onPress={() => onToggle(item.id)}>
+      <TouchableOpacity style={styles.itemContent}>
         <View style={styles.itemLeft}>
-          <Text style={[styles.itemText, item.completed && styles.completedText]}>
-            {item.text}
+          <Text style={[styles.itemText]}>
+            {item.item}
           </Text>
         </View>
         <View style={styles.itemRight}>

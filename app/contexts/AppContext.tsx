@@ -13,7 +13,7 @@ interface AppContextType {
     setUser: (user: User) => void;
     group: Group | null;
     setGroup: (group: Group) => void;
-    userGroceryList: ListItem[] | null;
+    myGroceryList: ListItem[] | null;
     setUserGroceryList: (groceryList: ListItem[]) => void;
     groupGroceryCollection: SharedShoppingItem[] | null;
     setGroupGroceryCollection: (groceryList: SharedShoppingItem[]) => void;
@@ -23,12 +23,12 @@ interface AppContextType {
     // Wrapper functions
     loadUser: (username: string) => Promise<void>;
     loadGroup: (groupID: string) => Promise<Group>;
-    loadUserGroceryList: (username: string) => Promise<void>;
+    loadMyGroceryList: () => Promise<void>;
     loadGroupGroceryList: () => Promise<void>;
     loadFavorsForUser: () => Promise<void>;
     loadFavorsByUser: () => Promise<void>;
     createMyItem: (item: string, priority: number) => Promise<void>;
-    updateMyItem: (id: number, item: string, priority: number) => Promise<void>;
+    updateMyItem: (newInfo: Partial<ListItem>) => Promise<void>;
     createNewUser: (newUser: Partial<User>) => Promise<void>;
     createNewGroup: (id: string, name: string, users: string[]) => Promise<void>;
     createFavor: (itemId: number, item: string, forUser: string, amount: number) => Promise<void>;
@@ -43,25 +43,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
     const [user, setUser] = useState<User | null>(null);
     const [group, setGroup] = useState<Group | null>(null);
-    const [userGroceryList, setUserGroceryList] = useState<ListItem[] | null>(null);
+    const [myGroceryList, setUserGroceryList] = useState<ListItem[] | null>(null);
     const [groupGroceryCollection, setGroupGroceryCollection] = useState<SharedShoppingItem[] | null>(null);
     const [favors, setFavors] = useState<Favor[] | null>(null);
 
     // Use this for client component handlind:      return { status: "found", user };
     const loadUser = async (username: string) => {
-        // setUser({ username: "alice", firstName: "Unknown", lastName: "Unknown", groupId: "none" });
         try {
             const retrievedUser: Partial<User> = await ApiClient.getUser(username);
-            const localUser: User = {...retrievedUser, username: username};
+            const localUser: User = { ...retrievedUser, username: username };
             console.log(`SETTING USER in CONTEXT to:`, localUser);
             setUser(localUser);
             console.log("SETTING USER in CONTEXT");
         } catch (err: any) {
-            if (err.status === 404)
-            {
-                throw new Error("USER_NOT_FOUND");
-            }
-            throw new Error("NETWORK_ERROR");
+            throw new Error(err.status === 404 ? "USER_NOT_FOUND" : "NETWORK_ERROR");
         }
     }
 
@@ -73,15 +68,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         return retrievedGroup
     }
 
-    const loadUserGroceryList = async (username: string) => {
-        if (user)
-        {
-            const userGroceryList = await ApiClient.getUserGroceryList(user.username);
-            console.log(userGroceryList);
-            setUserGroceryList(userGroceryList);
+    const loadMyGroceryList = async () => {
+        console.log("AppContext.loadMyGroceryList");
+        if (!user) {
+            throw new Error("CURRENT_USER_NOT_LOGGED_IN");
         }
-        else{
-            throw new Error("CURRENT_USER_NOT_FOUND");
+        try {
+            const myGroceryList: ListItem[] = await ApiClient.getUserGroceryList(user.username);
+            // console.log(userGroceryList);
+            setUserGroceryList(myGroceryList);
+        } catch (err: any) {
+            throw new Error(err.status === 404 ? "LIST_NOT_FOUND" : "NETWORK_ERROR");
         }
     }
 
@@ -105,32 +102,33 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     const createMyItem = async (item: string, priority: number) => {
         if (!user?.username) return;
         await ApiClient.createItem(user.username, { item, priority });
-        await loadUserGroceryList(user.username);
+        await loadMyGroceryList();
     }
 
-    const updateMyItem = async (id: number, item: string, priority: number) => {
-        if (!user?.username) return;
-        await ApiClient.modifyListItem(user.username, id, item, priority);
-        await loadUserGroceryList(user.username);
+    const updateMyItem = async (newInfo:Partial<ListItem>) => {
+        if (!user?.username) throw new Error("USER_NOT_LOGGED_IN");
+        if (!newInfo.id) throw new Error("MISSING_ITEM_ID");
+
+        await ApiClient.modifyListItem(user.username, newInfo);
+        await loadMyGroceryList();
     }
 
     const updateMyUser = async (newInfo: Partial<User>) => {
         console.log("-------AC: updateMyUser");
-        if (!user?.username)
-        {
+        if (!user?.username) {
             throw new Error("User not loaded");
         }
         console.log("currentUser:", user.username);
         console.log("new: ", newInfo);
-    const safeInfo: Partial<User> = {
-        ...newInfo,
-        groupId: typeof newInfo.groupId === "string" 
-            ? ApiClient.slugify(newInfo.groupId) 
-            : user.groupId,
-        username: user.username,
-    };
-    console.log("safe:", safeInfo);
-    await ApiClient.modifyUser(safeInfo);
+        const safeInfo: Partial<User> = {
+            ...newInfo,
+            groupId: typeof newInfo.groupId === "string"
+                ? ApiClient.slugify(newInfo.groupId)
+                : user.groupId,
+            username: user.username,
+        };
+        console.log("safe:", safeInfo);
+        await ApiClient.modifyUser(safeInfo);
     };
 
     const createNewUser = async (newUser: Partial<User>): Promise<void> => {
@@ -182,7 +180,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setUser,
         group,
         setGroup,
-        userGroceryList,
+        myGroceryList,
         setUserGroceryList,
         groupGroceryCollection,
         setGroupGroceryCollection,
@@ -190,7 +188,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setFavors,
         loadUser,
         loadGroup,
-        loadUserGroceryList,
+        loadMyGroceryList,
         loadGroupGroceryList,
         loadFavorsForUser,
         loadFavorsByUser,

@@ -4,7 +4,6 @@ import { Image } from "expo-image";
 import { SplashScreen, Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
-import { AppProvider } from "../contexts/AppContext";
 
 const listIcon = require("@/assets/images/shopping-list.png");
 const favorIcon = require("@/assets/images/transfer.png");
@@ -49,7 +48,6 @@ export default function TabLayout() {
   }
 
   return (
-    <AppProvider>
       <Tabs
         // Allow per-route headerTitle to be provided via route params (e.g. { headerTitle: 'My Title' })
         screenOptions={({ route }: { route: any }) => ({
@@ -107,8 +105,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </AppProvider>
-
   );
 }
 

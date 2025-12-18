@@ -2,7 +2,7 @@ import { useFonts } from "expo-font";
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { SplashScreen, Stack, router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -13,59 +13,38 @@ import {
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
 import { useAppContext } from "../contexts/AppContext";
-import { ApiClient } from "../services/ApiClient";
-
-interface ShoppingItem {
-  id: string;
-  text: string;
-  completed: boolean;
-  priority: number;
-}
 
 export default function MyList() {
+  // ✅ Move these above the return
+  const [newItem, setNewItem] = useState('');
+  const [priority, setPriority] = useState<number>(1);
+  const {myGroceryList, createMyItem, loadMyGroceryList, updateMyItem} = useAppContext();
+
+  useEffect(() => {
+    loadMyGroceryList();
+  }, [loadMyGroceryList]);
+
   let [fontsLoaded] = useFonts({
     'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
     'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
   });
-
-  // ✅ Move these above the return
-  const [items, setItems] = useState<ShoppingItem[]>([]);
-  const [newItem, setNewItem] = useState('');
-  const [priority, setPriority] = useState<number>(1);
-  const {user} = useAppContext();
-
-
-if (!fontsLoaded) {
-  SplashScreen.preventAutoHideAsync();
-  return null;
-}
+  
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
 
   const addItem = () => {
     if (newItem.trim()) {
-      const newShoppingItem: ShoppingItem = {
-        id: Date.now().toString(),
-        text: newItem.trim(),
-        completed: false,
-        priority,
-      };
-      setItems([...items, newShoppingItem]);
-      if (user)
-      {
-      const response = ApiClient.addItemToUserList("abyle", {item: "gum", priority: 2 })
-      }
+      createMyItem(newItem.trim(), priority);
+      loadMyGroceryList();
       setNewItem('');
       setPriority(1);
     }
   };
 
-  const toggleItem = (id: string) => {
-    setItems(items.map(item =>
-      item.id === id ? { ...item, completed: !item.completed } : item
-    ));
-  };
-
-  const deleteItem = (id: string) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+  const deleteItem = (id: number) => {
+    // Delete item logic will be added later
   };
 
   const getPriorityText = (priority: number) => {
@@ -149,18 +128,17 @@ if (!fontsLoaded) {
         </View>
 
         <FlatList
-          data={items}
+          data={myGroceryList || []}
           renderItem={({ item, index }) => (
             <ShoppingItemRow
               item={item}
               index={index}
-              onToggle={toggleItem}
               onDelete={deleteItem}
               getPriorityText={getPriorityText}
               getPriorityColor={getPriorityColor}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           style={styles.list}
           showsVerticalScrollIndicator={false}
         />

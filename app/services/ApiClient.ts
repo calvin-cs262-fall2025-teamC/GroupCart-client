@@ -84,9 +84,9 @@ export class ApiClient {
     return this.request(`favor`, "POST", data);
   }
 
-  public static async modifyListItem(username: string, id: number, item: string, priority: number): Promise<void> {
-    const data = { item: item, priority: priority };
-    return this.request(`list/${username}/${id}`, "PUT", data);
+  public static async modifyListItem(username: string, newInfo: Partial<ListItem>): Promise<void> {
+    const data = { item: newInfo.item, priority: newInfo.priority };
+    return this.request(`list/${username}/${newInfo.id}`, "PUT", data);
   }
 
   public static async modifyFavor(id: number, reimbursed: boolean, amount: number): Promise<void> {
