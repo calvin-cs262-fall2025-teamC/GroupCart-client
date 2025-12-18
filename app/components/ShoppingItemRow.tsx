@@ -1,7 +1,7 @@
 import { useFonts } from "expo-font";
 import { SplashScreen } from 'expo-router';
 import React, { useRef } from 'react';
-import { Alert, Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface Props {
   item: {
     id: number;
@@ -33,22 +33,13 @@ export default function ShoppingItemRow({
   }
 
   const handleDelete = () => {
-    Alert.alert('Delete Item', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {
-          Animated.timing(opacity, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-          }).start(() => {
-            onDelete(item.id);
-          });
-        },
-      },
-    ]);
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 30,
+      useNativeDriver: true,
+    }).start(() => {
+      onDelete(item.id);
+    });
   };
 
   return (
