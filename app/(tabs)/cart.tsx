@@ -8,7 +8,6 @@ import {
     View
 } from "react-native";
 
-
 import { useState } from 'react';
 
 import RequestRow from "../components/RequestRow";
@@ -16,7 +15,7 @@ import { useAppContext } from "../contexts/AppContext";
 import { GroupRequest } from "../models/GroupRequest";
 
 export default function GroupCart() {
-    const { user } = useAppContext();
+    const { groupGroceryCollection } = useAppContext();
     let [fontsLoaded] = useFonts({
         'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
@@ -55,9 +54,6 @@ export default function GroupCart() {
             <View style={styles.overlay}>
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
                     <View>
-
-
-
 
                         {groupRequests.some(c => c.completed === false) && (
                             <View>
