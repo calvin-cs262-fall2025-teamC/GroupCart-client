@@ -22,7 +22,7 @@ const PRESET_COLORS = [
 ];
 export default function Settings() {
   const navigation = useNavigation();
-  const { user, updateMyUser } = useAppContext();
+  const { user, updateMyUser, loadGroup } = useAppContext();
   // Ensure the native header uses the friendly title instead of the file route
   React.useLayoutEffect(() => {
     try {
@@ -40,9 +40,9 @@ export default function Settings() {
   }, [navigation]);
 
   let [fontsLoaded] = useFonts({
-        'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
-        'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
-      });
+    'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+    'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
+  });
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -57,18 +57,18 @@ export default function Settings() {
   }, [user]);
 
   if (!fontsLoaded) {
-  SplashScreen.preventAutoHideAsync();
-  return null;
-}
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color.replace('#', ''));
   };
 
   const handleSaveName = async () => {
-    if (firstName.trim() && lastName.trim()) {
+    if (firstName.trim() && lastName.trim() && user) {
       try {
-        await updateMyUser({ firstName: firstName.trim(), lastName: lastName.trim()});
+        await updateMyUser({ firstName: firstName.trim(), lastName: lastName.trim() });
         Alert.alert('Success', 'Name updated!');
       } catch (err) {
         Alert.alert('Error', 'Failed to update name');
@@ -80,12 +80,18 @@ export default function Settings() {
   };
 
   const handleColorSelect = async (color: string) => {
+    if (!user) return;
+    const cleanColor = color.replace('#', '');
     handleColorChange(color);
     try {
-      await updateMyUser({ color: color.replace('#', '') });
+      await updateMyUser({ color: cleanColor });
+      // Reload group to update userColors map for other components
+      if (user.groupId) {
+        await loadGroup(user.groupId);
+      }
     } catch (err) {
       Alert.alert('Error', 'Failed to update color');
-      console.log(err);
+      console.error('Color update error:', err);
     }
   };
 
@@ -98,98 +104,98 @@ export default function Settings() {
   }
 
   return (
-      <LinearGradient
+    <LinearGradient
 
-                    colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
-                    // Gradient direction: starts from top-right, flows to bottom-left
-                    // [x1, y1] = start point, [x2, y2] = end point
-                    start={{ x: 1, y: 0}} // Top right
-                    end={{ x: 0, y: 1 }} // Bottom left
+      colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
+      // Gradient direction: starts from top-right, flows to bottom-left
+      // [x1, y1] = start point, [x2, y2] = end point
+      start={{ x: 1, y: 0 }} // Top right
+      end={{ x: 0, y: 1 }} // Bottom left
 
-                    locations={[0.1, 0.3, 0.6, 1]}
-                    style={[styles.container]}
-                  >
+      locations={[0.1, 0.3, 0.6, 1]}
+      style={[styles.container]}
+    >
       <View style={styles.overlay}>
-    <ScrollView style= {styles.content}>
-      <View style={styles.title}></View>
+        <ScrollView style={styles.content}>
+          <View style={styles.title}></View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>First Name</Text>
-        <View style={styles.inputRow}>
-          <TextInput
-            style={styles.input}
-            value={firstName}
-            onChangeText={setFirstName}
-            placeholder="Enter your first name"
-            placeholderTextColor="#999"
-          />
-        </View>
-
-        <Text style={[styles.label, { marginTop: 8 }]}>Last Name</Text>
-        <View style={styles.inputRow}>
-          <TextInput
-            style={styles.input}
-            value={lastName}
-            onChangeText={setLastName}
-            placeholder="Enter your last name"
-            placeholderTextColor="#999"
-          />
-          <TouchableOpacity
-            style={[styles.saveButton, { backgroundColor: '#' + selectedColor }]}
-            onPress={handleSaveName}
-          >
-            <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Profile Color</Text>
-        <Text style={styles.description}>
-          Choose a color for your profile. This color will be used to identify you in group requests.
-        </Text>
-
-        <View style={styles.colorGrid}>
-          {PRESET_COLORS.map((color) => (
-            <TouchableOpacity
-              key={color}
-              style={[
-                styles.colorOption,
-                {
-                  backgroundColor: color,
-                  borderWidth: selectedColor === color.replace('#', '') ? 4 : 2,
-                  borderColor: selectedColor === color.replace('#', '') ? '#000' : '#ddd',
-                  transform: selectedColor === color.replace('#', '') ? [{ scale: 1.1 }] : [{ scale: 1 }],
-                },
-              ]}
-              onPress={() => handleColorSelect(color)}
-            >
-              {selectedColor === color.replace('#', '') && (
-                <View style={styles.checkmark}>
-                  <Text style={styles.checkmarkText}>✓</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <View style={styles.previewSection}>
-          <Text style={styles.previewLabel}>Preview:</Text>
-          <View style={styles.previewContainer}>
-            <View style={[styles.previewAvatar, { backgroundColor: '#' + selectedColor }]}>
-              <Text style={styles.previewAvatarText}>
-                {firstName.charAt(0).toUpperCase() || 'Y'}
-              </Text>
+          <View style={styles.section}>
+            <Text style={styles.label}>First Name</Text>
+            <View style={styles.inputRow}>
+              <TextInput
+                style={styles.input}
+                value={firstName}
+                onChangeText={setFirstName}
+                placeholder="Enter your first name"
+                placeholderTextColor="#999"
+              />
             </View>
-            <Text style={[styles.previewName, { color: '#' + selectedColor }]}>
-              {`${firstName} ${lastName}` || 'You'}
-            </Text>
-          </View>
-        </View>
-      </View>
 
-    </ScrollView>
-    </View>
+            <Text style={[styles.label, { marginTop: 8 }]}>Last Name</Text>
+            <View style={styles.inputRow}>
+              <TextInput
+                style={styles.input}
+                value={lastName}
+                onChangeText={setLastName}
+                placeholder="Enter your last name"
+                placeholderTextColor="#999"
+              />
+              <TouchableOpacity
+                style={[styles.saveButton, { backgroundColor: '#' + selectedColor }]}
+                onPress={handleSaveName}
+              >
+                <Text style={styles.saveButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.label}>Profile Color</Text>
+            <Text style={styles.description}>
+              Choose a color for your profile. This color will be used to identify you in group requests.
+            </Text>
+
+            <View style={styles.colorGrid}>
+              {PRESET_COLORS.map((color) => (
+                <TouchableOpacity
+                  key={color}
+                  style={[
+                    styles.colorOption,
+                    {
+                      backgroundColor: color,
+                      borderWidth: selectedColor === color.replace('#', '') ? 4 : 2,
+                      borderColor: selectedColor === color.replace('#', '') ? '#000' : '#ddd',
+                      transform: selectedColor === color.replace('#', '') ? [{ scale: 1.1 }] : [{ scale: 1 }],
+                    },
+                  ]}
+                  onPress={() => handleColorSelect(color)}
+                >
+                  {selectedColor === color.replace('#', '') && (
+                    <View style={styles.checkmark}>
+                      <Text style={styles.checkmarkText}>✓</Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.previewSection}>
+              <Text style={styles.previewLabel}>Preview:</Text>
+              <View style={styles.previewContainer}>
+                <View style={[styles.previewAvatar, { backgroundColor: '#' + selectedColor }]}>
+                  <Text style={styles.previewAvatarText}>
+                    {firstName.charAt(0).toUpperCase() || 'Y'}
+                  </Text>
+                </View>
+                <Text style={[styles.previewName, { color: '#' + selectedColor }]}>
+                  {`${firstName} ${lastName}` || 'You'}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+        </ScrollView>
+      </View>
     </LinearGradient>
   );
 }
@@ -199,7 +205,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
- overlay: {
+  overlay: {
 
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },

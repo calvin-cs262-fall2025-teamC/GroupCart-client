@@ -116,12 +116,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     const updateMyUser = async (newInfo: Partial<User>) => {
-        console.log("-------AC: updateMyUser");
         if (!user?.username) {
             throw new Error("User not loaded");
         }
-        console.log("currentUser:", user.username);
-        console.log("new: ", newInfo);
         const safeInfo: Partial<User> = {
             ...newInfo,
             groupId: typeof newInfo.groupId === "string"
@@ -129,7 +126,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
                 : user.groupId,
             username: user.username,
         };
-        console.log("safe:", safeInfo);
         await ApiClient.modifyUser(safeInfo);
     };
 
