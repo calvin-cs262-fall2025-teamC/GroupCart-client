@@ -22,7 +22,7 @@ const PRESET_COLORS = [
 ];
 export default function Settings() {
   const navigation = useNavigation();
-
+  const { user, updateMyUser } = useAppContext();
   // Ensure the native header uses the friendly title instead of the file route
   React.useLayoutEffect(() => {
     try {
@@ -38,37 +38,55 @@ export default function Settings() {
       // ignore if navigator doesn't support setOptions in this environment
     }
   }, [navigation]);
-let [fontsLoaded] = useFonts({
+
+  let [fontsLoaded] = useFonts({
         'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
       });
 
-  const { user } = useAppContext();
-  const [displayName, setDisplayName] = useState(user && user.firstName || '');
-  const [selectedColor, setSelectedColor] = useState('#0079ff');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [selectedColor, setSelectedColor] = useState('0079ff');
 
   React.useEffect(() => {
     if (user) {
-      setDisplayName(user.firstName);
-      // setSelectedColor(user.color);
+      setFirstName(user.firstName || '');
+      setLastName(user.lastName || '');
+      handleColorChange(user.color || '#0079ff');
     }
   }, [user]);
-if (!fontsLoaded) {
+
+  if (!fontsLoaded) {
   SplashScreen.preventAutoHideAsync();
   return null;
 }
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color.replace('#', ''));
+  };
+
   const handleSaveName = async () => {
-    if (displayName.trim()) {
-      // await updateUserDisplayName(displayName.trim());
-      Alert.alert('Success', 'Display name updated!');
+    if (firstName.trim() && lastName.trim()) {
+      try {
+        await updateMyUser({ firstName: firstName.trim(), lastName: lastName.trim()});
+        Alert.alert('Success', 'Name updated!');
+      } catch (err) {
+        Alert.alert('Error', 'Failed to update name');
+        console.log(err);
+      }
     } else {
-      Alert.alert('Error', 'Display name cannot be empty');
+      Alert.alert('Error', 'First name and last name cannot be empty');
     }
   };
 
   const handleColorSelect = async (color: string) => {
-    setSelectedColor(color);
-    // await updateUserColor(color);
+    handleColorChange(color);
+    try {
+      await updateMyUser({ color: color.replace('#', '') });
+    } catch (err) {
+      Alert.alert('Error', 'Failed to update color');
+      console.log(err);
+    }
   };
 
   if (!user) {
@@ -96,17 +114,28 @@ if (!fontsLoaded) {
       <View style={styles.title}></View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Display Name</Text>
+        <Text style={styles.label}>First Name</Text>
         <View style={styles.inputRow}>
           <TextInput
             style={styles.input}
-            value={displayName}
-            onChangeText={setDisplayName}
-            placeholder="Enter your name"
+            value={firstName}
+            onChangeText={setFirstName}
+            placeholder="Enter your first name"
+            placeholderTextColor="#999"
+          />
+        </View>
+
+        <Text style={[styles.label, { marginTop: 8 }]}>Last Name</Text>
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.input}
+            value={lastName}
+            onChangeText={setLastName}
+            placeholder="Enter your last name"
             placeholderTextColor="#999"
           />
           <TouchableOpacity
-            style={[styles.saveButton, { backgroundColor: selectedColor }]}
+            style={[styles.saveButton, { backgroundColor: '#' + selectedColor }]}
             onPress={handleSaveName}
           >
             <Text style={styles.saveButtonText}>Save</Text>
@@ -128,14 +157,14 @@ if (!fontsLoaded) {
                 styles.colorOption,
                 {
                   backgroundColor: color,
-                  borderWidth: selectedColor === color ? 4 : 2,
-                  borderColor: selectedColor === color ? '#000' : '#ddd',
-                  transform: selectedColor === color ? [{ scale: 1.1 }] : [{ scale: 1 }],
+                  borderWidth: selectedColor === color.replace('#', '') ? 4 : 2,
+                  borderColor: selectedColor === color.replace('#', '') ? '#000' : '#ddd',
+                  transform: selectedColor === color.replace('#', '') ? [{ scale: 1.1 }] : [{ scale: 1 }],
                 },
               ]}
               onPress={() => handleColorSelect(color)}
             >
-              {selectedColor === color && (
+              {selectedColor === color.replace('#', '') && (
                 <View style={styles.checkmark}>
                   <Text style={styles.checkmarkText}>✓</Text>
                 </View>
@@ -147,13 +176,13 @@ if (!fontsLoaded) {
         <View style={styles.previewSection}>
           <Text style={styles.previewLabel}>Preview:</Text>
           <View style={styles.previewContainer}>
-            <View style={[styles.previewAvatar, { backgroundColor: selectedColor }]}>
+            <View style={[styles.previewAvatar, { backgroundColor: '#' + selectedColor }]}>
               <Text style={styles.previewAvatarText}>
-                {displayName.charAt(0).toUpperCase() || 'Y'}
+                {firstName.charAt(0).toUpperCase() || 'Y'}
               </Text>
             </View>
-            <Text style={[styles.previewName, { color: selectedColor }]}>
-              {displayName || 'You'}
+            <Text style={[styles.previewName, { color: '#' + selectedColor }]}>
+              {`${firstName} ${lastName}` || 'You'}
             </Text>
           </View>
         </View>
