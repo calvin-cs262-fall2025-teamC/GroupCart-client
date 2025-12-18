@@ -18,7 +18,7 @@ export default function MyList() {
   // ✅ Move these above the return
   const [newItem, setNewItem] = useState('');
   const [priority, setPriority] = useState<number>(1);
-  const {myGroceryList, createMyItem, loadMyGroceryList, updateMyItem} = useAppContext();
+  const {myGroceryList, createMyItem, loadMyGroceryList, deleteMyItem} = useAppContext();
 
   useEffect(() => {
     loadMyGroceryList();
@@ -44,7 +44,7 @@ export default function MyList() {
   };
 
   const deleteItem = (id: number) => {
-    // Delete item logic will be added later
+    deleteMyItem(id);
   };
 
   const getPriorityText = (priority: number) => {

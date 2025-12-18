@@ -1,5 +1,5 @@
 
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 import { Favor } from "../models/Favor";
 import { Group } from '../models/Group';
 import { ListItem } from '../models/ListItem';
@@ -29,6 +29,7 @@ interface AppContextType {
     loadFavorsByUser: () => Promise<void>;
     createMyItem: (item: string, priority: number) => Promise<void>;
     updateMyItem: (newInfo: Partial<ListItem>) => Promise<void>;
+    deleteMyItem: (id: number) => Promise<void>;
     createNewUser: (newUser: Partial<User>) => Promise<void>;
     createNewGroup: (id: string, name: string, users: string[]) => Promise<void>;
     createFavor: (itemId: number, item: string, forUser: string, amount: number) => Promise<void>;
@@ -69,7 +70,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     const loadMyGroceryList = async () => {
-        console.log("AppContext.loadMyGroceryList");
+        // console.log("AppContext.loadMyGroceryList");
         if (!user) {
             throw new Error("CURRENT_USER_NOT_LOGGED_IN");
         }
@@ -171,9 +172,25 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         await loadFavorsForUser();
     }
 
-    useEffect(() => {
-        loadGroupGroceryList();
-    }, []);
+    const deleteMyItem = async (id: number) => {
+        if (!user?.username) throw new Error("USER_NOT_LOGGED_IN");
+        console.log("ID OF ITEM CALLED FOR DEL: ",id, "ON USER", user.username);
+        try {
+            await ApiClient.deleteItem(user.username, id);
+            await loadMyGroceryList();
+        } catch (err: any) {
+            console.log(err);
+            if (err.status === 404) {
+                console.log(err);
+                throw new Error("ITEM_NOT_FOUND");
+            }
+            throw new Error("NETWORK_ERROR");
+        }
+    }
+
+    // useEffect(() => {
+    //     loadGroupGroceryList();
+    // }, []);
 
     const value: AppContextType = {
         user,
@@ -194,6 +211,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         loadFavorsByUser,
         createMyItem,
         updateMyItem,
+        deleteMyItem,
         createNewUser,
         createNewGroup,
         createFavor,

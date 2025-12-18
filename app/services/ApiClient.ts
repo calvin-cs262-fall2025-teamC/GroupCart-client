@@ -22,7 +22,7 @@ export class ApiClient {
     // Throw for other non-success responses
     if (!response.ok) {
       const text = await response.text();
-      const error =  new Error(`HTTP ${response.status}: ${text}`);
+      const error = new Error(`HTTP ${response.status}: ${text}`);
       (error as any).status = response.status;
       throw error;
     }
@@ -33,12 +33,12 @@ export class ApiClient {
 
   // Provide this to users of ApiClient to make URL friendly values, like when creating a userID or a
   public static slugify(input: string): string {
-  return input
-    .trim()
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')  // remove special characters
-    .replace(/\s+/g, '-')      // replace whitespace with dashes
-    .replace(/-+/g, '-');      // collapse multiple dashes
+    return input
+      .trim()
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')  // remove special characters
+      .replace(/\s+/g, '-')      // replace whitespace with dashes
+      .replace(/-+/g, '-');      // collapse multiple dashes
   }
 
   // Get group by group id
@@ -69,7 +69,7 @@ export class ApiClient {
     return this.request(`shop`, "GET");
   }
 
-  public static async createUser(newUser: Partial<User>): Promise<{message: string, username: string, firstName: string, lastName: string}> {
+  public static async createUser(newUser: Partial<User>): Promise<{ message: string, username: string, firstName: string, lastName: string }> {
     const data = { firstName: "deffirstname", lastName: "deflastname" };
     return this.request(`user/${newUser.username}`, "POST", data);
   }
@@ -94,18 +94,23 @@ export class ApiClient {
     return this.request(`favor/${id}`, "PUT", data);
   }
 
-public static async modifyUser(newInfo: Partial<User>): Promise<void> 
-  { 
+  public static async modifyUser(newInfo: Partial<User>): Promise<void> {
     const data = newInfo;
     console.log("apiclient:", newInfo);
     return this.request(`user/${newInfo.username}`, "PUT", data);
   }
 
-  // Add item to List
   public static async createItem(
     username: string,
     data: { item: string; priority: number }
   ): Promise<void> {
     return this.request(`list/${username}`, "POST", data);
   }
+
+  public static async deleteItem(username: string, id: number): Promise<void> {
+    console.log("ApiClient.deleteItem");
+    console.log("id: ", id);
+    return this.request(`list/${username}/${id}`, "DELETE");
+  }
+
 }
