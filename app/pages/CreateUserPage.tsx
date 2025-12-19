@@ -23,7 +23,7 @@ import { useAppContext } from '../contexts/AppContext';
  */
 export default function CreateUserPage(): React.ReactElement | null {
 	// ===== Contexts =====
-	const { user, loadUser, createNewUser } = useAppContext();
+	const { loadUser, createNewUser } = useAppContext();
 
 	// ===== Hooks =====
 	const navigation = useNavigation();

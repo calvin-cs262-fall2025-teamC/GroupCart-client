@@ -30,7 +30,7 @@ import { useAppContext } from '../contexts/AppContext';
  */
 export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Contexts =====
-	const { user, loadUser, group, loadGroup } = useAppContext();
+	const { loadUser } = useAppContext();
 
 	// ===== Hooks =====
 	const navigation = useNavigation();
