@@ -1,6 +1,9 @@
 import { Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
+/**
+ * Help page explaining the favors screen and reimbursement tracking.
+ */
 export default function FavorsHelp() {
   return (
     <>

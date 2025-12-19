@@ -1,6 +1,9 @@
 import { Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
+/**
+ * Help page explaining the personal shopping list screen.
+ */
 export default function HelpScreen() {
   return (
     <View style={styles.container}>

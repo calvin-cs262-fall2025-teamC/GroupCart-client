@@ -1,6 +1,9 @@
 import { Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
+/**
+ * Help page explaining the group cart screen and purchase tracking.
+ */
 export default function GroupCartHelp() {
   return (
     <>
