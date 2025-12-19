@@ -1,4 +1,4 @@
-name: ESLint Check
+name: .github/workflows/eslint.yml
 
 on:
   pull_request:
