@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen, Stack, router, useFocusEffect } from 'expo-router';
+import { SplashScreen, Stack, router } from 'expo-router';
 import {
     ScrollView,
     StyleSheet,
@@ -8,7 +8,7 @@ import {
     View
 } from "react-native";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import RequestRow from "../components/RequestRow";
 import { useAppContext } from "../contexts/AppContext";
@@ -30,20 +30,19 @@ export default function GroupCart() {
         'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
     });
     const [groupRequests, setGroupRequests] = useState<GroupRequest[]>([]);
-    const hasRunRef = useRef(false);
-
-    const getUserColor = (username: string) => {
-        if (!group || !group.userColors) return "gray";
-        const anyColors: any = group.userColors as any;
-        if (anyColors instanceof Map) return anyColors.get(username) ?? "gray";
-        return (anyColors as Record<string, string>)[username] ?? "gray";
-    };
 
     /**
      * Maps groupGroceryCollection to displayable GroupRequest objects.
      * @sideeffect Fetches user data for all requesters to get display names
      */
     useEffect(() => {
+        const getUserColor = (username: string) => {
+            if (!group || !group.userColors) return "gray";
+            const anyColors: any = group.userColors as any;
+            if (anyColors instanceof Map) return anyColors.get(username) ?? "gray";
+            return (anyColors as Record<string, string>)[username] ?? "gray";
+        };
+
         const mapRequests = async () => {
             if (groupGroceryCollection) {
                 // Step 1: Extract all unique usernames
@@ -91,25 +90,12 @@ export default function GroupCart() {
     }, [groupGroceryCollection, group]);
 
     /**
-     * Loads group grocery list from API.
-     * @sideeffect Updates context with latest group grocery data
+     * Load group grocery list on mount.
+     * @sideeffect Fetches data from API on component mount
      */
-    const populateCart = async () => {
-        await loadGroupGroceryList();
-    };
-
-    useFocusEffect(
-        useCallback(() => {
-            if (!hasRunRef.current) {
-                populateCart();
-                hasRunRef.current = true;
-            }
-            
-            return () => {
-                hasRunRef.current = false;
-            };
-        }, [])
-    );
+    useEffect(() => {
+        loadGroupGroceryList();
+    }, [loadGroupGroceryList]);
 
     if (!fontsLoaded) {
         SplashScreen.preventAutoHideAsync();
@@ -135,7 +121,7 @@ export default function GroupCart() {
             <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
               <Text
                 style={styles.headerHelp}
-                onPress={() => populateCart()}
+                onPress={() => loadGroupGroceryList()}
               >
                 Refresh
               </Text>
