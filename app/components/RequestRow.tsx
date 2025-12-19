@@ -10,6 +10,20 @@ import {
 import { GroupRequest } from "../models/GroupRequest";
 const userIcon = require("@/assets/images/user-icon.png");
 
+/**
+ * RequestRow: Displays a group request item with multiple requester information.
+ * Has side effects: Loads fonts and manages group request state mutations.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {GroupRequest} props.groupRequest - The group request to display
+ * @param {React.Dispatch<React.SetStateAction<GroupRequest[]>>} props.setGroupRequests - Function to update group requests state
+ * @returns {React.ReactElement|null} The request row component or null while fonts load
+ *
+ * Side effects:
+ * - Loads custom fonts (Shanti, Montserrat) asynchronously
+ * - Mutates parent state when completion status is toggled
+ */
 export default function RequestRow({ groupRequest, setGroupRequests }: { groupRequest: GroupRequest, setGroupRequests: React.Dispatch<React.SetStateAction<GroupRequest[]>> }) {
   let [fontsLoaded] = useFonts({
       'Shanti': require('../../assets/images/Shanti-Regular.ttf'),

@@ -10,6 +10,16 @@ const favorIcon = require("@/assets/images/transfer.png");
 const cartIcon = require("@/assets/images/cart.png");
 const settingsIcon = require("@/assets/images/setting.png");
 
+/**
+ * Animated tab icon that scales based on focus state.
+ * Has side effects: Animates scale on focus changes
+ * 
+ * @param {Object} props - Component props
+ * @param {any} props.source - Image source
+ * @param {string} props.color - Icon color
+ * @param {boolean} props.focused - Whether tab is focused
+ * @returns {React.ReactElement} Animated icon view
+ */
 function AnimatedTabIcon({
   source,
   color,
@@ -36,6 +46,14 @@ function AnimatedTabIcon({
   );
 }
 
+/**
+ * Tab navigation layout with four main screens.
+ * Fetches data: Loads custom fonts
+ * Has side effects: Initializes tab navigator and fonts
+ * 
+ * @component
+ * @returns {React.ReactElement|null} Tab navigation layout or null while fonts load
+ */
 export default function TabLayout() {
   const [fontsLoaded] = useFonts({
     Shanti: require("../../assets/images/Shanti-Regular.ttf"),

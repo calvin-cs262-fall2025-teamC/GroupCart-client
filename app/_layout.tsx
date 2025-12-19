@@ -1,7 +1,15 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 import { AppProvider } from './contexts/AppContext';
-// ...existing code...
+
+/**
+ * Root layout with navigation and global app context.
+ * Depends on context: AppProvider
+ * Has side effects: Initializes navigation structure
+ * 
+ * @component
+ * @returns {React.ReactElement} Navigation stack wrapped in AppProvider
+ */
 export default function RootLayout(): React.ReactElement {
   // const navigation = useNavigation();
   return (
