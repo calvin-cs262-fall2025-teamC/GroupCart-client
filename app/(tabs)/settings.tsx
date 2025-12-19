@@ -20,6 +20,13 @@ const PRESET_COLORS = [
   '#2196F3', '#795548', '#009688', '#FF6F00', '#673AB7',
   '#FF69B4',
 ];
+
+/**
+ * User profile settings for name and color customization.
+ * @depends AppContext - User data and update methods
+ * @sideeffect Updates user profile, reloads group to sync color changes
+ * @throws Alerts on update failures
+ */
 export default function Settings() {
   const navigation = useNavigation();
   const { user, updateMyUser, loadGroup } = useAppContext();
@@ -65,6 +72,10 @@ export default function Settings() {
     setSelectedColor(color.replace('#', ''));
   };
 
+  /**
+   * Saves user's first and last name.
+   * @sideeffect API call to update user, shows success/error alert
+   */
   const handleSaveName = async () => {
     if (firstName.trim() && lastName.trim() && user) {
       try {
@@ -79,6 +90,11 @@ export default function Settings() {
     }
   };
 
+  /**
+   * Updates user's color and reloads group.
+   * @sideeffect API call to update color, reloads group to sync userColors map
+   * @throws Logs error and shows alert on failure
+   */
   const handleColorSelect = async (color: string) => {
     if (!user) return;
     const cleanColor = color.replace('#', '');

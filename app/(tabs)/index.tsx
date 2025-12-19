@@ -14,12 +14,21 @@ import {
 import ShoppingItemRow from '../components/ShoppingItemRow';
 import { useAppContext } from "../contexts/AppContext";
 
+/**
+ * Personal grocery list with priority-based item management.
+ * @depends AppContext - User's grocery list CRUD operations
+ * @sideeffect Creates/deletes list items, refreshes group grocery list
+ */
 export default function MyList() {
   // ✅ Move these above the return
   const [newItem, setNewItem] = useState('');
   const [priority, setPriority] = useState<number>(1);
   const {myGroceryList, createMyItem, loadMyGroceryList, deleteMyItem, loadGroupGroceryList} = useAppContext();
 
+  /**
+   * Loads user's grocery list on mount.
+   * @sideeffect Fetches list from API via context
+   */
   useEffect(() => {
     loadMyGroceryList();
   }, [loadMyGroceryList]);
@@ -34,6 +43,10 @@ export default function MyList() {
     return null;
   }
 
+  /**
+   * Creates new list item and refreshes lists.
+   * @sideeffect API call to create item, updates both personal and group lists
+   */
   const addItem = () => {
     if (newItem.trim()) {
       createMyItem(newItem.trim(), priority);
@@ -44,6 +57,10 @@ export default function MyList() {
     }
   };
 
+  /**
+   * Deletes list item and refreshes group list.
+   * @sideeffect API call to delete item, updates group grocery list
+   */
   const deleteItem = (id: number) => {
     deleteMyItem(id);
     loadGroupGroceryList();     // For sake of interactive demo

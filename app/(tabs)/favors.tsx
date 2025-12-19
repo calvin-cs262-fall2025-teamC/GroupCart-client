@@ -16,6 +16,11 @@ interface Favor {
   reimbursed?: boolean;
 }
 
+/**
+ * Favors tracking screen showing owed and completed transactions.
+ * Currently uses mock data - not connected to API.
+ * @sideeffect Manages local favor state, shows/hides reminder notifications
+ */
 export default function FavorsTab() {
   let [fontsLoaded] = useFonts({
     'Shanti': require('../../assets/images/Shanti-Regular.ttf'),

@@ -17,6 +17,12 @@ import { GroupRequest } from "../models/GroupRequest";
 import { Requester } from "../models/Requester";
 import { ApiClient } from "../services/ApiClient";
 
+/**
+ * Group shopping cart with needed/purchased item tracking.
+ * @depends AppContext - Group data and grocery list
+ * @sideeffect Fetches group grocery list, loads user data for display names
+ * @throws Network errors from user/list fetching logged to console
+ */
 export default function GroupCart() {
     const { group, groupGroceryCollection, loadGroupGroceryList } = useAppContext();
     let [fontsLoaded] = useFonts({
@@ -33,7 +39,10 @@ export default function GroupCart() {
         return (anyColors as Record<string, string>)[username] ?? "gray";
     };
 
-    // Map groupGroceryCollection to groupRequests whenever it changes
+    /**
+     * Maps groupGroceryCollection to displayable GroupRequest objects.
+     * @sideeffect Fetches user data for all requesters to get display names
+     */
     useEffect(() => {
         const mapRequests = async () => {
             if (groupGroceryCollection) {
@@ -81,6 +90,10 @@ export default function GroupCart() {
         mapRequests();
     }, [groupGroceryCollection, group]);
 
+    /**
+     * Loads group grocery list from API.
+     * @sideeffect Updates context with latest group grocery data
+     */
     const populateCart = async () => {
         await loadGroupGroceryList();
     };
