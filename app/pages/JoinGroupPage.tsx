@@ -12,8 +12,26 @@ import {
 	View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { useAppContext } from '../contexts/AppContext';
 
+/**
+ * Group join page using invite code.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The group join form or null while fonts load
+ * 
+ * @input code - Group invite code from form field
+ * @output Loaded group in context, updated user groupId, navigation to tabs
+ * 
+ * @depends AppContext - Group loading and user update methods
+ * @sideeffect Loads group, updates user's groupId, navigates to tabs on success
+ * @throws {GROUP_NOT_FOUND} Invalid group code
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function JoinGroupPage(): React.ReactElement | null {
+	// ===== Contexts =====
+	const { loadGroup, updateMyUser } = useAppContext();
+
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [code, setCode] = useState('');
@@ -54,32 +72,32 @@ export default function JoinGroupPage(): React.ReactElement | null {
 
 		setIsLoading(true);
 		try {
-			// TODO: Replace with real API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			Alert.alert('Success', `Joined group: ${code}`);
-			// TODO: Navigate to group screen
-		} catch {
-			Alert.alert('Error', 'Failed to join group');
+			// Attempt to load group from API
+			await loadGroup(code);
+			await updateMyUser({groupId: code});
+
+			// Navigate only on success
+			(navigation as any).navigate('(tabs)');
+		} catch (err: any) {
+			// Check the error message
+			switch (err.message) {
+				case "GROUP_NOT_FOUND":
+					Alert.alert('Invalid Code', `Unable to find group: ${code}`);
+					break;
+				case "NETWORK_ERROR":
+					Alert.alert("Error", "There was a problem connecting to the server. Try again later.");
+					break;
+				default:
+					// Alert.alert("Error", "An unexpected error occurred.");
+					Alert.alert(err.message);
+			}
 		} finally {
 			setIsLoading(false);
 		}
-		// TODO: wire up real join logic / navigation
-		Alert.alert('Joining group', `Code: ${code}`);
-		(navigation as any).navigate('(tabs)');
 	};
 
 	const onCreate = async () => {
-		setIsLoading(true);
-		try {
-			// TODO: Replace with real navigation or API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			// TODO: Navigate to create group screen
-			Alert.alert('Create group', 'Navigate to create group flow');
-		} catch {
-			Alert.alert('Error', 'Failed to create group');
-		} finally {
-			setIsLoading(false);
-		}
+		(navigation as any).navigate('pages/CreateGroupPage');
 	};
 
 	// ===== Render =====
@@ -90,9 +108,6 @@ export default function JoinGroupPage(): React.ReactElement | null {
 				style={styles.image}
 				source={require('@/assets/images/logo.png')}
 			/>
-
-
-
 
 			{/* Code Input */}
 			<TextInput

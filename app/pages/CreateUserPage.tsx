@@ -5,13 +5,31 @@ import { SplashScreen } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { useAppContext } from '../contexts/AppContext';
 
+/**
+ * User creation page.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The user creation form or null while fonts load
+ * 
+ * @input username, firstName, lastName - Form field values
+ * @output Created user in DB, loaded user in context, success/error alerts
+ * 
+ * @depends AppContext - User creation and loading methods
+ * @sideeffect Creates user, loads user data, shows alerts
+ * @throws {USER_ALREADY_EXISTS} Username is already taken
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function CreateUserPage(): React.ReactElement | null {
+	// ===== Contexts =====
+	const { user, loadUser, createNewUser } = useAppContext();
+
 	// ===== Hooks =====
 	const navigation = useNavigation();
 	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	let [fontsLoaded] = useFonts({
 		'Montserrat': require('../../assets/images/Montserrat-Regular.ttf'),
@@ -35,17 +53,30 @@ export default function CreateUserPage(): React.ReactElement | null {
 
 	// ===== Handlers =====
 	const onCreate = async () => {
-		if (!username.trim() || !email.trim() || !password.trim()) {
-			Alert.alert('Missing fields', 'Please fill in all fields');
+		if (!username.trim()) {
+			Alert.alert('Missing Username', 'Please fill in a username');
 			return;
 		}
 
 		setIsLoading(true);
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			Alert.alert('Success', `Account created: ${username}`);
-		} catch {
-			Alert.alert('Error', 'Failed to create account');
+			await createNewUser({username : username, firstName : firstName, lastName : lastName});
+			await loadUser(username);
+
+			// Success!
+			Alert.alert("Success", "User created");
+		} catch (err: any) {
+			// Check the error message
+			switch (err.message) {
+				case "USER_ALREADY_EXISTS":
+					Alert.alert("Sorry", "This username is already taken. Please choose another.");
+					break;
+				case "NETWORK_ERROR":
+					Alert.alert("Error", "There was a problem connecting to the server. Try again later.");
+					break;
+				default:
+					Alert.alert("Error", "An unexpected error occurred.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -74,26 +105,25 @@ export default function CreateUserPage(): React.ReactElement | null {
 				editable={!isLoading}
 			/>
 
-			{/* Email Input */}
-			<Text style={styles.label}>Email*</Text>
+			{/* Firstname Input */}
+			<Text style={styles.label}>First Name*</Text>
 			<TextInput
 				style={styles.input}
-				placeholder="Enter your email"
-				value={email}
-				onChangeText={setEmail}
-				keyboardType="email-address"
+				placeholder="Enter your First Name"
+				value={firstName}
+				onChangeText={setFirstName}
 				autoCapitalize="none"
 				editable={!isLoading}
 			/>
 
-			{/* Password Input */}
-			<Text style={styles.label}>Password*</Text>
+			{/* Lastname Input */}
+			<Text style={styles.label}>Last Name*</Text>
 			<TextInput
 				style={styles.input}
-				placeholder="Enter your password"
-				value={password}
-				onChangeText={setPassword}
-				secureTextEntry
+				placeholder="Enter your First Name"
+				value={lastName}
+				onChangeText={setLastName}
+				autoCapitalize="none"
 				editable={!isLoading}
 			/>
 

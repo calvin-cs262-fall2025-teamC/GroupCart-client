@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from "expo-font";
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen } from 'expo-router';
+import { SplashScreen, Stack, router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -16,11 +16,16 @@ interface Favor {
   reimbursed?: boolean;
 }
 
+/**
+ * Favors tracking screen showing owed and completed transactions.
+ * Currently uses mock data - not connected to API.
+ * @sideeffect Manages local favor state, shows/hides reminder notifications
+ */
 export default function FavorsTab() {
   let [fontsLoaded] = useFonts({
-        'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
-        'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
-      });
+    'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
+    'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
+  });
   const [favorsOwed, setFavorsOwed] = useState<Favor[]>([
     { id: 1, buyer: 'Sarah', items: 'Eggs (12 ct), Milk', amount: 8.50, date: '10/06/2025', completed: false },
     { id: 2, buyer: 'Mike', items: 'Bread, Butter', amount: 6.25, date: '10/05/2025', completed: false },
@@ -62,131 +67,148 @@ export default function FavorsTab() {
   const totalToReceive = favorsCompleted
     .filter(f => !f.reimbursed)
     .reduce((sum, f) => sum + f.amount, 0);
-     if (!fontsLoaded) {
-        SplashScreen.preventAutoHideAsync();
-        return null;
-      }
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
 
   return (
     <LinearGradient
 
-          colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
-          // Gradient direction: starts from top-right, flows to bottom-left
-          // [x1, y1] = start point, [x2, y2] = end point
-          start={{ x: 1, y: 0}} // Top right
-          end={{ x: 0, y: 1 }} // Bottom left
+      colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
+      // Gradient direction: starts from top-right, flows to bottom-left
+      // [x1, y1] = start point, [x2, y2] = end point
+      start={{ x: 1, y: 0 }} // Top right
+      end={{ x: 0, y: 1 }} // Bottom left
 
-          locations={[0.1, 0.3, 0.6, 1]}
-          style={[styles.background]}
-        >
-    <View style={styles.overlay}>
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.totalsContainer}>
-          <Text style={styles.totalOwed}>You owe: ${totalOwed.toFixed(2)}</Text>
-          <Text style={styles.totalToReceive}>Owed to you: ${totalToReceive.toFixed(2)}</Text>
-        </View>
-      </View>
-
-      {notifications.length > 0 && (
-        <View style={styles.notificationContainer}>
-          {notifications.map((msg, i) => (
-            <Text key={i} style={styles.notificationText}>{msg}</Text>
-          ))}
-        </View>
-      )}
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>You Owe</Text>
-        {favorsOwed.map(favor => (
-          <View
-            key={favor.id}
-            style={[
-              styles.card,
-              favor.completed ? styles.cardCompleted : styles.cardOwed
-            ]}
-          >
-            <View style={styles.cardContent}>
-              <View style={styles.cardLeft}>
-                <Text style={styles.cardName}>{favor.buyer} bought for you</Text>
-                <Text style={styles.cardItems}>{favor.items}</Text>
-                <Text style={styles.cardDate}>{favor.date}</Text>
-              </View>
-              <View style={styles.cardRight}>
-                <Text style={styles.amountOwed}>${favor.amount.toFixed(2)}</Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.checkboxContainer}
-              onPress={() => toggleFavorOwed(favor.id)}
+      locations={[0.1, 0.3, 0.6, 1]}
+      style={[styles.background]}
+    >
+      <Stack.Screen
+        options={{
+          title: "Favors",
+          headerRight: () => (
+            <Text
+              style={styles.headerHelp}
+              onPress={() => router.push("/pages/help/FavorsHelpPage")}
             >
-              <View style={styles.checkbox}>
-                {favor.completed && (
-                  <Ionicons name="checkmark-sharp" size={17}  color="green" weight={30} />
-                )}
-              </View>
-              <Text style={styles.checkboxLabel}>
-                {favor.completed ? 'Reimbursed' : 'Mark as reimbursed'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>You Completed</Text>
-        {favorsCompleted.map(favor => (
-          <View
-            key={favor.id}
-            style={[
-              styles.card,
-              favor.reimbursed ? styles.cardCompleted : styles.cardCompleted2
-            ]}
-          >
-            <View style={styles.cardContent}>
-              <View style={styles.cardLeft}>
-                <Text style={styles.cardName}>You bought for {favor.recipient}</Text>
-                <Text style={styles.cardItems}>{favor.items}</Text>
-                <Text style={styles.cardDate}>{favor.date}</Text>
-              </View>
-              <View style={styles.cardRight}>
-                <Text style={styles.amountToReceive}>${favor.amount.toFixed(2)}</Text>
-              </View>
+              Help
+            </Text>
+          ),
+        }}
+      />
+      <View style={styles.overlay}>
+        <ScrollView style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.totalsContainer}>
+              <Text style={styles.totalOwed}>You owe: ${totalOwed.toFixed(2)}</Text>
+              <Text style={styles.totalToReceive}>Owed to you: ${totalToReceive.toFixed(2)}</Text>
             </View>
-            <View style={styles.cardFooter}>
-              <TouchableOpacity
-                style={styles.checkboxContainer}
-                onPress={() => toggleFavorCompleted(favor.id)}
+          </View>
+
+          {notifications.length > 0 && (
+            <View style={styles.notificationContainer}>
+              {notifications.map((msg, i) => (
+                <Text key={i} style={styles.notificationText}>{msg}</Text>
+              ))}
+            </View>
+          )}
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>You Owe</Text>
+            {favorsOwed.map(favor => (
+              <View
+                key={favor.id}
+                style={[
+                  styles.card,
+                  favor.completed ? styles.cardCompleted : styles.cardOwed
+                ]}
               >
-                <View style={styles.checkbox}>
-                  {favor.reimbursed && (
-                    <Ionicons name="checkmark-sharp" size={17} color="green" />
+                <View style={styles.cardContent}>
+                  <View style={styles.cardLeft}>
+                    <Text style={styles.cardName}>{favor.buyer} bought for you</Text>
+                    <Text style={styles.cardItems}>{favor.items}</Text>
+                    <Text style={styles.cardDate}>{favor.date}</Text>
+                  </View>
+                  <View style={styles.cardRight}>
+                    <Text style={styles.amountOwed}>${favor.amount.toFixed(2)}</Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.checkboxContainer}
+                  onPress={() => toggleFavorOwed(favor.id)}
+                >
+                  <View style={styles.checkbox}>
+                    {favor.completed && (
+                      <Ionicons name="checkmark-sharp" size={17} color="green" weight={30} />
+                    )}
+                  </View>
+                  <Text style={styles.checkboxLabel}>
+                    {favor.completed ? 'Reimbursed' : 'Mark as reimbursed'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>You Completed</Text>
+            {favorsCompleted.map(favor => (
+              <View
+                key={favor.id}
+                style={[
+                  styles.card,
+                  favor.reimbursed ? styles.cardCompleted : styles.cardCompleted2
+                ]}
+              >
+                <View style={styles.cardContent}>
+                  <View style={styles.cardLeft}>
+                    <Text style={styles.cardName}>You bought for {favor.recipient}</Text>
+                    <Text style={styles.cardItems}>{favor.items}</Text>
+                    <Text style={styles.cardDate}>{favor.date}</Text>
+                  </View>
+                  <View style={styles.cardRight}>
+                    <Text style={styles.amountToReceive}>${favor.amount.toFixed(2)}</Text>
+                  </View>
+                </View>
+                <View style={styles.cardFooter}>
+                  <TouchableOpacity
+                    style={styles.checkboxContainer}
+                    onPress={() => toggleFavorCompleted(favor.id)}
+                  >
+                    <View style={styles.checkbox}>
+                      {favor.reimbursed && (
+                        <Ionicons name="checkmark-sharp" size={17} color="green" />
+                      )}
+                    </View>
+                    <Text style={styles.checkboxLabel}>
+                      {favor.reimbursed ? 'Reimbursed' : 'Mark as reimbursed'}
+                    </Text>
+                  </TouchableOpacity>
+                  {!favor.reimbursed && (
+                    <TouchableOpacity
+                      style={styles.remindButton}
+                      onPress={() => sendReminder(favor.recipient!, favor.amount)}
+                    >
+                      <Ionicons name="notifications-outline" size={16} color="#fff" />
+                      <Text style={styles.remindButtonText}>Remind</Text>
+                    </TouchableOpacity>
                   )}
                 </View>
-                <Text style={styles.checkboxLabel}>
-                  {favor.reimbursed ? 'Reimbursed' : 'Mark as reimbursed'}
-                </Text>
-              </TouchableOpacity>
-              {!favor.reimbursed && (
-                <TouchableOpacity
-                  style={styles.remindButton}
-                  onPress={() => sendReminder(favor.recipient!, favor.amount)}
-                >
-                  <Ionicons name="notifications-outline" size={16} color="#fff" />
-                  <Text style={styles.remindButtonText}>Remind</Text>
-                </TouchableOpacity>
-              )}
-            </View>
+              </View>
+            ))}
           </View>
-        ))}
+        </ScrollView>
       </View>
-    </ScrollView>
-    </View>
-  </LinearGradient>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  headerHelp: {
+    marginRight: 24,
+    fontSize: 16,
+  },
   background: {
     flex: 1,
   },

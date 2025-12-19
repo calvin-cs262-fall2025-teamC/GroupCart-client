@@ -1,5 +1,10 @@
+/**
+ * User profile with optional group membership and assigned color.
+ */
 export interface User {
-    firstName: string;
-    lastName:  string;
-    groupId: string | null; 
+    username: string;
+    firstName?: string;
+    lastName?:  string;
+    groupId?: string;
+    color?: string;
 }

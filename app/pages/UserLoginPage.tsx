@@ -12,12 +12,30 @@ import {
 	View,
 } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
+import { useAppContext } from '../contexts/AppContext';
 
+/**
+ * User login page by username.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The login form or null while fonts load
+ * 
+ * @input username - Username from form field
+ * @output Loaded user in context, navigation to JoinGroupPage
+ * 
+ * @depends AppContext - User loading method
+ * @sideeffect Loads user data, navigates to JoinGroupPage on success
+ * @throws {USER_NOT_FOUND} Username doesn't exist
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function UserLoginPage(): React.ReactElement | null {
+	// ===== Contexts =====
+	const { user, loadUser, group, loadGroup } = useAppContext();
+
 	// ===== Hooks =====
 	const navigation = useNavigation();
-	const [code, setCode] = useState('');
-	const [isLoading, setIsLoading] = useState(false);	
+	const [username, setUsername] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 
 	let [fontsLoaded] = useFonts({
 		'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
@@ -47,44 +65,43 @@ export default function UserLoginPage(): React.ReactElement | null {
 
 	// ===== Handlers =====
 	const onLogin = async () => {
-		if (!code.trim()) {
-			Alert.alert('Missing code', 'Please enter a UserName.');
+		if (!username.trim()) {
+			Alert.alert('Missing Login', 'Please enter a UserName.');
 			return;
 		}
-
 		setIsLoading(true);
 		try {
-			// TODO: Replace with real API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			Alert.alert('Success', `Logged in: ${code}`);
-			// TODO: Navigate to home screen
-		} catch {
-			Alert.alert('Error', 'Failed to login');
+			// Attempt to load user from API
+			await loadUser(username);
+
+			// Navigate only on success
+			(navigation as any).navigate('pages/JoinGroupPage');
+		} catch (err: any) {
+			// Check the error message
+			switch (err.message) {
+				case "USER_NOT_FOUND":
+					Alert.alert('Invalid Login', `Unable to find user: ${username}`);
+					break;
+				case "NETWORK_ERROR":
+					Alert.alert("Error", "There was a problem connecting to the server. Try again later.");
+					break;
+				default:
+					Alert.alert("Error", "An unexpected error occurred.");
+			}
 		} finally {
+			// Always reset loading state
 			setIsLoading(false);
 		}
-		// TODO: wire up real join logic / navigation
-		Alert.alert('Logging in User', `User entered: ${code}`);
-		(navigation as any).navigate('pages/JoinGroupPage');
 	};
 
+
 	const onCreate = async () => {
-		setIsLoading(true);
-		try {
-			// TODO: Replace with real API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			(navigation as any).navigate('pages/CreateUserPage');
-		} catch {
-			Alert.alert('Error', 'Failed to navigate to create account');
-		} finally {
-			setIsLoading(false);
-		}
+		(navigation as any).navigate('pages/CreateUserPage');
 	};
 
 	// ===== Render =====
 	return (
 		<View style={styles.container}>
-			{/* Logo */}
 			<Image
 				style={styles.image}
 				source={require('@/assets/images/logo.png')}
@@ -95,8 +112,8 @@ export default function UserLoginPage(): React.ReactElement | null {
 				style={styles.input}
 				placeholder="Enter Your Username"
 				placeholderTextColor="#888"
-				value={code}
-				onChangeText={setCode}
+				value={username}
+				onChangeText={setUsername}
 				autoCapitalize="none"
 				keyboardType="default"
 				editable={!isLoading}
@@ -232,6 +249,6 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		justifyContent: 'center',
 		alignItems: 'center',
-		 backgroundColor: '#ffffffbe',// Clean white background instead of dark overlay
+		backgroundColor: '#ffffffbe',// Clean white background instead of dark overlay
 	},
 });

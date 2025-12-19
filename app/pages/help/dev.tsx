@@ -3,24 +3,28 @@ import React from 'react';
 import { Alert, Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const PAGES = [
-    // Adjust these entries to match the route names you registered in your root/layout navigator.
     { label: 'Demo Page', route: 'pages/demo' },
     { label: 'Color Picker',  route: 'pages/colorpicker'},
     { label: 'Join Groups Page', route: 'pages/JoinGroupPage' },
     { label: 'User Login Page',  route: 'pages/UserLoginPage'},
     { label: 'API Test Page', route: 'pages/ApiTestPage' },
-
-    // Add more pages here as you create them, e.g.
-    // { label: 'Some Page', route: 'SomePage' },
 ];
 
+/**
+ * Developer page for testing unregistered page navigation.
+ * Fetches data: None
+ * Has side effects: Navigation
+ */
 export default function DevTab() {
     const navigation = useNavigation();
 
+    /**
+     * Navigate to a route with error handling.
+     * @param {string} route - Route name to navigate to
+     * @param {string} [headerTitle] - Optional header title
+     */
     function goTo(route: string, headerTitle?: string) {
         try {
-            // Try navigating; if the route isn't registered this will typically throw or do nothing.
-            // Pass the desired headerTitle as a param so the layout can pick it up from route.params.
             (navigation as any).navigate(route);
         } catch (err) {
             Alert.alert('Navigation error', `Could not navigate to "${route}".\n\n${String(err)}`);

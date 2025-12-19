@@ -1,5 +1,8 @@
 import { GroceryRequest } from "./GroceryRequest";
 
+/**
+ * Aggregates multiple user requests for a single item with completion tracking.
+ */
 export class GroupRequest {
     id: string;
     completed: boolean;

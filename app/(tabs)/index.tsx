@@ -1,68 +1,69 @@
 import { useFonts } from "expo-font";
 
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SplashScreen } from 'expo-router';
-import React, { useState } from 'react';
+import { SplashScreen, Stack, router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import ShoppingItemRow from '../components/ShoppingItemRow';
+import { useAppContext } from "../contexts/AppContext";
 
-
-interface ShoppingItem {
-  id: string;
-  text: string;
-  completed: boolean;
-  priority: number;
-}
-
-
+/**
+ * Personal grocery list with priority-based item management.
+ * @depends AppContext - User's grocery list CRUD operations
+ * @sideeffect Creates/deletes list items, refreshes group grocery list
+ */
 export default function MyList() {
+  // ✅ Move these above the return
+  const [newItem, setNewItem] = useState('');
+  const [priority, setPriority] = useState<number>(1);
+  const {myGroceryList, createMyItem, loadMyGroceryList, deleteMyItem, loadGroupGroceryList} = useAppContext();
+
+  /**
+   * Loads user's grocery list on mount.
+   * @sideeffect Fetches list from API via context
+   */
+  useEffect(() => {
+    loadMyGroceryList();
+  }, [loadMyGroceryList]);
+
   let [fontsLoaded] = useFonts({
     'Shanti': require('../../assets/images/Shanti-Regular.ttf'),
     'Montserrat': require('../../assets/images/Montserrat-Regular.ttf')
   });
+  
+  if (!fontsLoaded) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
 
-  // ✅ Move these above the return
-  const [items, setItems] = useState<ShoppingItem[]>([]);
-  const [newItem, setNewItem] = useState('');
-  const [priority, setPriority] = useState<number>(1);
-
-if (!fontsLoaded) {
-  SplashScreen.preventAutoHideAsync();
-  return null;
-}
-
-
-
+  /**
+   * Creates new list item and refreshes lists.
+   * @sideeffect API call to create item, updates both personal and group lists
+   */
   const addItem = () => {
     if (newItem.trim()) {
-      const newShoppingItem: ShoppingItem = {
-        id: Date.now().toString(),
-        text: newItem.trim(),
-        completed: false,
-        priority,
-      };
-      setItems([...items, newShoppingItem]);
+      createMyItem(newItem.trim(), priority);
+      loadMyGroceryList();
       setNewItem('');
       setPriority(1);
+      loadGroupGroceryList();           // For sake of interactive demo
     }
   };
 
-  const toggleItem = (id: string) => {
-    setItems(items.map(item =>
-      item.id === id ? { ...item, completed: !item.completed } : item
-    ));
-  };
-
-  const deleteItem = (id: string) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+  /**
+   * Deletes list item and refreshes group list.
+   * @sideeffect API call to delete item, updates group grocery list
+   */
+  const deleteItem = (id: number) => {
+    deleteMyItem(id);
+    loadGroupGroceryList();     // For sake of interactive demo
   };
 
   const getPriorityText = (priority: number) => {
@@ -89,15 +90,26 @@ if (!fontsLoaded) {
       colors={["#f2b2ffff", "#eed3ffff", "#bdc5f1ff", "#ffffffff"]}
       // Gradient direction: starts from top-right, flows to bottom-left
       // [x1, y1] = start point, [x2, y2] = end point
-      start={{ x: 1, y: 0}} // Top right
+      start={{ x: 1, y: 0 }} // Top right
       end={{ x: 0, y: 1 }} // Bottom left
 
       locations={[0.1, 0.3, 0.6, 1]}
       style={[styles.background]}
     >
-
+      <Stack.Screen
+        options={{
+          title: "Personal List",
+          headerRight: () => (
+            <Text
+              style={styles.headerHelp}
+              onPress={() => router.push("/pages/help/ListHelpPage")}
+            >
+              Help
+            </Text>
+          ),
+        }}
+      />
       <View style={styles.overlay}>
-
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -135,18 +147,17 @@ if (!fontsLoaded) {
         </View>
 
         <FlatList
-          data={items}
+          data={myGroceryList || []}
           renderItem={({ item, index }) => (
             <ShoppingItemRow
               item={item}
               index={index}
-              onToggle={toggleItem}
               onDelete={deleteItem}
               getPriorityText={getPriorityText}
               getPriorityColor={getPriorityColor}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           style={styles.list}
           showsVerticalScrollIndicator={false}
         />
@@ -166,13 +177,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // optional for readability
   },
 
+  headerHelp: {
+    marginRight: 24,
+    fontSize: 16,
+  },
+
   inputContainer: {
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 15,
     marginBottom: 20,
     elevation: 3,
-   fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat',
     marginTop: 10,
   },
   textInput: {

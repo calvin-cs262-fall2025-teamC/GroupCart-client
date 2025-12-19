@@ -9,13 +9,16 @@ interface LoadingCircleProps {
 
 /**
  * LoadingCircle: A spinning circle component for loading states.
+ * Has side effects: Animates continuously using React Native Animated API.
  *
- * Props:
- * - size: diameter of the circle in pixels (default: 60)
- * - color: color of the circle (default: '#360479' purple)
- * - strokeWidth: thickness of the circle stroke (default: 4)
+ * @component
+ * @param {LoadingCircleProps} props - Component props
+ * @param {number} [props.size=60] - Diameter of the circle in pixels
+ * @param {string} [props.color="#360479"] - Color of the circle (default: purple)
+ * @param {number} [props.strokeWidth=4] - Thickness of the circle stroke
+ * @returns {React.ReactElement} The animated loading circle
  *
- * Usage:
+ * @example
  * <LoadingCircle size={60} color="#360479" strokeWidth={4} />
  */
 export default function LoadingCircle({

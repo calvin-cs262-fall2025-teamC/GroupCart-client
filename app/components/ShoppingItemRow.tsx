@@ -1,25 +1,43 @@
 import { useFonts } from "expo-font";
 import { SplashScreen } from 'expo-router';
 import React, { useRef } from 'react';
-import { Alert, Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface Props {
   item: {
-    id: string;
-    text: string;
-    completed: boolean;
+    id: number;
+    item: string;
     priority: number;
   };
   index: number;
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   getPriorityText: (priority: number) => string;
   getPriorityColor: (priority: number) => string;
 }
 
+/**
+ * ShoppingItemRow: Displays a single grocery list item with priority and delete functionality.
+ * Has side effects: Loads fonts asynchronously and runs animation on delete action.
+ *
+ * @component
+ * @param {Props} props - Component props
+ * @param {Object} props.item - The shopping item data
+ * @param {number} props.item.id - Unique item identifier
+ * @param {string} props.item.item - Item name/description
+ * @param {number} props.item.priority - Priority level (0-3)
+ * @param {number} props.index - Position index in the list
+ * @param {Function} props.onDelete - Callback fired when item is deleted after animation completes
+ * @param {Function} props.getPriorityText - Function to get priority label text
+ * @param {Function} props.getPriorityColor - Function to get priority color based on level
+ * @returns {React.ReactElement|null} The animated shopping item row or null while fonts load
+ *
+ * Side effects:
+ * - Loads custom fonts (Shanti, Montserrat) asynchronously
+ * - Animates opacity fade-out when delete is triggered
+ * - Calls onDelete callback after animation completes
+ */
 export default function ShoppingItemRow({
   item,
   index,
-  onToggle,
   onDelete,
   getPriorityText,
   getPriorityColor,
@@ -36,30 +54,21 @@ export default function ShoppingItemRow({
   }
 
   const handleDelete = () => {
-    Alert.alert('Delete Item', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {
-          Animated.timing(opacity, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-          }).start(() => {
-            onDelete(item.id);
-          });
-        },
-      },
-    ]);
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 30,
+      useNativeDriver: true,
+    }).start(() => {
+      onDelete(item.id);
+    });
   };
 
   return (
     <Animated.View style={[styles.itemContainer, { opacity }]}>
-      <TouchableOpacity style={styles.itemContent} onPress={() => onToggle(item.id)}>
+      <TouchableOpacity style={styles.itemContent}>
         <View style={styles.itemLeft}>
-          <Text style={[styles.itemText, item.completed && styles.completedText]}>
-            {item.text}
+          <Text style={[styles.itemText]}>
+            {item.item}
           </Text>
         </View>
         <View style={styles.itemRight}>
