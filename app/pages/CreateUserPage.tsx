@@ -7,7 +7,20 @@ import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import LoadingCircle from '../components/LoadingCircle';
 import { useAppContext } from '../contexts/AppContext';
 
-
+/**
+ * User creation page.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The user creation form or null while fonts load
+ * 
+ * @input username, firstName, lastName - Form field values
+ * @output Created user in DB, loaded user in context, success/error alerts
+ * 
+ * @depends AppContext - User creation and loading methods
+ * @sideeffect Creates user, loads user data, shows alerts
+ * @throws {USER_ALREADY_EXISTS} Username is already taken
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function CreateUserPage(): React.ReactElement | null {
 	// ===== Contexts =====
 	const { user, loadUser, createNewUser } = useAppContext();

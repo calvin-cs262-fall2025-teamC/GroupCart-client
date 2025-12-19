@@ -7,7 +7,20 @@ import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import LoadingCircle from '../components/LoadingCircle';
 import { useAppContext } from '../contexts/AppContext';
 
-
+/**
+ * Group creation page.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The group creation form or null while fonts load
+ * 
+ * @input groupName - Form field value
+ * @output Created group in DB with current user as member, success/error alerts
+ * 
+ * @depends AppContext - Group creation method, current user
+ * @sideeffect Creates group with current user as member, shows alerts
+ * @throws {GROUP_ALREADY_EXISTS} Group name is already taken
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function CreateGroupPage(): React.ReactElement | null {
     // ===== Contexts =====
     const { user, createNewGroup } = useAppContext();

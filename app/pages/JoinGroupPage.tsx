@@ -14,6 +14,20 @@ import {
 import LoadingCircle from '../components/LoadingCircle';
 import { useAppContext } from '../contexts/AppContext';
 
+/**
+ * Group join page using invite code.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The group join form or null while fonts load
+ * 
+ * @input code - Group invite code from form field
+ * @output Loaded group in context, updated user groupId, navigation to tabs
+ * 
+ * @depends AppContext - Group loading and user update methods
+ * @sideeffect Loads group, updates user's groupId, navigates to tabs on success
+ * @throws {GROUP_NOT_FOUND} Invalid group code
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function JoinGroupPage(): React.ReactElement | null {
 	// ===== Contexts =====
 	const { loadGroup, updateMyUser } = useAppContext();

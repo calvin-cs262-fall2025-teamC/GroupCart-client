@@ -2,6 +2,9 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LoadingCircle from '../components/LoadingCircle';
 
+/**
+ * Generic loading screen with animated spinner.
+ */
 export default function LoadingPage() {
   return (
     <View style={styles.container}>

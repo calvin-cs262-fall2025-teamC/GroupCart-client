@@ -14,6 +14,20 @@ import {
 import LoadingCircle from '../components/LoadingCircle';
 import { useAppContext } from '../contexts/AppContext';
 
+/**
+ * User login page by username.
+ * 
+ * @component
+ * @returns {React.ReactElement|null} The login form or null while fonts load
+ * 
+ * @input username - Username from form field
+ * @output Loaded user in context, navigation to JoinGroupPage
+ * 
+ * @depends AppContext - User loading method
+ * @sideeffect Loads user data, navigates to JoinGroupPage on success
+ * @throws {USER_NOT_FOUND} Username doesn't exist
+ * @throws {NETWORK_ERROR} Server connection problem
+ */
 export default function UserLoginPage(): React.ReactElement | null {
 	// ===== Contexts =====
 	const { user, loadUser, group, loadGroup } = useAppContext();
