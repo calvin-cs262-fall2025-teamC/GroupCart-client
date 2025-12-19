@@ -1,3 +1,6 @@
+/**
+ * User representation in group context with assigned color for UI display.
+ */
 export class Requester {
     id: string;
     displayName: string;

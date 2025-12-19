@@ -1,5 +1,8 @@
 import { Requester } from "./Requester";
 
+/**
+ * Single item request from a user.
+ */
 export class GroceryRequest {
     id: string;
     requester: Requester;

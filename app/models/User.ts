@@ -1,3 +1,6 @@
+/**
+ * User profile with optional group membership and assigned color.
+ */
 export interface User {
     username: string;
     firstName?: string;
